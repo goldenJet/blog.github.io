@@ -1271,11 +1271,6 @@ pre .javascript .function {
 .use-motion .menu-item {
   opacity: 0;
 }
-.post-body {
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
-}
 .post-body p a {
   color: #0593d3;
   border-bottom: none;
@@ -1285,6 +1280,11 @@ pre .javascript .function {
   color: #fc6423;
   border-bottom: none;
   border-bottom: 1px solid #fc6423;
+}
+.post-body {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 .post-body .exturl .fa {
   font-size: 14px;
@@ -1901,7 +1901,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #affff1;
+  background: #cbf524;
 }
 .links-of-blogroll {
   font-size: 13px;
