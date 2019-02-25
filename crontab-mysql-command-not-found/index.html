@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="shell 脚本从服务器A迁移至服务器B之后，发现手动触发没问题，但是添加入 linux 的 crontab 定时任务中之后却无法自动运行。">
+<meta name="keywords" content="工具,Linux,crontab,mysql,shell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="踩坑记：linux定时器crontab错误 mysql command not found">
+<meta property="og:url" content="https://blog-test.jetchen.cn/crontab-mysql-command-not-found/index.html">
+<meta property="og:site_name" content="嘎里三分熟">
+<meta property="og:description" content="shell 脚本从服务器A迁移至服务器B之后，发现手动触发没问题，但是添加入 linux 的 crontab 定时任务中之后却无法自动运行。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/image/20180714/1531544104632470.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/image/20180714/1531544278565726.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/image/20180714/1531544326322810.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/image/20180714/1531542991453671.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/image/20180714/1531543221267362.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/image/20180714/1531543315989442.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/image/20180714/1531543626277525.png">
+<meta property="og:updated_time" content="2019-02-25T15:16:22.711Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="踩坑记：linux定时器crontab错误 mysql command not found">
+<meta name="twitter:description" content="shell 脚本从服务器A迁移至服务器B之后，发现手动触发没问题，但是添加入 linux 的 crontab 定时任务中之后却无法自动运行。">
+<meta name="twitter:image" content="http://blogsource.chenkaikai.com/uploads/image/20180714/1531544104632470.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://blog-test.jetchen.cn/crontab-mysql-command-not-found/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>踩坑记：linux定时器crontab错误 mysql command not found | 嘎里三分熟</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">嘎里三分熟</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about-me/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog-test.jetchen.cn/crontab-mysql-command-not-found/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jet Chen">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嘎里三分熟">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">踩坑记：linux定时器crontab错误 mysql command not found
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-07-14 13:06:25" itemprop="dateCreated datePublished" datetime="2018-07-14T13:06:25+08:00">2018-07-14</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-02-25 23:16:22" itemprop="dateModified" datetime="2019-02-25T23:16:22+08:00">2019-02-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/技能/" itemprop="url" rel="index"><span itemprop="name">技能</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/技能/踩坑记/" itemprop="url" rel="index"><span itemprop="name">踩坑记</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><center>shell 脚本从服务器A迁移至服务器B之后，发现手动触发没问题，但是添加入 linux 的 crontab 定时任务中之后却无法自动运行。</center><br><a id="more"></a></p>
+<h2>一、背景介绍</h2>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;此篇文章讲述自己的踩坑血泪史之一。<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;故事发生在公元2018年，那年风和日丽，接到了新任务：将之前在服务器A上运行的定时备份数据库的任务迁移至服务器B。（<a href="http://www.jetchen.cn/mysql%e5%ae%9a%e6%97%b6%e5%a4%87%e4%bb%bd/" target="_blank">上次介绍的定时备份的文章链接</a>）<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;呵呵，这哪里能称得上任务，举手之劳罢了，后来发现，自己太年轻。<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;step1：移动 shell 脚本并调整部分参数<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;step2：创建备份数据放置的文件夹<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;step3：调整脚本和文件夹的权限<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;step4：调整 crontab 定时任务，并重新加载了crontab 的配置： service crond reload<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;好，完事儿，手动跑了遍脚本，没有发现任何问题，于是等着测试定时任务了，但是发现到了设置的时间点数据并没有自动备份下来，接下来就开始了此次的挖坑故事。<br></p><p></p>
+<h2>二、挖坑</h2>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;手动可以运行的脚本，却无法自动运行？what？两者都是 root 用户的操作，于是首先先对比了服务器A和B上的脚本、文件夹、定时任务的异同，<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;然而并没有发现有任何的不一样，<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;于是查看了权限，权限也一样，但是仔细查看时候发现了一丝丝猫腻，服务器B的文件权限后面跟了一个点，而服务器A的文件后面却没有，不仔细看还真看不出来。<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（后补的图，忽略X权限）<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://blogsource.chenkaikai.com/uploads/image/20180714/1531544104632470.png" title="1531544104632470.png" alt="crontab mysql commond not find 05.png"></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;好了，问题找到了，SELinux(Secure Enhanced Linux)， 关乎 linux 的安全策略机制，（具体介绍暂不进行描述，在下只理解了一点点小精髓，并不深入）</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;于是狠狠补了一课，研究了一天，很是兴奋。<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<br></p>
+<h2>三、踩坑</h2>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;既然问题找到了，那就试着解决吧。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;SELinux的工作模式一共有三种 enforcing、permissive和disabled&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;① enforcing　 强制模式：只要是违反策略的行动都会被禁止，并作为内核信息记录</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;② permissive　允许模式：违反策略的行动不会被禁止，但是会提示警告信息&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;③ disabled　　禁用模式：禁用SELinux，与不带SELinux系统是一样的，通常情况下我们在不怎么了解SELinux时，将模式设置成disabled，这样在访问一些网络应用时就不会出问题了。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;SELinux 的主配置文件是 /etc/sysconfig/selinux，可以查看配置文件来查看工作模式。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://blogsource.chenkaikai.com/uploads/image/20180714/1531544278565726.png" title="1531544278565726.png" alt="crontab mysql commond not find 06.png"></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;或者可以使用&nbsp;getenforce&nbsp; 命令来查看</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://blogsource.chenkaikai.com/uploads/image/20180714/1531544326322810.png" title="1531544326322810.png" alt="crontab mysql commond not find 07.png"></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;当然了，此时也可以使用 setenforce [0|1]&nbsp; 命令来修改工作模式，setenforce 0 表示设置成 permissive，1 表示 enforcing</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;【注：】但是这是临时的解决方式，重启计算机之后便无效了，要想永久生效，只能修改上文提到的配置文件。<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;于是我临时调整：<span style="font-size: 14px;">setenforce 0</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;但是之后经过测试，仍不能解决问题，那么久采取了极端的做法，修改配置文件。<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;于是就挑选了一个月黑风高夜，良辰吉日时，修改了配置文件，重启了服务器。<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;满怀欣喜地进行测试，还是失败。瞬间受挫。<br></p>
+<p><br></p>
+<h2>四、填坑</h2>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;那么就继续硬着头皮填坑吧。<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;老规矩，翻日志。<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;这次翻看的是root 用户的邮箱：tail -f <strong>/var/spool/mail/root</strong>&nbsp; &nbsp; <br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;我们找到了错误踪迹：<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://blogsource.chenkaikai.com/uploads/image/20180714/1531542991453671.png" title="1531542991453671.png" alt="crontab mysql commond not find 01.png"></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;错误很明显，我们脚本内的 mysql 命令，在服务器上并没找到，<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;于是指定了两步走战略：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;① 查询 crontab 定时任务配置内引入的 bin 文件夹路径：<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://blogsource.chenkaikai.com/uploads/image/20180714/1531543221267362.png" title="1531543221267362.png" alt="crontab mysql commond not find 02.png"></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;② 查询当前服务器上 mysql 服务的执行路径<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;<img src="http://blogsource.chenkaikai.com/uploads/image/20180714/1531543315989442.png" title="1531543315989442.png" alt="crontab mysql commond not find 03.png"></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;果然，服务器 B 上面的mysql默认的安装路径并没有添加在定时任务的列表里面。<br></p>
+<p><br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;接下来问题就相当好解决了，有两种方法：<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;① 直接将 mysql 的执行文件路径&nbsp;/usr/local/mysql/bin 添加到定时任务内</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;② 或者可以建立软连接，<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://blogsource.chenkaikai.com/uploads/image/20180714/1531543626277525.png" title="1531543626277525.png" alt="crontab mysql commond not find 04.png"></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;然后下面就是见证奇迹的环节了，当然，问题肯定得到了解决。</p>
+<h2>五、小结</h2>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;小结一下下，此次踩坑的缘由很简单，由于出问题的时候并没有第一时间查看日志，所以饶了一点弯路。<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;不过收货也颇丰，顺便又回顾了一遍&nbsp;<span style="font-size: 14px;">SELinux。</span></p>
+<p><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;最后，重要的事情说三遍，日志很重要，日志很重要，日志很重要，问题基本上都是可以通过查看日志解决的，但是前提是：日志要详细并且精准到位。<br></span></p>
+<p><br></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+	  
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束 <i class="fa fa-fighter-jet"></i> 感谢阅读 ------</div>
+    
+</div>
+	  
+	</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/工具/" rel="tag"># 工具</a>
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/crontab/" rel="tag"># crontab</a>
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+            <a href="/tags/shell/" rel="tag"># shell</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/spring-boot-admin/" rel="next" title="Spring Boot Admin 监控系统">
+                <i class="fa fa-chevron-left"></i> Spring Boot Admin 监控系统
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/intellij-idea-config/" rel="prev" title="IntelliJ IDEA 常用配置及快捷键">
+                IntelliJ IDEA 常用配置及快捷键 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jet Chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">157</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/goldenJet" title="GitHub &rarr; https://github.com/goldenJet" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/goldenJ51015801" title="Twitter &rarr; https://twitter.com/goldenJ51015801" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">一、背景介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">二、挖坑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">三、踩坑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">四、填坑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">5.</span> <span class="nav-text">五、小结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jet Chen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+<div class="BbeiAn-info">
+    <a target="_blank" href="http://www.miitbeian.gov.cn/" rel="nofollow">浙ICP备17005575号-1</a> <!--a标签中增加nofollow属性，避免爬虫出站。-->| 
+	<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802009043" style="text-decoration:none;padding-left:17px;background:url(/images/icon-police.png) no-repeat left center" rel="nofollow">浙公网安备 33010802009043号</a>	  <!--这里将图标作为了背景，以使得能和后面的文字在同一行-->
+</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

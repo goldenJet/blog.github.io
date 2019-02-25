@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="最近一些小问题的总结">
+<meta name="keywords" content="BootStrap,bug,mysql,java,quartz,ss服务,搬瓦工">
+<meta property="og:type" content="article">
+<meta property="og:title" content="近期小问题总结 2018&#x2F;08&#x2F;19">
+<meta property="og:url" content="https://blog-test.jetchen.cn/summarize-2018-08-19/index.html">
+<meta property="og:site_name" content="嘎里三分熟">
+<meta property="og:description" content="最近一些小问题的总结">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/image/20180819/1534678882275851.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/image/20180819/1534680530450626.png">
+<meta property="og:updated_time" content="2019-02-25T15:37:48.382Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="近期小问题总结 2018&#x2F;08&#x2F;19">
+<meta name="twitter:description" content="最近一些小问题的总结">
+<meta name="twitter:image" content="http://blogsource.chenkaikai.com/uploads/image/20180819/1534678882275851.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://blog-test.jetchen.cn/summarize-2018-08-19/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>近期小问题总结 2018/08/19 | 嘎里三分熟</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">嘎里三分熟</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about-me/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog-test.jetchen.cn/summarize-2018-08-19/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jet Chen">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嘎里三分熟">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">近期小问题总结 2018/08/19
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-08-19 20:26:55" itemprop="dateCreated datePublished" datetime="2018-08-19T20:26:55+08:00">2018-08-19</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-02-25 23:37:48" itemprop="dateModified" datetime="2019-02-25T23:37:48+08:00">2019-02-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Bug集中营/" itemprop="url" rel="index"><span itemprop="name">Bug集中营</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Bug集中营/小谈/" itemprop="url" rel="index"><span itemprop="name">小谈</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Bug集中营/小谈/踩坑记/" itemprop="url" rel="index"><span itemprop="name">踩坑记</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><center>最近一些小问题的总结</center><br><a id="more"></a></p>
+<h2>一、bootstrap 多层 modal 关闭后浏览器无法滚动的问题</h2>
+
+<ul class=" list-paddingleft-2" style="list-style-type: disc;"><li>&nbsp;&nbsp;&nbsp;&nbsp;问题描述：bootstrap 官方文档是说明不支持多层 modal 嵌套的，但是实践证明是可以的，只不过出现了多层嵌套后，当关闭了 modal，浏览器却无法上下滚动。<br><p></p></li><li>&nbsp;&nbsp;&nbsp;&nbsp;原因：滚动事件时击穿到 body 层的，当打开 modal 时，body 会增加样式“modal-open”，即将 overflow 变为了 hidden，此时是无法滚动的，而当 modal 被关闭之后，“modal-open”便被移除了。<br><p></p></li><li><p>&nbsp;&nbsp;&nbsp;&nbsp;解决：所以，解决很简单，只需要在 modal 关闭之后，在 body 上增加绑定“modal-open”样式即可。</p></li></ul>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;$(&quot;.myModal&quot;).on(&quot;hidden.bs.modal&quot;,function()&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;$(document.body).addClass(&quot;modal-open&quot;);</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;);</span><br></pre></td></tr></table></figure>
+<p></p><p><br></p>
+<p><br></p>
+<h2>二、quartz 修改执行时间后出现立即执行的问题</h2>
+
+<ul class=" list-paddingleft-2" style="list-style-type: disc;"><li>&nbsp;&nbsp;&nbsp;&nbsp;问题描述：之前写过一个 quartz 的独立模块，可以进行界面化配置，<a href="http://www.jetchen.cn/quart-page/" target="_blank">传送门</a>，但是后来发现了一个问题，即当调整了执行时间，即 cron 表达式之后，任务便立即执行了一遍。<br><p></p></li><li><p>&nbsp;&nbsp;&nbsp;&nbsp;原因：通过查看构件&nbsp;CronScheduleBuilder 的源码发现，当修改定时任务执行时间的时候，默认是立即执行一次的，所以我们进行相关调整。</p></li><li><p>&nbsp;&nbsp;&nbsp;&nbsp;解决：其实很简单，只需要增加一项配合即可&nbsp;.withMisfireHandlingInstructionDoNothing()，可见下图红框</p></li></ul>
+
+<p></p><p><img src="http://blogsource.chenkaikai.com/uploads/image/20180819/1534678882275851.png" title="1534678882275851.png" alt="微信图片_20180819194039.png"></p>
+<p><br></p>
+<p><br></p>
+<h2>三、mysql 关于 is not null 的执行效率优化问题</h2>
+
+<ul class=" list-paddingleft-2" style="list-style-type: disc;"><li>&nbsp;&nbsp;&nbsp;&nbsp;问题描述：很简单，数据库是 mysql，过滤某个字段为空的数据，以前用的是 is not null，但是当数据量到达 20W 以上之后，is not null 的执行效率就会急剧下滑。<br><p></p></li><li><p>&nbsp;&nbsp;&nbsp;&nbsp;原因：该字段为空，即该字段不存在索引，查询效率很低<br></p></li><li><p>&nbsp;&nbsp;&nbsp;&nbsp;解决，其实很简单，使用一点点奇淫技巧起即可，即使用 mysql 的 if，如下：if(field, 0, 1)</p></li></ul>
+
+<p></p><p><br></p>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+<h2>四、文字过长后缩略显示的问题</h2>
+
+<ul class=" list-paddingleft-2" style="list-style-type: disc;"><li>&nbsp;&nbsp;&nbsp;&nbsp;问题描述：之前在 table 中的某个列上，增加了样式，即当问题过长之后便显现缩略，即“这是缩略。。。”，然后鼠标放上去之后显示全文，但是后来发现此招仅对汉字等有效，而对于数字，则可以缩略，但是鼠标放上去之后不显示全文。<br><p></p></li><li><p>&nbsp;&nbsp;&nbsp;&nbsp;解决：使用&nbsp;word-break: break-all; 样式来使连续的英文和数字进行换行显示，如下图</p></li></ul>
+
+<p></p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://blogsource.chenkaikai.com/uploads/image/20180819/1534680530450626.png" title="1534680530450626.png" alt="summarize02.png"></p>
+<p><br></p>
+<h2>五、搬瓦工设置一键ss</h2>
+
+<ul class=" list-paddingleft-2" style="list-style-type: disc;"><li>&nbsp;&nbsp;&nbsp;&nbsp;问题描述：搬瓦工以前的 vps 是有傻瓜式搭建 ss 服务的前端管理界面，但是最新的 vps 是取消了这一功能的，虽然我们可以在服务器端手动安装 ss 程序，但是管理还是存在不便利性，附上搬瓦工官网：<a href="https://www.bwh1.net" target="_blank" rel="noopener">https://www.bwh1.net</a><p></p></li><li><p>&nbsp;&nbsp;&nbsp;&nbsp;解决：很简单，登录后台管理系统之后，访问此链接即可，接下来都是傻瓜式操作：<a href="https://kiwivm.64clouds.com/main-exec.php?mode=extras_shadowsocks" target="_blank" rel="noopener">https://kiwivm.64clouds.com/main-exec.php?mode=extras_shadowsocks</a></p></li></ul>
+
+<p></p><p><br></p>
+<p><br></p>
+<h2>六、短链接的生成算法</h2>
+
+<ul class=" list-paddingleft-2" style="list-style-type: disc;"><li>&nbsp;&nbsp;&nbsp;&nbsp;问题描述：最近短信中需要添加访问连接，长链接不仅长，而且不友好，但是又不想使用外部的服务，于是手动写一套<br><p></p></li><li><p>&nbsp;&nbsp;&nbsp;&nbsp;原理：将长链接通过加密算法生成6位长度的短链接，然后再在 redis 中设置长、短链接的一对一关系，短链接访问时查询长链接然后进行重定向操作。<br></p></li><li><p>&nbsp;&nbsp;&nbsp;&nbsp;代码：<br></p></li></ul>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">package&amp;nbsp;com.wailian.util;</span><br><span class="line">import&amp;nbsp;org.springframework.beans.factory.annotation.Value;</span><br><span class="line">import&amp;nbsp;org.springframework.stereotype.Component;</span><br><span class="line">/**</span><br><span class="line">*&amp;nbsp;@Description:&amp;nbsp;短网址生成器</span><br><span class="line">*&amp;nbsp;1.&amp;nbsp;&amp;nbsp;将长网址用md5算法生成32位签名串，分为4段,，每段8个字符。</span><br><span class="line">*&amp;nbsp;2.&amp;nbsp;&amp;nbsp;对这4段循环处理，取每段的8个字符,&amp;nbsp;将他看成16进制字符串与0x3fffffff(30位1)的位与操作，超过30位的忽略处理。多了也没用因为下面要分成6段&amp;nbsp;&amp;nbsp;嘿嘿正好取整。注意用Long型变量（长度问题&amp;nbsp;&amp;nbsp;你懂得）</span><br><span class="line">*&amp;nbsp;3.&amp;nbsp;&amp;nbsp;将每段得到的30位字符（后台以long十进制显示）又分成6段，通过移位运算将每5位分别与字符数组求与运算（0x0000003D），得到其在字符数组中的索引并取出拼串。</span><br><span class="line">*&amp;nbsp;4.&amp;nbsp;&amp;nbsp;这样一个md5字符串可以获得4个6位串，取里面的任意一个就可作为这个长url的短url地址。</span><br><span class="line">*&amp;nbsp;@Author:&amp;nbsp;Jet.Chen</span><br><span class="line">*&amp;nbsp;@Date:&amp;nbsp;2018/8/14</span><br><span class="line">*/</span><br><span class="line">@Component</span><br><span class="line">public&amp;nbsp;class&amp;nbsp;ShortUrlGenerator&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;public&amp;nbsp;static&amp;nbsp;void&amp;nbsp;main(String[]&amp;nbsp;args)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;String&amp;nbsp;sLongUrl&amp;nbsp;=&amp;nbsp;&quot;http://192.168.154.77:9090/customized/customerPage?token=8500e409da8542aece6ebc42ca2a6d92&quot;;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;String[]&amp;nbsp;aResult&amp;nbsp;=&amp;nbsp;shortUrl&amp;nbsp;(sLongUrl);</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;打印出结果</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;for&amp;nbsp;(&amp;nbsp;int&amp;nbsp;i&amp;nbsp;=&amp;nbsp;0;&amp;nbsp;i&amp;nbsp;&lt;&amp;nbsp;aResult.&amp;nbsp;length&amp;nbsp;;&amp;nbsp;i++)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;System.&amp;nbsp;out&amp;nbsp;.println(&amp;nbsp;&quot;The&amp;nbsp;string&amp;nbsp;[&quot;&amp;nbsp;+&amp;nbsp;i&amp;nbsp;+&amp;nbsp;&quot;]&amp;nbsp;is&amp;nbsp;&quot;&amp;nbsp;+&amp;nbsp;aResult[i]);</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;返回4段</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;public&amp;nbsp;static&amp;nbsp;String[]&amp;nbsp;shortUrl(String&amp;nbsp;url)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;可以自定义生成&amp;nbsp;MD5&amp;nbsp;加密字符传前的混合&amp;nbsp;KEY</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;String&amp;nbsp;key&amp;nbsp;=&amp;nbsp;&quot;wailianJet&quot;&amp;nbsp;;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;要使用生成&amp;nbsp;URL&amp;nbsp;的字符</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;String[]&amp;nbsp;chars&amp;nbsp;=&amp;nbsp;new&amp;nbsp;String[]&amp;nbsp;&#123;&amp;nbsp;&quot;a&quot;&amp;nbsp;,&amp;nbsp;&quot;b&quot;&amp;nbsp;,&amp;nbsp;&quot;c&quot;&amp;nbsp;,&amp;nbsp;&quot;d&quot;&amp;nbsp;,&amp;nbsp;&quot;e&quot;&amp;nbsp;,&amp;nbsp;&quot;f&quot;&amp;nbsp;,&amp;nbsp;&quot;g&quot;&amp;nbsp;,&amp;nbsp;&quot;h&quot;&amp;nbsp;,</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&quot;i&quot;&amp;nbsp;,&amp;nbsp;&quot;j&quot;&amp;nbsp;,&amp;nbsp;&quot;k&quot;&amp;nbsp;,&amp;nbsp;&quot;l&quot;&amp;nbsp;,&amp;nbsp;&quot;m&quot;&amp;nbsp;,&amp;nbsp;&quot;n&quot;&amp;nbsp;,&amp;nbsp;&quot;o&quot;&amp;nbsp;,&amp;nbsp;&quot;p&quot;&amp;nbsp;,&amp;nbsp;&quot;q&quot;&amp;nbsp;,&amp;nbsp;&quot;r&quot;&amp;nbsp;,&amp;nbsp;&quot;s&quot;&amp;nbsp;,&amp;nbsp;&quot;t&quot;&amp;nbsp;,</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&quot;u&quot;&amp;nbsp;,&amp;nbsp;&quot;v&quot;&amp;nbsp;,&amp;nbsp;&quot;w&quot;&amp;nbsp;,&amp;nbsp;&quot;x&quot;&amp;nbsp;,&amp;nbsp;&quot;y&quot;&amp;nbsp;,&amp;nbsp;&quot;z&quot;&amp;nbsp;,&amp;nbsp;&quot;0&quot;&amp;nbsp;,&amp;nbsp;&quot;1&quot;&amp;nbsp;,&amp;nbsp;&quot;2&quot;&amp;nbsp;,&amp;nbsp;&quot;3&quot;&amp;nbsp;,&amp;nbsp;&quot;4&quot;&amp;nbsp;,&amp;nbsp;&quot;5&quot;&amp;nbsp;,</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&quot;6&quot;&amp;nbsp;,&amp;nbsp;&quot;7&quot;&amp;nbsp;,&amp;nbsp;&quot;8&quot;&amp;nbsp;,&amp;nbsp;&quot;9&quot;&amp;nbsp;,&amp;nbsp;&quot;A&quot;&amp;nbsp;,&amp;nbsp;&quot;B&quot;&amp;nbsp;,&amp;nbsp;&quot;C&quot;&amp;nbsp;,&amp;nbsp;&quot;D&quot;&amp;nbsp;,&amp;nbsp;&quot;E&quot;&amp;nbsp;,&amp;nbsp;&quot;F&quot;&amp;nbsp;,&amp;nbsp;&quot;G&quot;&amp;nbsp;,&amp;nbsp;&quot;H&quot;&amp;nbsp;,</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&quot;I&quot;&amp;nbsp;,&amp;nbsp;&quot;J&quot;&amp;nbsp;,&amp;nbsp;&quot;K&quot;&amp;nbsp;,&amp;nbsp;&quot;L&quot;&amp;nbsp;,&amp;nbsp;&quot;M&quot;&amp;nbsp;,&amp;nbsp;&quot;N&quot;&amp;nbsp;,&amp;nbsp;&quot;O&quot;&amp;nbsp;,&amp;nbsp;&quot;P&quot;&amp;nbsp;,&amp;nbsp;&quot;Q&quot;&amp;nbsp;,&amp;nbsp;&quot;R&quot;&amp;nbsp;,&amp;nbsp;&quot;S&quot;&amp;nbsp;,&amp;nbsp;&quot;T&quot;&amp;nbsp;,</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&quot;U&quot;&amp;nbsp;,&amp;nbsp;&quot;V&quot;&amp;nbsp;,&amp;nbsp;&quot;W&quot;&amp;nbsp;,&amp;nbsp;&quot;X&quot;&amp;nbsp;,&amp;nbsp;&quot;Y&quot;&amp;nbsp;,&amp;nbsp;&quot;Z&quot;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;对传入网址进行&amp;nbsp;MD5&amp;nbsp;加密</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;String&amp;nbsp;sMD5EncryptResult&amp;nbsp;=&amp;nbsp;(MD5Util.generateMD5(key&amp;nbsp;+&amp;nbsp;url));</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;String&amp;nbsp;hex&amp;nbsp;=&amp;nbsp;sMD5EncryptResult;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;String[]&amp;nbsp;resUrl&amp;nbsp;=&amp;nbsp;new&amp;nbsp;String[4];</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//得到&amp;nbsp;4组短链接字符串</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;for&amp;nbsp;(&amp;nbsp;int&amp;nbsp;i&amp;nbsp;=&amp;nbsp;0;&amp;nbsp;i&amp;nbsp;&lt;&amp;nbsp;4;&amp;nbsp;i++)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;把加密字符按照&amp;nbsp;8&amp;nbsp;位一组&amp;nbsp;16&amp;nbsp;进制与&amp;nbsp;0x3FFFFFFF&amp;nbsp;进行位与运算</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;String&amp;nbsp;sTempSubString&amp;nbsp;=&amp;nbsp;hex.substring(i&amp;nbsp;*&amp;nbsp;8,&amp;nbsp;i&amp;nbsp;*&amp;nbsp;8&amp;nbsp;+&amp;nbsp;8);</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;这里需要使用&amp;nbsp;long&amp;nbsp;型来转换，因为&amp;nbsp;Inteper&amp;nbsp;.parseInt()&amp;nbsp;只能处理&amp;nbsp;31&amp;nbsp;位&amp;nbsp;,&amp;nbsp;首位为符号位&amp;nbsp;,&amp;nbsp;如果不用&amp;nbsp;long&amp;nbsp;，则会越界</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;long&amp;nbsp;lHexLong&amp;nbsp;=&amp;nbsp;0x3FFFFFFF&amp;nbsp;&amp;&amp;nbsp;Long.parseLong&amp;nbsp;(sTempSubString,&amp;nbsp;16);</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;String&amp;nbsp;outChars&amp;nbsp;=&amp;nbsp;&quot;&quot;&amp;nbsp;;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//循环获得每组6位的字符串</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;for&amp;nbsp;(&amp;nbsp;int&amp;nbsp;j&amp;nbsp;=&amp;nbsp;0;&amp;nbsp;j&amp;nbsp;&lt;&amp;nbsp;6;&amp;nbsp;j++)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;把得到的值与&amp;nbsp;0x0000003D&amp;nbsp;进行位与运算，取得字符数组&amp;nbsp;chars&amp;nbsp;索引</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//(具体需要看chars数组的长度&amp;nbsp;&amp;nbsp;&amp;nbsp;以防下标溢出，注意起点为0)</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;long&amp;nbsp;index&amp;nbsp;=&amp;nbsp;0x0000003D&amp;nbsp;&amp;&amp;nbsp;lHexLong;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;把取得的字符相加</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;outChars&amp;nbsp;+=&amp;nbsp;chars[(&amp;nbsp;int&amp;nbsp;)&amp;nbsp;index];</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;每次循环按位右移&amp;nbsp;5&amp;nbsp;位</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;lHexLong&amp;nbsp;=&amp;nbsp;lHexLong&amp;nbsp;&gt;&gt;&amp;nbsp;5;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;把字符串存入对应索引的输出数组</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;resUrl[i]&amp;nbsp;=&amp;nbsp;outChars;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;return&amp;nbsp;resUrl;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p></p><p><br></p>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+	  
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束 <i class="fa fa-fighter-jet"></i> 感谢阅读 ------</div>
+    
+</div>
+	  
+	</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/BootStrap/" rel="tag"># BootStrap</a>
+          
+            <a href="/tags/bug/" rel="tag"># bug</a>
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/quartz/" rel="tag"># quartz</a>
+          
+            <a href="/tags/ss服务/" rel="tag"># ss服务</a>
+          
+            <a href="/tags/搬瓦工/" rel="tag"># 搬瓦工</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/validate-mobile/" rel="next" title="国际手机号码有效性校验">
+                <i class="fa fa-chevron-left"></i> 国际手机号码有效性校验
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/reject-hsts/" rel="prev" title="踩坑记：HSTS导致子域名无法访问">
+                踩坑记：HSTS导致子域名无法访问 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jet Chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">157</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/goldenJet" title="GitHub &rarr; https://github.com/goldenJet" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/goldenJ51015801" title="Twitter &rarr; https://twitter.com/goldenJ51015801" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">一、bootstrap 多层 modal 关闭后浏览器无法滚动的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">二、quartz 修改执行时间后出现立即执行的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">三、mysql 关于 is not null 的执行效率优化问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">四、文字过长后缩略显示的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">5.</span> <span class="nav-text">五、搬瓦工设置一键ss</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">6.</span> <span class="nav-text">六、短链接的生成算法</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jet Chen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+<div class="BbeiAn-info">
+    <a target="_blank" href="http://www.miitbeian.gov.cn/" rel="nofollow">浙ICP备17005575号-1</a> <!--a标签中增加nofollow属性，避免爬虫出站。-->| 
+	<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802009043" style="text-decoration:none;padding-left:17px;background:url(/images/icon-police.png) no-repeat left center" rel="nofollow">浙公网安备 33010802009043号</a>	  <!--这里将图标作为了背景，以使得能和后面的文字在同一行-->
+</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="2018-7-19更。本文主要用于记录一些 Linux 的常用命令供自己参考。">
+<meta name="keywords" content="工具,Linux,命令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux常用命令">
+<meta property="og:url" content="https://blog-test.jetchen.cn/linux-command/index.html">
+<meta property="og:site_name" content="嘎里三分熟">
+<meta property="og:description" content="2018-7-19更。本文主要用于记录一些 Linux 的常用命令供自己参考。">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-02-25T15:25:56.600Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux常用命令">
+<meta name="twitter:description" content="2018-7-19更。本文主要用于记录一些 Linux 的常用命令供自己参考。">
+
+
+
+
+
+
+  <link rel="canonical" href="https://blog-test.jetchen.cn/linux-command/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Linux常用命令 | 嘎里三分熟</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">嘎里三分熟</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about-me/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog-test.jetchen.cn/linux-command/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jet Chen">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嘎里三分熟">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux常用命令
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-06-29 11:41:34" itemprop="dateCreated datePublished" datetime="2017-06-29T11:41:34+08:00">2017-06-29</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-02-25 23:25:56" itemprop="dateModified" datetime="2019-02-25T23:25:56+08:00">2019-02-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/常用工具/" itemprop="url" rel="index"><span itemprop="name">常用工具</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><center>2018-7-19更。本文主要用于记录一些 Linux 的常用命令供自己参考。</center><br><a id="more"></a></p>
+<h4>主要针对 Centos</h4>
+
+<h2>一、各种查看<br></h2>
+
+<h4>1、查看目录</h4>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>pwd</strong> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 查看当前目录</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>ls</strong> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 显示当前目录下的文件<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; 另：&nbsp;<strong>-l</strong>（ls -l 等价于<strong> ll</strong>） 列出文件的详细信息<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>-a</strong> 列出所有文件，包括隐藏的<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #FF0000;"><strong>-Z</strong></span> 查看具体权限说明<br></p><p></p>
+<h4>2、查看文件</h4>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;不常用：cat 和 tac 分别是正向和逆向查看文件全内容<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;常用：<strong>more</strong> 和 <strong>less</strong>（分页显示文件内容），<strong>head</strong> 和 <strong>tail</strong>（显示文件的头或尾内容）<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; ① less 可以使用 pageup 和 pagedown 按键来翻页，并且可以使用 /关键字 来搜索内容（n键下一个，<span style="font-size: 14px;">q键退出</span>）<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;② head 和 tail 语法为 head [-n number] 文件名 （number是指定显示的行数）<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #FF0000;">动态查看日志刷新时，使用 <strong>tail -f 文件名</strong> 来查看文件内容</span><br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;③ <strong>tailf</strong> 几乎等价于 tail -f ，但区别就是当日志文件名更改之后，tailf 仍然可以进行跟踪<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #FF0000;">查看指定末尾100行：<strong>tail -n 100</strong> <strong>文件名</strong></span><br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;④ <strong>stat</strong> 查看文件的详细信息<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;查看指定文本的 行数、字数、字符数，用：<strong>wc</strong></p>
+<h4>3、查看进程</h4>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;最常用：<strong>ps -ef | grep java</strong> &nbsp; 或者 &nbsp; <strong>ps aux | grep java</strong><br></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;</strong>其中：f 表示树状结构显示，a 表示所有用户，u 表示以用户为主的格式来显示<strong><br></strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;另：查看所有进程，用 ps -A 或者 ps -e</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 查看指定用户jet的进程，用 ps -u jet<br></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 查看非root运行的进程，用 ps -U root -u root -N</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;查找进行，用 pgrep java<br></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 查找指定用户jet的进程，用 pgrep -u jet java</p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; top</strong> 命令查看系统的动态实时视图<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;杀进程用： <strong>kill -9 xxxx</strong> （xxxx代表pid）<br></p>
+<h4>4、查看安装 nginx 所生成的文件&nbsp;</h4>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;rpm -ql nginx</p>
+<h4>5、查看主机等基础信息</h4>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>who</strong> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 显示在线登陆用户<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #FF0000;"><strong>w</strong></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查看当前在线用户的操作命令<br></p>
+<p>&nbsp;&nbsp;&nbsp;<strong>&nbsp;whoami</strong> &nbsp; &nbsp; 显示当前操作用户<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>hostname</strong> &nbsp;显示主机名<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>uname</strong> &nbsp; &nbsp; &nbsp; 显示系统信息<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>ifconfig</strong> &nbsp; &nbsp; &nbsp;显示网络情况（ip 等）</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>df -lh&nbsp;</strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;查看磁盘</p>
+<h2>二、各种修改</h2>
+
+<h4>1、文件夹</h4>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;创建：<strong>mkdir</strong><br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;移动（重命名）：<strong>mv</strong></p>
+<h4>2、文件<br></h4>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;创建空文件：<strong>touch</strong><br></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;</strong>添加内容到指定文件：<strong>echo 内容 &gt; 文件名</strong> &nbsp; 或者 &nbsp; &nbsp;<strong>echo 内容 &gt;&gt; 文件名</strong> （前者是覆盖，后者是追加）<strong><br></strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;修改内容：最基础的是&nbsp;<strong>vi</strong>，vi 基础按键：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;① 光标：<strong>k、j、h、l</strong> &nbsp;对应上、下、左、右<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>nG</strong> &nbsp;跳转到指定的 n 行</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Ctrl + G</strong> 光标所在的位置的行数和列数报告<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>w 、 b</strong> &nbsp;使光标向前或向后跳过一个单词</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;② 编辑：<strong>i、a、r</strong> &nbsp;在光标的前、后、以及所在处插入字符<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<strong>cw、dw</strong> 改变/删除光标所在处的单词<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>&nbsp;x、d$、dd</strong> &nbsp;删除一个字符、删除光标所在处到行尾、删除整行<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>u</strong> &nbsp;回复前一步的操作<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;③ 查找：<strong>/string、？string</strong> &nbsp;从光标所在处向后或向前查找相应的字符串<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;④ 复制：<strong>yy、p</strong> &nbsp; 拷贝一行到剪贴板、取出剪贴板中的内容<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⑤ 同时编辑两个文件：<strong>vi file1 file2</strong><br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 两个文件之间切换： &nbsp; <strong>&nbsp;:n</strong><br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⑥ 保存：<strong>ZZ</strong><strong>、:x</strong> &nbsp;保存并退出<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⑦ 退出：<strong>:q、:q!</strong> &nbsp;退出、不保存直接退出</p>
+<h4>3、打包压缩</h4>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;常用语法： tar 命令集 文件与目录<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;命令集：<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>-c</strong> 归档文件（压缩，create）<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>-x</strong>&nbsp;解压缩文件（c 和 x 只能存一）<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>-z</strong> gzip 压缩文件<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>-J</strong> bzip2 压缩文件<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>-v</strong> 显示压缩或解压缩的过长<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>-f</strong> 使用档名（f 之后不能加参数，如-zcvfp 就是错误的）<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>-t</strong> 查看压缩包里面的文件<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;经典案例：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 压缩：<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;① 将abc 只打包不压缩 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <strong>tar -cvf</strong> /home/abc<strong>.tar</strong> /home/abc</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;② 将abc 打包并使用gzip压缩 &nbsp;&nbsp;<strong><span style="font-size: 14px;">tar -zcvf</span></strong><span style="font-size: 14px;"> /home/abc<strong>.tar.gz</strong> /home/abc</span></p>
+<p><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;③<span style="font-size: 14px;">&nbsp;将abc 打包并使用bzip2压缩 &nbsp;&nbsp;</span><strong><span style="font-size: 14px;">tar -jcvf</span></strong><span style="font-size: 14px;"> /home/abc<strong>.tar.bz2</strong> /home/abc</span></span></p>
+<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 解压缩：把上述命令中的 c 替换成 x 就行<br></span></span></p>
+<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 查看压缩包内部：注意要根据压缩形式，即如果是gzip 压缩的，就要用 tar -ztvf /home/abc.tar.gz<br></span></span></p>
+<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 华彩：如果只想解压出abc 文件内部的一个demo 文件夹，此时要使用&nbsp;<strong style="font-size: 14px; white-space: normal;">tar -zcvf</strong><span style="font-size: 14px;">&nbsp;/home/abc<strong>.tar.gz <span style="font-size: 14px; color: #FF0000;">abc/demo</span></strong>&nbsp;/home/abc ，即在tar 包后面指定内部文件名</span></span></span></p>
+<h2>三、各种删除<br></h2>
+
+<h4>1、文件和文件夹<br></h4>
+
+<p>&nbsp;&nbsp;&nbsp; 删除空目录：<strong>rmdir</strong><br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;删除：<strong>rm</strong><br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;可选参数： <strong>-r</strong> 递归删除<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<strong>-f</strong> 强制删除<br></p>
+<h2>四、各种运行<br></h2>
+
+<h4>1、持续运行 jar 包，场景就是 spring-boot 项目打成了 jar 包，放 Linux 直接运行</h4>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #FF0000;"><strong>nohup java -jar name &amp;</strong></span> （nohup 代表不挂断地运行，场景就是关掉SSH客户端之后程序继续运行，&amp; 代表让程序自动运行，那么自然就是 jar 的名字啦，如：demo.jar）<br></p>
+<h4>2、关机、重启</h4>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;关机：halt</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;重启：reboot</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;关机重启：shutdown -r</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;关机不重启：shutdown -h</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;立即关机： shutdown now</p>
+<h4>3、上传下载</h4>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;有很多方式，介绍一下 rz 、sz 配合 SSH 来实现上传和下载&nbsp;<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;上传 <strong>rz</strong>，<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;下载 <strong>sz</strong>，<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;前提，需要安装：yum -y install lrzsz</p>
+<p><br></p>
+<h2>五、基础操作</h2>
+
+<h4>1、防火墙操作</h4>
+
+<p>&nbsp; &nbsp; ① 查看已添加的iptables规则： iptables -L -n&nbsp; (service iptables status)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 将所有iptables以序号标记显示： iptables -L -n –line-numbers</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;② 开端口：iptables -A INPUT -p tcp –dport 80 -j ACCEPT</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;快速：<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;span style=”color: #FF0000; font-family: “PingFang SC”, “Microsoft YaHei”, SimHei, Arial, SimSun; background-color: #FFFFFF;”&gt;/sbin/iptables -I INPUT -p tcp –dport 80 -j ACCEPT</p>
+<p>&lt;span style=”color: #FF0000; font-family: “PingFang SC”, “Microsoft YaHei”, SimHei, Arial, SimSun; background-color: #FFFFFF;”&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;span style=”color: #FF0000; font-family: “PingFang SC”, “Microsoft YaHei”, SimHei, Arial, SimSun; background-color: #FFFFFF;”&gt;/etc/rc.d/init.d/iptables save</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;③ 配置文件：vim /etc/sysconfig/iptables</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;④ 基本操作</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;service&nbsp;iptables&nbsp;stop&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;service&nbsp;iptables&nbsp;start&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;service&nbsp;iptables&nbsp;restart&nbsp;&nbsp;</p>
+<h4>2、yum 源更换镜像</h4>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;① 备份：# mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;② 下载，（centos6或者7，自行更替）<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;163：# wget -O /etc/yum.repos.d/CentOS-Base.repo <a href="http://mirrors.163.com/.help/CentOS6-Base-163.repo" target="_blank" rel="noopener">http://mirrors.163.com/.help/CentOS6-Base-163.repo</a> </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;阿里：# wget -O /etc/yum.repos.d/CentOS-Base.repo <a href="http://mirrors.aliyun.com/repo/Centos-6.repo" target="_blank" rel="noopener">http://mirrors.aliyun.com/repo/Centos-6.repo</a></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;③ 更新yum配置，生成缓存<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# yum clean all</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# yum makecache<br></p>
+<h4>3、调整时间</h4>
+
+<p>&nbsp; &nbsp; ① 联网同步</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;在此只介绍如何同步系统时间和 NTP 时间（网络时间协议）。<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;ntpdate pool.ntp.org</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;如果没有安装话需要先安装：<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;centos：yum install ntp</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;ubuntu：apt-get update<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;apt-get install ntp</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;② 手动修改</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;命令：date [指令] [参数]</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#设定日期20180330 时刻归零00:00:00&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date –s “20180330”&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#设定时刻20:32:59 日期保持不变&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date –s “20:32:59”&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#以下六种均可同时设定日期和时刻&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date –s “20180330 20:32:59”&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date –s “20:32:59 20180330”&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date –s “2018/03/30 20:32:59”&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date –s “20:32:59 2018/03/30”&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date –s “20:32:59 03/30/2018”&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date –s “03/30/2018 20:32:59”</p>
+<p>&nbsp; &nbsp; <br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;③ 时区调整<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查看当前时区：date -R<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;手动设置时区：tzselect</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;然后跟着一步一步设置，然后再替换系统时区文件或者创建软连接<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;demo：cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
+<p><br></p>
+<p><br></p>
+<h2>六、环境配置</h2>
+
+<h4>1、jdk<br></h4>
+
+<p>&nbsp; &nbsp; ① 删除默认安装的 openjdk<br></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; 查看包含 java 的程序：rpm -qa | grep java</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="font-size: 14px;">rpm -qa | grep gcj</span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="font-size: 14px;">rpm -qa | grep jdk</span></span></p>
+<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; 卸载对应程序：&lt;span style=”color: #454545; font-family: “PingFang SC”, “Microsoft YaHei”, SimHei, Arial, SimSun; background-color: #FFFFFF;”&gt;rpm&nbsp;-e –nodeps xxx</span></span></p>
+<p><span style="font-size: 14px;"><span style="font-size: 14px;">&lt;span style=”color: #454545; font-family: “PingFang SC”, “Microsoft YaHei”, SimHei, Arial, SimSun; background-color: #FFFFFF;”&gt;&nbsp; &nbsp; ②安装 jdk（本人喜欢 tar 包安装）：<br></span></span></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; 解压：tar -zxvf xxx<br></p>
+<p>&nbsp; &nbsp; ③配置环境变量：<br></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; 修改配置文件：vim /etc/profile<br></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; 在里面添加环境：</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; # jdk</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; export JAVA_HOME=/usr/java/jdk1.8.0_161</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; export PATH=$JAVA_HOME/bin:$PATH</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;使配置文件生效：source /etc/profile</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<h2>七、权限相关</h2>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;① SELinux</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 14px;">策略有三种：</span>① enforcing 强制模式，② permissive 允许模式，③ disabled 禁用模式</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;配置文件：/etc/sysconfig/selinux</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查看和临时修改：getenforce 和 setenforce 0&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;说明，0：permissive，1：enforcing<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;② 调整文件所属用户和组<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chown username:usergroup /path/to/file</p>
+<p>&nbsp; &nbsp; ③ 权限查看<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ll 命令即可查看，</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;权限有， r：读，w：写，x：操作<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;从左至右依次为：所属人权限，所属组权限，其余人所有人权限<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;例：drwxr-xr-x</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;④ 修改权限<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; u：user，g：group，o：otner，a：all</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+：增加，-：取消<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;例，给予所有人w权限：chmod a+w /path/to/file</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r：4，w：2，x：1<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;例，给予文件所有人所有权限：<span style="font-size: 14px;">chmod 777 /path/to/file</span></p>
+<p><br></p>
+<p><br></p>
+<h2>八、其它命令</h2>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;① scp 命令文件上传下载</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;复制本地文件到远程服务器：scp local_file remote_username@remote_ip:remote_folder；</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;例如：scp /home/jet/file.md <a href="mailto:jet@192.168.1.1" target="_blank" rel="noopener">jet@192.168.1.1</a>:/home/jet/test.md</p>
+<p><br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;复制远程文件到本地：scp remote_username@remote_ip:remote_folder local_file</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;例如：scp <a href="mailto:jet@192.168.1.1" target="_blank" rel="noopener">jet@192.168.1.1</a>:/home/jet/test.md /home/jet/file.md</p>
+<p>&nbsp; &nbsp; ② 查看公网ip<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curl ipinfo.io</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;③ 查域名指向的服务器ip<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nslookup jetchen.cn</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;④ 查看有没有安装某服务<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;which vsftpd</p>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br></p>
+<p><br></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+	  
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束 <i class="fa fa-fighter-jet"></i> 感谢阅读 ------</div>
+    
+</div>
+	  
+	</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/工具/" rel="tag"># 工具</a>
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/命令/" rel="tag"># 命令</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/spring-boot-project-create/" rel="next" title="IDEA快速搭建SpringBoot项目">
+                <i class="fa fa-chevron-left"></i> IDEA快速搭建SpringBoot项目
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/linux-redis-install/" rel="prev" title="Linux下安装Redis">
+                Linux下安装Redis <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jet Chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">157</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/goldenJet" title="GitHub &rarr; https://github.com/goldenJet" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/goldenJ51015801" title="Twitter &rarr; https://twitter.com/goldenJ51015801" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">主要针对 Centos</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number"></span> <span class="nav-text">一、各种查看</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">1、查看目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">2、查看文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">3、查看进程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">4、查看安装 nginx 所生成的文件 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">5.</span> <span class="nav-text">5、查看主机等基础信息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number"></span> <span class="nav-text">二、各种修改</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">1、文件夹</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">2、文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">3、打包压缩</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number"></span> <span class="nav-text">三、各种删除</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">1、文件和文件夹</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number"></span> <span class="nav-text">四、各种运行</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">1、持续运行 jar 包，场景就是 spring-boot 项目打成了 jar 包，放 Linux 直接运行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">2、关机、重启</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">3、上传下载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number"></span> <span class="nav-text">五、基础操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">1、防火墙操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">2、yum 源更换镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">3、调整时间</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number"></span> <span class="nav-text">六、环境配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">1、jdk</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number"></span> <span class="nav-text">七、权限相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number"></span> <span class="nav-text">八、其它命令</span></a></li></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jet Chen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+<div class="BbeiAn-info">
+    <a target="_blank" href="http://www.miitbeian.gov.cn/" rel="nofollow">浙ICP备17005575号-1</a> <!--a标签中增加nofollow属性，避免爬虫出站。-->| 
+	<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802009043" style="text-decoration:none;padding-left:17px;background:url(/images/icon-police.png) no-repeat left center" rel="nofollow">浙公网安备 33010802009043号</a>	  <!--这里将图标作为了背景，以使得能和后面的文字在同一行-->
+</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

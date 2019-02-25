@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="接入层的技术演变很有意思，这篇文章就对自己的小小见解做个记录。">
+<meta name="keywords" content="DNS轮询,F5,keepalive,nginx,反向代理,负载均衡,高可用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="接入层进化史的一些思考">
+<meta property="og:url" content="https://blog-test.jetchen.cn/access-layer-architecture-evolution/index.html">
+<meta property="og:site_name" content="嘎里三分熟">
+<meta property="og:description" content="接入层的技术演变很有意思，这篇文章就对自己的小小见解做个记录。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/01/server01.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/01/server02.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/01/server03.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/01/server04.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/01/server05.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/01/server06.png">
+<meta property="og:updated_time" content="2019-02-25T15:07:50.777Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="接入层进化史的一些思考">
+<meta name="twitter:description" content="接入层的技术演变很有意思，这篇文章就对自己的小小见解做个记录。">
+<meta name="twitter:image" content="http://blogsource.chenkaikai.com/uploads/2019/01/server01.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://blog-test.jetchen.cn/access-layer-architecture-evolution/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>接入层进化史的一些思考 | 嘎里三分熟</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">嘎里三分熟</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about-me/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog-test.jetchen.cn/access-layer-architecture-evolution/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jet Chen">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嘎里三分熟">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">接入层进化史的一些思考
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-01-02 22:25:17" itemprop="dateCreated datePublished" datetime="2019-01-02T22:25:17+08:00">2019-01-02</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-02-25 23:07:50" itemprop="dateModified" datetime="2019-02-25T23:07:50+08:00">2019-02-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/技术分析集/" itemprop="url" rel="index"><span itemprop="name">技术分析集</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><center>接入层的技术演变很有意思，这篇文章就对自己的小小见解做个记录。</center><br><a id="more"></a></p>
+<!-- wp:paragraph -->
+<p></p><p>2019年的第一天，写点啥呢？其实满脑子的idea，那就花一年时间慢慢写吧，第一篇就先阐述下自己对接入层架构演变的一些个人思考吧。</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:heading -->
+<p></p><h2>一、演进过程的思考</h2><br><!-- /wp:heading --><p></p>
+<!-- wp:heading {"level":3} -->
+<p></p><h3>1、单体架构</h3><br><!-- /wp:heading --><p></p>
+<!-- wp:image {"id":252,"width":350,"height":195} -->
+<p><figure class="wp-block-image is-resized"><img src="http://blogsource.chenkaikai.com/uploads/2019/01/server01.png" alt class="wp-image-252" width="350" height="195"></figure><br><!-- /wp:image --></p>
+<!-- wp:paragraph -->
+<p></p><p><strong>过程</strong>：<br>        1）浏览器的请求通过 DNS Server 解析到指定的 IP 地址<br>        2）浏览器通过 IP 地址访问 Web Server</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:paragraph -->
+<p></p><p><strong>缺点</strong>：<br>1）当到达 Web Server 的性能瓶颈时，无法扩容<br>2）当 Web Server 宕机后整个系统就挂了</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:heading {"level":3} -->
+<p></p><h3>2、DNS 轮询</h3><br><!-- /wp:heading --><p></p>
+<!-- wp:image {"id":253,"width":446,"height":224} -->
+<p><figure class="wp-block-image is-resized"><img src="http://blogsource.chenkaikai.com/uploads/2019/01/server02.png" alt class="wp-image-253" width="446" height="224"></figure><br><!-- /wp:image --></p>
+<!-- wp:paragraph -->
+<p></p><p><strong>说明</strong>：<br>为了解决 Web Server 的性能瓶颈问题，于是进行了横向扩展，于是最简单的 DNS 轮询便派上了用场。</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:paragraph -->
+<p></p><p><strong>过程</strong>：<br>1）浏览器的每次请求通过 DNS Server 会解析到不同的 IP 地址<br>2）浏览器通过不同的 IP 地址访问不同的 Web Server <br></p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:paragraph -->
+<p></p><p><strong>优点</strong>：<br>1）简单并且零成本，只需要增加 DNS Server 的 IP 解析地址即可<br>2）解决了 Web Server 性能瓶颈的问题</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:paragraph -->
+<p></p><p><strong>缺点</strong>：<br>1）暴露了太多的外网 IP<br>2）DNS 的解析需要一定的生效时间<br>3）如果有一台 Web Server 宕了，但是此时的 DNS Server 并不知道，所以会对部分功能模块产生影响</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:heading {"level":3} -->
+<p></p><h3>3、反向代理</h3><br><!-- /wp:heading --><p></p>
+<!-- wp:image {"id":254,"width":467,"height":306} -->
+<p><figure class="wp-block-image is-resized"><img src="http://blogsource.chenkaikai.com/uploads/2019/01/server03.png" alt class="wp-image-254" width="467" height="306"></figure><br><!-- /wp:image --></p>
+<!-- wp:paragraph -->
+<p></p><p><strong>说明</strong>：<br>中间加了一层反向代理层，以 Nginx 为例，对整个系统性能的提升是很明显的。</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:paragraph -->
+<p></p><p><strong>过程</strong>：<br>1） 浏览器的请求通过 DNS Server 解析到指定的 IP 地址 <br>2）该 IP 地址对应的是反向代理层，此时将请求转发到身后的 Web Server 集群中<br></p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:paragraph -->
+<p></p><p><strong>优点</strong>：<br>1）只需要暴露一个外网 IP 地址即可<br>2）如果有一台 Web Server 宕了，此时 Nginx 就不会将请求转发给这台服务器<br>3）Web Server 扩展变得更加简单</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:paragraph -->
+<p></p><p><strong>缺点</strong>：<br>1）Nginx 变成了单点，如果出故障，则整个服务变得不可用<br>2）因为多了一个请求转发的过程，请求时间略微增大</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:heading {"level":3} -->
+<p></p><h3>4、keepalive</h3><br><!-- /wp:heading --><p></p>
+<!-- wp:image {"id":255,"width":467,"height":398} -->
+<p><figure class="wp-block-image is-resized"><img src="http://blogsource.chenkaikai.com/uploads/2019/01/server04.png" alt class="wp-image-255" width="467" height="398"></figure><br><!-- /wp:image --></p>
+<!-- wp:paragraph -->
+<p></p><p><strong>说明</strong>：<br>对反向代理层进行改造，新部署一台 Nginx 服务，并使用 keepalive 技术提供相同的虚拟 IP (VIP)，此时保障了 Nginx 的高可用。</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:paragraph -->
+<p></p><p><strong>优点</strong>：<br>1）增加了 Nginx  的高可用性</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:paragraph -->
+<p></p><p><strong>缺点</strong>：<br>1）其实 Nginx 此时还是单点使用，资源占用率只有 50%，存在资源浪费的现象</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:heading {"level":3} -->
+<p></p><h3>5、Lvs/F5</h3><br><!-- /wp:heading --><p></p>
+<!-- wp:image {"id":256,"width":467,"height":491} -->
+<p><figure class="wp-block-image is-resized"><img src="http://blogsource.chenkaikai.com/uploads/2019/01/server05.png" alt class="wp-image-256" width="467" height="491"></figure><br><!-- /wp:image --></p>
+<!-- wp:paragraph -->
+<p></p><p><strong>说明</strong>：<br>这种方法其实并不是解决 Nginx 的单点问题的，而是解决 Nginx 的性能问题的，因为 Nginx 只是软件层面的反向代理，而使用 Lvs 技术，或者 F5，它是实施在硬件层面的，性能相较于软件层面的 Nginx，抗压能力又上了一个新的台阶。并且几乎已经满足了所有公司的需求。</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:paragraph -->
+<p></p><p><strong>缺点</strong>：<br>1）成本变高，F5 需要进行购买<br>2）比如百度、Google 等日PV超级大的系统，瓶颈还是会出现在反向代理层</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:heading {"level":3} -->
+<p></p><h3>6、 Lvs/F5 + DNS 轮询</h3><br><!-- /wp:heading --><p></p>
+<!-- wp:image {"id":257,"width":721,"height":480} -->
+<p><figure class="wp-block-image is-resized"><img src="http://blogsource.chenkaikai.com/uploads/2019/01/server06.png" alt class="wp-image-257" width="721" height="480"></figure><br><!-- /wp:image --></p>
+<!-- wp:paragraph -->
+<p></p><p><strong>说明</strong>：<br>其实不管是 Nginx 也好，F5 也好，最终都是有性能瓶颈的，最好的解决办法仍然是水平扩展，一台不行我上两台不就好了，两台不行我就上三台，所以最终的方案还是使用 DNS 轮询来解决。</p><br><!-- /wp:paragraph --><p></p>
+<!-- wp:heading -->
+<p></p><h2>二、总结</h2><br><!-- /wp:heading --><p></p>
+<!-- wp:paragraph -->
+<p></p><p>1、谈一谈反向代理层：方向代理层是服务端的统一入口，屏蔽了服务端的所有细节，性能很重要<br>2、关于负载均衡：负载均衡的算法多种多样，比如 IP 哈希、轮询、增加权重等<br>3、所有所有的一切，都围绕着很重要的一个点：高可用 <br>4、很多时候问题的解决，还是需要使用到最最基本的技术，所有的轮子都是建立在基础之上的 <br>5、技术永远没有最好，只有更高，更新迭代的速度是很快的，所以我们都需要永远保持一颗对新技术的探索的好奇心 </p><br><!-- /wp:paragraph --><p></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+	  
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束 <i class="fa fa-fighter-jet"></i> 感谢阅读 ------</div>
+    
+</div>
+	  
+	</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DNS轮询/" rel="tag"># DNS轮询</a>
+          
+            <a href="/tags/F5/" rel="tag"># F5</a>
+          
+            <a href="/tags/keepalive/" rel="tag"># keepalive</a>
+          
+            <a href="/tags/nginx/" rel="tag"># nginx</a>
+          
+            <a href="/tags/反向代理/" rel="tag"># 反向代理</a>
+          
+            <a href="/tags/负载均衡/" rel="tag"># 负载均衡</a>
+          
+            <a href="/tags/高可用/" rel="tag"># 高可用</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/postman-pre-request-scripts/" rel="next" title="Postman Pre-request 使用">
+                <i class="fa fa-chevron-left"></i> Postman Pre-request 使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/animating-url/" rel="prev" title="Animating URL (URL 跑马灯)">
+                Animating URL (URL 跑马灯) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jet Chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">157</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/goldenJet" title="GitHub &rarr; https://github.com/goldenJet" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/goldenJ51015801" title="Twitter &rarr; https://twitter.com/goldenJ51015801" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">一、演进过程的思考</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.1.</span> <span class="nav-text">1、单体架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.2.</span> <span class="nav-text">2、DNS 轮询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.3.</span> <span class="nav-text">3、反向代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.4.</span> <span class="nav-text">4、keepalive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.5.</span> <span class="nav-text">5、Lvs/F5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">1.6.</span> <span class="nav-text">6、 Lvs/F5 + DNS 轮询</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">二、总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jet Chen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+<div class="BbeiAn-info">
+    <a target="_blank" href="http://www.miitbeian.gov.cn/" rel="nofollow">浙ICP备17005575号-1</a> <!--a标签中增加nofollow属性，避免爬虫出站。-->| 
+	<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802009043" style="text-decoration:none;padding-left:17px;background:url(/images/icon-police.png) no-repeat left center" rel="nofollow">浙公网安备 33010802009043号</a>	  <!--这里将图标作为了背景，以使得能和后面的文字在同一行-->
+</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

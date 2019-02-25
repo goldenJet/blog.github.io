@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、背景咱先小看一下下面这幅对比图，两边都是简单的 javabean，相较于右边常规地写了一大堆 get 和 set 方法，左边的 javabean 中并没有看到任何 get 和 set 方法却能照常调用却无异常，why？">
+<meta name="keywords" content="lombok,代码简洁之道">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java鬼使神迹——Lombok">
+<meta property="og:url" content="https://blog-test.jetchen.cn/lombok/index.html">
+<meta property="og:site_name" content="嘎里三分熟">
+<meta property="og:description" content="一、背景咱先小看一下下面这幅对比图，两边都是简单的 javabean，相较于右边常规地写了一大堆 get 和 set 方法，左边的 javabean 中并没有看到任何 get 和 set 方法却能照常调用却无异常，why？">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/image/20170331/1490953451110645.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/image/20170331/1490955603153768.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/image/20170331/1490956951206621.jpg">
+<meta property="og:updated_time" content="2019-02-25T15:27:15.144Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java鬼使神迹——Lombok">
+<meta name="twitter:description" content="一、背景咱先小看一下下面这幅对比图，两边都是简单的 javabean，相较于右边常规地写了一大堆 get 和 set 方法，左边的 javabean 中并没有看到任何 get 和 set 方法却能照常调用却无异常，why？">
+<meta name="twitter:image" content="http://blogsource.chenkaikai.com/uploads/image/20170331/1490953451110645.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://blog-test.jetchen.cn/lombok/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java鬼使神迹——Lombok | 嘎里三分熟</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">嘎里三分熟</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about-me/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog-test.jetchen.cn/lombok/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jet Chen">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嘎里三分熟">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java鬼使神迹——Lombok
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-03-31 18:48:31" itemprop="dateCreated datePublished" datetime="2017-03-31T18:48:31+08:00">2017-03-31</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-02-25 23:27:15" itemprop="dateModified" datetime="2019-02-25T23:27:15+08:00">2019-02-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java工具/" itemprop="url" rel="index"><span itemprop="name">Java工具</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p></p><h2>一、背景<br></h2><p>咱先小看一下下面这幅对比图，两边都是简单的 javabean，相较于右边常规地<span style="font-size: 14px;">写了一大堆 get 和 set 方法，</span>左边的 javabean 中并没有看到任何 get 和 set 方法却能照常调用却无异常，why？<br></p><p><img src="http://blogsource.chenkaikai.com/uploads/image/20170331/1490953451110645.png" alt="1490953451110645.png"></p><br><a id="more"></a><p></p>
+<p></p><h2>二、Lombok 简介</h2><p>&lt;span style=”color: #333333; font-family: “microsoft yahei”; font-size: 14px; background-color: #FFFFFF;”&gt;官方地址：&lt;a href=”<a href="https://projectlombok.org/&quot;" target="_blank" rel="noopener">https://projectlombok.org/&quot;</a> style=”color: rgb(51, 102, 153); text-decoration: none; box-sizing: border-box; font-family: “microsoft yahei”; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);”&gt;<a href="https://projectlombok.org/" target="_blank" rel="noopener">https://projectlombok.org/</a></p><p>&lt;span style=”color: #333333; font-family: “microsoft yahei”; font-size: 14px; background-color: #FFFFFF;”&gt;github地址：&lt;a href=”<a href="https://github.com/rzwitserloot/lombok&quot;" target="_blank" rel="noopener">https://github.com/rzwitserloot/lombok&quot;</a> style=”color: rgb(51, 102, 153); text-decoration: none; box-sizing: border-box; font-family: “microsoft yahei”; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);”&gt;<a href="https://github.com/rzwitserloot/lombok" target="_blank" rel="noopener">https://github.com/rzwitserloot/lombok</a></p><p>&lt;span style=”color: #333333; font-family: “microsoft yahei”; font-size: 14px; background-color: #FFFFFF;”&gt;Lombok是一个很灵巧的工具，只要使用相对应的注解，它变可以帮助我们简化消除一些必须有但是明显很臃肿的 Java 代码，比如 javabean 中很冗长的 get 和 set 方法。&nbsp;</p><p>&lt;span style=”color: #333333; font-family: “microsoft yahei”; font-size: 14px; background-color: #FFFFFF;”&gt;如下图中，我们仅仅添加了一个 @Data 注解，查看左边的构造，发现已经帮我们自动添加了构造、 get、set、equals、toString 等方法。</p><p>&lt;span style=”color: #333333; font-family: “microsoft yahei”; font-size: 14px; background-color: #FFFFFF;”&gt;<img src="http://blogsource.chenkaikai.com/uploads/image/20170331/1490955603153768.png" title="1490955603153768.png" alt="lombok_structure.png"></p><h2>三、Lombok使用</h2><p>首先一点，我们需要在我们的 idea 中安装相应的插件，比如使用 Intellij IDEA，只需要去插件库里面搜索 Lombok Plugin 即可。</p><p>其次，项目中需要导入 jar 包，若使用 maven 构建项目，则只需在 pom 中添加如下代码：</p><code>`</code><p></p>
+<p><dependency><br>&nbsp;&nbsp;<groupid>org.projectlombok</groupid><br>&nbsp;&nbsp;<artifactid>lombok</artifactid><br>&nbsp;&nbsp;<version>1.16.10</version><br></dependency><code>`</code></p><p>接下来就可以大展身手了，上面提到，我们只需要进行简单的注解即可，那么下面就来介绍下各种常用注解吧（标红的为最常用的）：<br></p><p>&lt;span style=”color: #2F2F2F; font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #F7F7F7;”&gt;val : 最终局部变量<br>&lt;span style=”color: #2F2F2F; font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #F7F7F7;”&gt;@NonNull : 让你不在担忧并且爱上NullPointerException<br>&lt;span style=”color: #2F2F2F; font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #F7F7F7;”&gt;@CleanUp : 自动资源管理：不用再在finally中添加资源的close方法<br>&lt;span style=”color: #2F2F2F; font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #F7F7F7;”&gt;@Setter/@Getter : 自动生成set和get方法<br>&lt;span style=”color: #2F2F2F; font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #F7F7F7;”&gt;@ToString : 自动生成toString方法<br>&lt;span style=”color: #2F2F2F; font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #F7F7F7;”&gt;@EqualsAndHashcode : 从对象的字段中生成hashCode和equals的实现<br>&lt;span style=”color: #2F2F2F; font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #F7F7F7;”&gt;@NoArgsConstructor/@RequiredArgsConstructor/@AllArgsConstructor&nbsp;自动生成构造方法<br>&lt;span style=”font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #F7F7F7; color: #FF0000;”&gt;@&lt;span style=”color: #2F2F2F; font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #F7F7F7;”&gt;&lt;span style=”font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #F7F7F7; color: #FF0000;”&gt;Data : 自动生成set/get方法，toString方法，equals方法，hashCode方法，不带参数的构造方法<br>&lt;span style=”color: #2F2F2F; font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #F7F7F7;”&gt;@Value : 用于注解final类<br>&lt;span style=”color: #2F2F2F; font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #F7F7F7;”&gt;@Builder : 产生复杂的构建器api类<br>&lt;span style=”color: #2F2F2F; font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #F7F7F7;”&gt;@SneakyThrows : 异常处理（谨慎使用）<br>&lt;span style=”color: #2F2F2F; font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #F7F7F7;”&gt;@Synchronized : 同步方法安全的转化<br>&lt;span style=”color: #2F2F2F; font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #F7F7F7;”&gt;@Getter(lazy=true) :<br>&lt;span style=”font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #F7F7F7; color: #FF0000;”&gt;@Log&lt;span style=”color: #2F2F2F; font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #F7F7F7;”&gt; : 支持各种logger对象，使用时用对应的注解，如：@Log4j</p><p>附上官方文档（注解说明）地址&lt;span style=”font-size: 14px; color: #333333; font-family: “microsoft yahei”; background-color: #FFFFFF;”&gt;：&lt;a href=”<a href="https://projectlombok.org/features/index.html&quot;" target="_blank" rel="noopener">https://projectlombok.org/features/index.html&quot;</a> style=”font-size: 14px; white-space: normal; color: rgb(51, 102, 153); text-decoration: none; box-sizing: border-box; font-family: “microsoft yahei”; background-color: rgb(255, 255, 255);”&gt;<a href="https://projectlombok.org/features/index.html" target="_blank" rel="noopener">https://projectlombok.org/features/index.html</a></p><h2>四、原理说明<br></h2><p>&lt;span style=”color: #333333; font-family: “microsoft yahei”; font-size: 14px; background-color: #FFFFFF;”&gt;其实我们都很好奇，为什么只需要加入一些简单的注解，变会自动实现这么多强大的功能。</p><p>&lt;span style=”color: #333333; font-family: “microsoft yahei”; font-size: 14px; background-color: #FFFFFF;”&gt;自从 Java 6 起，javac就支持“JSR 269 Pluggable Annotation Processing API”规范，只要程序实现了该 API ，就能在 javac 运行的时候得到调用。&nbsp;<br>举例来说，现在有一个实现了” JSR 269 API “的程序A,那么使用javac编译源码的时候具体流程如下：&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;1) javac 对源代码进行分析，生成一棵抽象语法树 (AST)&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;2) 运行过程中调用实现了” JSR 269 API “的A程序&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;3) 此时 A 程序就可以完成它自己的逻辑，包括修改第一步骤得到的抽象语法树 (AST)&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;4) javac 使用修改后的抽象语法树 (AST) 生成字节码文件&nbsp;<br>详细的流程图如下：&nbsp;<br>&nbsp;<img src="http://blogsource.chenkaikai.com/uploads/image/20170331/1490956951206621.jpg" title="1490956951206621.jpg" alt="抽象语法树(AST).jpg"></p><p>lombok 本质上就是这样的一个实现了”JSR 269 API”的程序。在使用 javac 的过程中，它产生作用的具体流程如下：<br>&nbsp;&nbsp;&nbsp;&nbsp;1) javac 对源代码进行分析，生成一棵抽象语法树(AST)&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;2) 运行过程中调用实现了”JSR 269 API”的 lombok 程序&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;3) 此时 lombok 就对第一步骤得到的 AST 进行处理，找到 @Data 注解所在类对应的语法树(AST)，然后修改该语法树(AST)，增加 getter 和 setter 方法定义的相应树节点&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;4) javac 使用修改后的抽象语法树(AST)生成字节码文件&nbsp;</p><p><br></p><h2>五、罪恶之源</h2><p>诚然，lombok 给我们带来了莫大的便捷，但是同时也是对源代码文件的可读性和完整性的大打折扣，并且降低了对源代码阅读的舒适性。</p><p><br></p><p><br></p><p><br></p><p></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+	  
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束 <i class="fa fa-fighter-jet"></i> 感谢阅读 ------</div>
+    
+</div>
+	  
+	</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/lombok/" rel="tag"># lombok</a>
+          
+            <a href="/tags/代码简洁之道/" rel="tag"># 代码简洁之道</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/no-need-to-restart-service/" rel="next" title="使用 thymeleaf 时不重启服务修改 html">
+                <i class="fa fa-chevron-left"></i> 使用 thymeleaf 时不重启服务修改 html
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/bootstrap-datetimepicker/" rel="prev" title="BootStrap使用之时间控件（1）">
+                BootStrap使用之时间控件（1） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jet Chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">157</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/goldenJet" title="GitHub &rarr; https://github.com/goldenJet" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/goldenJ51015801" title="Twitter &rarr; https://twitter.com/goldenJ51015801" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">一、背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">二、Lombok 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">三、Lombok使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">四、原理说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">5.</span> <span class="nav-text">五、罪恶之源</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jet Chen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+<div class="BbeiAn-info">
+    <a target="_blank" href="http://www.miitbeian.gov.cn/" rel="nofollow">浙ICP备17005575号-1</a> <!--a标签中增加nofollow属性，避免爬虫出站。-->| 
+	<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802009043" style="text-decoration:none;padding-left:17px;background:url(/images/icon-police.png) no-repeat left center" rel="nofollow">浙公网安备 33010802009043号</a>	  <!--这里将图标作为了背景，以使得能和后面的文字在同一行-->
+</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

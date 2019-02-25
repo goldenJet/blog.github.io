@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本文介绍另一款字符串匹配算法，BM算法，此种算法的优化点在于，pattern 的往后位移量，更大步，而且，原文越大，该算法的优势越明显，因为 BM 算法的瓶颈在于对 pattern 的初始化。">
+<meta name="keywords" content="java,算法,字符串匹配,BM,坏字符,好后缀">
+<meta property="og:type" content="article">
+<meta property="og:title" content="字符串匹配算法（二）BM">
+<meta property="og:url" content="https://blog-test.jetchen.cn/字符串匹配算法（二）bm/index.html">
+<meta property="og:site_name" content="嘎里三分熟">
+<meta property="og:description" content="本文介绍另一款字符串匹配算法，BM算法，此种算法的优化点在于，pattern 的往后位移量，更大步，而且，原文越大，该算法的优势越明显，因为 BM 算法的瓶颈在于对 pattern 的初始化。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/image/20171115/1510731337129807.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/image/20171115/1510736351486118.png">
+<meta property="og:updated_time" content="2019-02-25T15:39:53.623Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="字符串匹配算法（二）BM">
+<meta name="twitter:description" content="本文介绍另一款字符串匹配算法，BM算法，此种算法的优化点在于，pattern 的往后位移量，更大步，而且，原文越大，该算法的优势越明显，因为 BM 算法的瓶颈在于对 pattern 的初始化。">
+<meta name="twitter:image" content="http://blogsource.chenkaikai.com/uploads/image/20171115/1510731337129807.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://blog-test.jetchen.cn/字符串匹配算法（二）bm/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>字符串匹配算法（二）BM | 嘎里三分熟</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">嘎里三分熟</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about-me/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog-test.jetchen.cn/字符串匹配算法（二）bm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jet Chen">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嘎里三分熟">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">字符串匹配算法（二）BM
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-11-18 15:12:42" itemprop="dateCreated datePublished" datetime="2017-11-18T15:12:42+08:00">2017-11-18</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-02-25 23:39:53" itemprop="dateModified" datetime="2019-02-25T23:39:53+08:00">2019-02-25</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><center>本文介绍另一款字符串匹配算法，BM算法，此种算法的优化点在于，pattern 的往后位移量，更大步，而且，原文越大，该算法的优势越明显，因为 BM 算法的瓶颈在于对 pattern 的初始化。</center><br><a id="more"></a></p>
+<h2>一、简介<br></h2>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<a href="http://www.jetchen.cn/%e5%ad%97%e7%ac%a6%e4%b8%b2%e5%8c%b9%e9%85%8d%e7%ae%97%e6%b3%95%ef%bc%88%e4%b8%80%ef%bc%89kmp/" target="_blank">上文</a>中我们介绍了一款字符串匹配的算法，此文会介绍另一款更高效的算法，据称会教KMP算法而言，效率提高了3~5倍。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;该算法由 Bob Boyer 和J Strother Moore 共同创建，故称为&nbsp;Boyer-Moore 字符串搜索算法，简称 BM 算法。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;我们在文本文档编辑的时候，常用的搜索功能（Ctrl + F），底层算法其实就是该 BM 算法。<br></p>
+<p><br></p><p></p>
+<h2>二、名词定义</h2>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;以下摘自&nbsp;wikipedia</p>
+<ul class=" list-paddingleft-2" style="list-style-type: disc;"><li>被检索的字符，也就是原文，称为 text，用符号 <strong>T</strong> 表示<p></p></li><li><p>检索的字符串，也就是你需要搜索的字符串，<strong>称为模式串</strong>，也称为 <strong>pattern</strong>，用符号 <strong>P</strong> 表示</p></li><li><p><strong>P </strong>的长度记为 <strong>n</strong></p></li><li><p><strong>T </strong>的长度记为 <strong>m</strong></p></li><li><p>S[i] 为字符串 S 从1开始计数的第 i 个字符</p></li><li><p>S[i..j] 为字符串 S 的一个子串，始于i，终于j</p></li><li><p>S 的前缀定义为 S[1..i]，其中 i 小于S 的长度</p></li><li><p>S 的后缀定义为 S[i..n]，其中n 为 S 的长度</p></li><li><p>k 表示 字符串P 的最后一位在 T 中的位置</p></li><li><p>当发生匹配时，P 在 T 中的位置记为 <strong>T[(k-n+1)..k]</strong></p></li><li><p>坏字符：T 和 P 中不匹配的字符（下文的案例中会详细介绍）</p></li><li><p>好后缀：T 和 P 中相匹配的后缀<span style="font-size: 14px;">（下文的案例中会详细介绍）</span><br></p></li></ul>
+
+<p></p><p><br></p>
+<h2>三、原理简析</h2>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;下面以图示的方式，来简单阐述 BM 算法的匹配步骤。<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;首先，相较于朴素的算法，朴素算法是从 P 的首字符开始匹配，直至出现不一致，然后再将 P 后移一定的位数。而 BM 算法的变通之处主要出现在两点上：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;①<strong>BM 算法从 P 的末字符开始，依次往前进行匹配</strong>，直至出现不一致；</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;②此时 P 需要右移，那么右移多少位呢？该位数由两个子算法共同构成，即<strong>坏字符算法</strong>和<strong>好后缀算法</strong>，两者分别进行计算右移的位数，谁算得的右移位数多，最终 P 右移的位数便会采用。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;其实，坏字符和好后缀计算的右移位数的计算，都是查询相应的表而得到的，而这两张表，就是 BM 的核心，即，该算法需要对 P 进行预处理，从而得出这两张表。<br></p>
+<p><br></p>
+<h2>四、简明图示案例</h2>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BM 算法核心：<strong style="color: rgb(255, 0, 0); font-size: 14px; white-space: normal;">找到一个后缀，让已匹配过的后缀与P中从后往前最近的一个相同的子串对齐。</strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size: 16px;">&nbsp;<strong>案例一</strong>：</span><strong>T </strong>为 <strong>0123456789&nbsp; ， P</strong>为 <strong>MOORE</strong><br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;常规的匹配是先将0和M开始匹配，不一样，然后后移一位，再将1和M进行匹配，依次类推，总共需要匹配10次，或者先进一点，需要匹配6次，<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;而我们的 BM 算法，如果利用坏字符规则，则只需要匹配两次：<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;第一次直接将4和E进行匹配，出现不一致，此时我们需要将P后移，此时的4即为坏字符，那么后移多少位呢？此处根据核心：<span style="color: #000000;"><strong>找到一个后缀，让已匹配过的后缀与P中从后往前最近的一个相同的子串对齐</strong></span>，而此处，由于已匹配过的后缀是4，但是这个4并没有出现在P中，所以将整个P往后移，直至P的首字符M位于4的后面，即将P往后移动5个字符，也就是往后移P的长度个字符。<br></p>
+<p>&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;另外，坏字符移动规则公式为：<strong>后移位数 = 坏字符位数 - 坏字符在P中上次出现的位置</strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;而此处：后移位数 = 5 - 0 = 5，所以后移5位</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;第二次匹配的话，同理。所以，最后仅仅匹配了2次便查找完毕了，效率很高。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上述案例的运行模式可以见下图：<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://blogsource.chenkaikai.com/uploads/image/20171115/1510731337129807.png" title="1510731337129807.png" alt="BM01.png"></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<span style="font-size: 16px;"><strong>案例二</strong></span>：<strong>T</strong>为 <strong>HERE IS A SIMPLE EXAMPLE</strong>&nbsp; &nbsp;， <strong>P</strong>为 <strong>EXAMPLE</strong><br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这个案例取自 BM 算法的创始人之一 Moore 教授自己言传身教的例子。<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;先来说说什么是好后缀以及好后缀的一些移动规则：<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;T 和 P 进行匹配的时候，从P 的尾部开始，匹配出的相同的字符串（包括单个字符）即为好后缀，</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如 ABCDAB 和 BACD，首次匹配时，首字符对齐，从尾开始匹配，发现有相同的字符串 “CD”，此时的好后缀有 “CD”和“D”，<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;知道了好后缀的定义，那么根据好后缀计算而得的右移位数的计算方式呢？ <strong>右移位数 = 好后缀的位置 - 好后缀在模式串P中上一次出现的位置</strong>。<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;此处需要注意三点：<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;① 好后缀的位置，以好后缀的最后一个字符为准，即假设“BACD”的 CD 是好后缀，则好后缀的位置以“D”为准，即4（从1开始计算）；<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;② 如果好后缀在模式串中只出现过一次，比如：假设“BACD”的 CD 是好后缀，而 CD 仅出现了一次，则上一次出现的位置记做 0（即未出现过）；<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;③ 如果好后缀有多个，计算上次出现位置时，此时除了最长的那个好后缀，其余的好后缀上次出现的位置必须是在头部（即起始位置）。比如：假设“DCDBACD”的好后缀为 ACD，同样，好后缀还有 CD，D，总共三个好后缀，我们依次来计算上次出现的位置，“ACD”仅出现一次，为0，当没有其它有效的好后缀的时候，便用这个；“CD”上次出现位置不在头部，不计算；“D”这个字符正好和头部相同，故“D”的上次出现位置为1，所以好后缀在模式串P中上一次出现的位置为1。<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;说完了规则，那么我们正式看案例，见下图：<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://blogsource.chenkaikai.com/uploads/image/20171115/1510736351486118.png" title="1510736351486118.png" alt="BM02.png"></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;原理讲明白了，那么我们就该搞清楚其中最为核心的&nbsp;《坏字符规则表》和《好后缀规则表》 的生成原理了。</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</p>
+<h2>五、代码实现</h2>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">public&amp;nbsp;static&amp;nbsp;void&amp;nbsp;boyerMoore(String&amp;nbsp;pattern,&amp;nbsp;String&amp;nbsp;text)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;int&amp;nbsp;m&amp;nbsp;=&amp;nbsp;pattern.length();</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;int&amp;nbsp;n&amp;nbsp;=&amp;nbsp;text.length();</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Map&lt;String,&amp;nbsp;Integer&gt;&amp;nbsp;bmBc&amp;nbsp;=&amp;nbsp;new&amp;nbsp;HashMap&lt;&gt;();</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;int[]&amp;nbsp;bmGs&amp;nbsp;=&amp;nbsp;new&amp;nbsp;int[m];</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//初始化</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;preBmBc(pattern,&amp;nbsp;m,&amp;nbsp;bmBc);</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;preBmGs(pattern,&amp;nbsp;m,&amp;nbsp;bmGs);</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//开始匹配</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;int&amp;nbsp;j&amp;nbsp;=&amp;nbsp;0;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;int&amp;nbsp;i;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;int&amp;nbsp;count&amp;nbsp;=&amp;nbsp;0;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;while&amp;nbsp;(j&amp;nbsp;&lt;=&amp;nbsp;n&amp;nbsp;-&amp;nbsp;m)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;for&amp;nbsp;(i&amp;nbsp;=&amp;nbsp;m&amp;nbsp;-&amp;nbsp;1;&amp;nbsp;i&amp;nbsp;&gt;=&amp;nbsp;0&amp;nbsp;&amp;&amp;&amp;nbsp;pattern.charAt(i)&amp;nbsp;==&amp;nbsp;text.charAt(i&amp;nbsp;+&amp;nbsp;j);&amp;nbsp;i--)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//用于计数</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;count++;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;if&amp;nbsp;(i&amp;nbsp;&lt;&amp;nbsp;0)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;System.out.println(&quot;one&amp;nbsp;position&amp;nbsp;is:&quot;&amp;nbsp;+&amp;nbsp;j);</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;j&amp;nbsp;+=&amp;nbsp;bmGs[0];</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;&amp;nbsp;else&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;j&amp;nbsp;+=&amp;nbsp;Math.max(bmGs[i],&amp;nbsp;getBmBc(String.valueOf(text.charAt(i&amp;nbsp;+&amp;nbsp;j)),&amp;nbsp;bmBc,&amp;nbsp;m)&amp;nbsp;-&amp;nbsp;m&amp;nbsp;+&amp;nbsp;1&amp;nbsp;+&amp;nbsp;i);</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;System.out.println(&quot;count:&quot;&amp;nbsp;+&amp;nbsp;count);</span><br><span class="line">&#125;</span><br><span class="line">/**</span><br><span class="line">&amp;nbsp;*&amp;nbsp;坏字符初始化</span><br><span class="line">&amp;nbsp;*/</span><br><span class="line">private&amp;nbsp;static&amp;nbsp;void&amp;nbsp;preBmBc(String&amp;nbsp;pattern,&amp;nbsp;int&amp;nbsp;patLength,&amp;nbsp;Map&lt;String,&amp;nbsp;Integer&gt;&amp;nbsp;bmBc)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;System.out.println(&quot;bmbc&amp;nbsp;start&amp;nbsp;process...&quot;);</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;for&amp;nbsp;(int&amp;nbsp;i&amp;nbsp;=&amp;nbsp;patLength&amp;nbsp;-&amp;nbsp;2;&amp;nbsp;i&amp;nbsp;&gt;=&amp;nbsp;0;&amp;nbsp;i--)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;if&amp;nbsp;(!bmBc.containsKey(String.valueOf(pattern.charAt(i))))&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;bmBc.put(String.valueOf(pattern.charAt(i)),&amp;nbsp;patLength&amp;nbsp;-&amp;nbsp;i&amp;nbsp;-&amp;nbsp;1);</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&#125;</span><br><span class="line">/**</span><br><span class="line">&amp;nbsp;*&amp;nbsp;好后缀初始化</span><br><span class="line">&amp;nbsp;*/</span><br><span class="line">private&amp;nbsp;static&amp;nbsp;void&amp;nbsp;preBmGs(String&amp;nbsp;pattern,&amp;nbsp;int&amp;nbsp;patLength,&amp;nbsp;int[]&amp;nbsp;bmGs)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;int&amp;nbsp;i,&amp;nbsp;j;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;int[]&amp;nbsp;suffix&amp;nbsp;=&amp;nbsp;new&amp;nbsp;int[patLength];</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;suffix(pattern,&amp;nbsp;patLength,&amp;nbsp;suffix);</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//模式串中没有子串匹配上好后缀，也找不到一个最大前缀</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;for&amp;nbsp;(i&amp;nbsp;=&amp;nbsp;0;&amp;nbsp;i&amp;nbsp;&lt;&amp;nbsp;patLength;&amp;nbsp;i++)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;bmGs[i]&amp;nbsp;=&amp;nbsp;patLength;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//模式串中没有子串匹配上好后缀，但找到一个最大前缀</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;j&amp;nbsp;=&amp;nbsp;0;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;for&amp;nbsp;(i&amp;nbsp;=&amp;nbsp;patLength&amp;nbsp;-&amp;nbsp;1;&amp;nbsp;i&amp;nbsp;&gt;=&amp;nbsp;0;&amp;nbsp;i--)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;if&amp;nbsp;(suffix[i]&amp;nbsp;==&amp;nbsp;i&amp;nbsp;+&amp;nbsp;1)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;for&amp;nbsp;(;&amp;nbsp;j&amp;nbsp;&lt;&amp;nbsp;patLength&amp;nbsp;-&amp;nbsp;1&amp;nbsp;-&amp;nbsp;i;&amp;nbsp;j++)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;if&amp;nbsp;(bmGs[j]&amp;nbsp;==&amp;nbsp;patLength)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;bmGs[j]&amp;nbsp;=&amp;nbsp;patLength&amp;nbsp;-&amp;nbsp;1&amp;nbsp;-&amp;nbsp;i;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//模式串中有子串匹配上好后缀</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;for&amp;nbsp;(i&amp;nbsp;=&amp;nbsp;0;&amp;nbsp;i&amp;nbsp;&lt;&amp;nbsp;patLength&amp;nbsp;-&amp;nbsp;1;&amp;nbsp;i++)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;bmGs[patLength&amp;nbsp;-&amp;nbsp;1&amp;nbsp;-&amp;nbsp;suffix[i]]&amp;nbsp;=&amp;nbsp;patLength&amp;nbsp;-&amp;nbsp;1&amp;nbsp;-&amp;nbsp;i;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;System.out.print(&quot;bmGs:&quot;);</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;for&amp;nbsp;(i&amp;nbsp;=&amp;nbsp;0;&amp;nbsp;i&amp;nbsp;&lt;&amp;nbsp;patLength;&amp;nbsp;i++)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;System.out.print(bmGs[i]&amp;nbsp;+&amp;nbsp;&quot;,&quot;);</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;System.out.println();</span><br><span class="line">&#125;</span><br><span class="line">private&amp;nbsp;static&amp;nbsp;void&amp;nbsp;suffix(String&amp;nbsp;pattern,&amp;nbsp;int&amp;nbsp;patLength,&amp;nbsp;int[]&amp;nbsp;suffix)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;suffix[patLength&amp;nbsp;-&amp;nbsp;1]&amp;nbsp;=&amp;nbsp;patLength;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;int&amp;nbsp;q;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;for&amp;nbsp;(int&amp;nbsp;i&amp;nbsp;=&amp;nbsp;patLength&amp;nbsp;-&amp;nbsp;2;&amp;nbsp;i&amp;nbsp;&gt;=&amp;nbsp;0;&amp;nbsp;i--)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;q&amp;nbsp;=&amp;nbsp;i;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;while&amp;nbsp;(q&amp;nbsp;&gt;=&amp;nbsp;0&amp;nbsp;&amp;&amp;&amp;nbsp;pattern.charAt(q)&amp;nbsp;==&amp;nbsp;pattern.charAt(patLength&amp;nbsp;-&amp;nbsp;1&amp;nbsp;-&amp;nbsp;i&amp;nbsp;+&amp;nbsp;q))&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;q--;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;suffix[i]&amp;nbsp;=&amp;nbsp;i&amp;nbsp;-&amp;nbsp;q;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;</span><br><span class="line">&#125;</span><br><span class="line">private&amp;nbsp;static&amp;nbsp;int&amp;nbsp;getBmBc(String&amp;nbsp;c,&amp;nbsp;Map&lt;String,&amp;nbsp;Integer&gt;&amp;nbsp;bmBc,&amp;nbsp;int&amp;nbsp;m)&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//如果在规则中则返回相应的值，否则返回pattern的长度</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;return&amp;nbsp;bmBc.getOrDefault(c,&amp;nbsp;m);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br></p>
+<h2>六、资料</h2>
+
+<p>1、源码地址：<a href="https://github.com/goldenJet/JavaUtils/blob/master/com/jet/utils/algorithms/BoyerMoore.java" target="_blank">传送门</a></p>
+<p>2、有一篇文章可以参考，很不错，<a href="http://www.stoimen.com/blog/2012/04/17/computer-algorithms-boyer-moore-string-search-and-matching/" target="_blank">传送门</a></p>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+	  
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束 <i class="fa fa-fighter-jet"></i> 感谢阅读 ------</div>
+    
+</div>
+	  
+	</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/算法/" rel="tag"># 算法</a>
+          
+            <a href="/tags/字符串匹配/" rel="tag"># 字符串匹配</a>
+          
+            <a href="/tags/BM/" rel="tag"># BM</a>
+          
+            <a href="/tags/坏字符/" rel="tag"># 坏字符</a>
+          
+            <a href="/tags/好后缀/" rel="tag"># 好后缀</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/字符串匹配算法（一）kmp/" rel="next" title="字符串匹配算法（一）KMP">
+                <i class="fa fa-chevron-left"></i> 字符串匹配算法（一）KMP
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/mysql定时备份/" rel="prev" title="mysql定时备份">
+                mysql定时备份 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jet Chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">157</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/goldenJet" title="GitHub &rarr; https://github.com/goldenJet" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/goldenJ51015801" title="Twitter &rarr; https://twitter.com/goldenJ51015801" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">一、简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">二、名词定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">三、原理简析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">四、简明图示案例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">5.</span> <span class="nav-text">五、代码实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">6.</span> <span class="nav-text">六、资料</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jet Chen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+<div class="BbeiAn-info">
+    <a target="_blank" href="http://www.miitbeian.gov.cn/" rel="nofollow">浙ICP备17005575号-1</a> <!--a标签中增加nofollow属性，避免爬虫出站。-->| 
+	<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802009043" style="text-decoration:none;padding-left:17px;background:url(/images/icon-police.png) no-repeat left center" rel="nofollow">浙公网安备 33010802009043号</a>	  <!--这里将图标作为了背景，以使得能和后面的文字在同一行-->
+</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
