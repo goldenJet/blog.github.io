@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="时隔半年后的又一篇踩坑系列文章，这次的坑是在对接科大讯飞的语音转文字服务时，使用SDK的方式进行对接。">
+<meta name="keywords" content="-- SDK -- 科大讯飞 -- 语音转文字">
+<meta property="og:type" content="article">
+<meta property="og:title" content="踩坑记：讯飞语音转文字SDK的坑">
+<meta property="og:url" content="https://blog-test.jetchen.cn/xunfei-sdk/index.html">
+<meta property="og:site_name" content="嘎里三分熟">
+<meta property="og:description" content="时隔半年后的又一篇踩坑系列文章，这次的坑是在对接科大讯飞的语音转文字服务时，使用SDK的方式进行对接。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16538952-e718dddb89352d97.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16538952-67c9e9dec69560e0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16538952-787e4669debefd8a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-03-15T14:16:33.009Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="踩坑记：讯飞语音转文字SDK的坑">
+<meta name="twitter:description" content="时隔半年后的又一篇踩坑系列文章，这次的坑是在对接科大讯飞的语音转文字服务时，使用SDK的方式进行对接。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/16538952-e718dddb89352d97.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+
+
+
+  <link rel="canonical" href="https://blog-test.jetchen.cn/xunfei-sdk/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>踩坑记：讯飞语音转文字SDK的坑 | 嘎里三分熟</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">嘎里三分熟</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about-me/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog-test.jetchen.cn/xunfei-sdk/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jet Chen">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嘎里三分熟">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">踩坑记：讯飞语音转文字SDK的坑
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-03-07 22:11:04" itemprop="dateCreated datePublished" datetime="2019-03-07T22:11:04+08:00">2019-03-07</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/踩坑记/" itemprop="url" rel="index"><span itemprop="name">踩坑记</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>时隔半年后的又一篇踩坑系列文章，这次的坑是在对接科大讯飞的语音转文字服务时，使用SDK的方式进行对接。<br><a id="more"></a></p>
+<h2 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h2><p>客服的通话录音需要转成文字，团队决定使用科大讯飞的语音转文字服务，使用的是 SDK 的方式进行对接。</p>
+<h2 id="二、遇到的坑"><a href="#二、遇到的坑" class="headerlink" title="二、遇到的坑"></a>二、遇到的坑</h2><h4 id="1、关于-SDK-集成的坑"><a href="#1、关于-SDK-集成的坑" class="headerlink" title="1、关于 SDK 集成的坑"></a>1、关于 SDK 集成的坑</h4><p>问题：该SDK的集成方式只有一种，即提供一个 jar 包供下载，不提供 maven 仓库管理，不提供源码给予定制。</p>
+<h4 id="2、关于强制读取配置文件-的坑"><a href="#2、关于强制读取配置文件-的坑" class="headerlink" title="2、关于强制读取配置文件 的坑"></a>2、关于强制读取配置文件 的坑</h4><p>下图是规定的名为 config.properties 的配置文件。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/16538952-e718dddb89352d97.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>在类文件 <strong>LfasrClientImp</strong> 中，有一个静态代码块，会强制读取名为config.properties 的配置文件，然后校验该配置文件中的属性是否合法，这个class文件是我们重点调整的对象。</p>
+<p>而且在初始化的过程中，只要有不符合初始化要求的逻辑，则会给该类中的静态私有变量 <figure class="highlight plain"><figcaption><span>static String err_msg </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">该错误信息很关键，因为这个类是整个 SDK 的精华，即客户端的精华，所有的操作都需要先创建这个类的对象进行操作，然而当上文提到的私有变量 error_msg 不为 null 时，构造函数直接报错，所以导致无法创建对象，整个业务流程就没法走下去，见下图的构造方法。</span><br><span class="line"></span><br><span class="line">![](http://upload-images.jianshu.io/upload_images/16538952-3380b766df0b07bf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)</span><br><span class="line"></span><br><span class="line">#### 3、关于日志的坑</span><br><span class="line"></span><br><span class="line">① 原版SDK的源码，强制使用log4j，所以对于少数不使用 log4j 的项目，需要进行调整，附上报错信息：</span><br><span class="line">``` </span><br><span class="line">log4j:WARN No appenders could be found for logger (com.jet.service.XfyunService).</span><br><span class="line">log4j:WARN Please initialize the log4j system properly.</span><br><span class="line">log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.</span><br></pre></td></tr></table></figure></p>
+<p>② 原版 SDK 会打印很多的日志，比如有一些对音频进行处理的日志，部分日志信息是我们不需要的。</p>
+<h4 id="4、关于文件上传的坑"><a href="#4、关于文件上传的坑" class="headerlink" title="4、关于文件上传的坑"></a>4、关于文件上传的坑</h4><p>语音文件上传的模式只有一种，即给定一个本地的音频路径。<br>而如果你使用过七牛云的 SDK 你就深有体会讯飞的这个SDK 是有多烂，七牛云的上传文件的方法，你可以提供文件的本地路径，也支持流上传，当然也支持远程文件地址的方式上传。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/16538952-67c9e9dec69560e0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<h2 id="三、埋坑史"><a href="#三、埋坑史" class="headerlink" title="三、埋坑史"></a>三、埋坑史</h2><h4 id="1、-解决本地jar包的引入"><a href="#1、-解决本地jar包的引入" class="headerlink" title="1、 解决本地jar包的引入"></a>1、 解决本地jar包的引入</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 科大讯飞语音转文字 SDK --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;cn.xfyun&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;raasr&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;2.0.0.1006&lt;/version&gt;</span><br><span class="line">        &lt;scope&gt;system&lt;/scope&gt;</span><br><span class="line">    &lt;systemPath&gt;$&#123;project.basedir&#125;/src/main/resources/lib/lfasr-sdk-client-2.0.0.1006.jar&lt;/systemPath&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>打jar包的时候把本地的 jar 包也打进去：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;build&gt;</span><br><span class="line">    &lt;plugins&gt;</span><br><span class="line">        &lt;plugin&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">            &lt;configuration&gt;</span><br><span class="line">                &lt;mainClass&gt;com.Jet.jetApplication&lt;/mainClass&gt;</span><br><span class="line">                &lt;executable&gt;true&lt;/executable&gt;</span><br><span class="line">                &lt;includeSystemScope&gt;true&lt;/includeSystemScope&gt;</span><br><span class="line">            &lt;/configuration&gt;</span><br><span class="line">        &lt;/plugin&gt;</span><br><span class="line">    &lt;/plugins&gt;</span><br><span class="line">&lt;/build&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="2、解决配置文件的读取问题"><a href="#2、解决配置文件的读取问题" class="headerlink" title="2、解决配置文件的读取问题"></a>2、解决配置文件的读取问题</h4><p>依着他给个指定的配置文件 config.properties，但是还是按照项目里的一样，区分开发、测试和生产配置文件，然后强制读取本项目的配置，去强制覆盖 LfasrClientImp 类中的变量。</p>
+<h4 id="3、解决-LfasrClientImp-类中变量私有化的问题"><a href="#3、解决-LfasrClientImp-类中变量私有化的问题" class="headerlink" title="3、解决 LfasrClientImp 类中变量私有化的问题"></a>3、解决 LfasrClientImp 类中变量私有化的问题</h4><p>为什么关注该类中的静态私有变量呢，因为上文中提到有个私有的变量存储错误信息，我们需要调整这个错误信息。<br>而对于 LfasrClientImp 类中的静态私有属性，我们可以通过反射机制强制刷新属性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;LfasrClientImp&gt; lfasrClientImpClass = LfasrClientImp.class;</span><br><span class="line">Field field = lfasrClientImpClass.getDeclaredField(<span class="string">"SERV_APP_ID_VAL"</span>);</span><br><span class="line">field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">field.set(lfasrClientImpClass, <span class="string">"testAppId"</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="4、解决日志的坑"><a href="#4、解决日志的坑" class="headerlink" title="4、解决日志的坑"></a>4、解决日志的坑</h4><p>讯飞默认使用的是 log4j，如果很不幸你的项目使用的不是 log4j，要么你做出妥协，要么，就出大绝招：把讯飞 SDK 的 class 文件反编译出来，然后自己改源码，然后两条路可以走，一是再编译成 jar 包，二是直接作为一个 module 来使用。<br>但是还是建议调整日志框架为 log4j，不要动 SDK，防止版本更新。</p>
+<h4 id="5、解决上传接口的坑"><a href="#5、解决上传接口的坑" class="headerlink" title="5、解决上传接口的坑"></a>5、解决上传接口的坑</h4><p>上文提到了关于上传的方法，只有一个，即提供一个音频文件的本地地址，然后传给上传的方法。<br>what？难道我的音频文件不能是远程服务器上的？对于这种情况，我们需要手动进行封装，如果不想封装得太深。<br>简单的思路就是：<strong>下载文件 -&gt; 保存成临时文件 -&gt; 调用方法</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> File <span class="title">downLoadFiles</span><span class="params">(String Url)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        InputStream in = <span class="keyword">new</span> URL(Url).openConnection().getInputStream();</span><br><span class="line">        <span class="keyword">if</span> (in == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        String fileName = storePath  + <span class="string">"/"</span> + Url.substring(Url.lastIndexOf(<span class="string">"/"</span>));</span><br><span class="line">        File file = <span class="keyword">new</span> File(fileName);</span><br><span class="line">        OutputStream os = <span class="keyword">new</span> FileOutputStream(file);</span><br><span class="line">        <span class="keyword">int</span> bytesRead = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">8192</span>];</span><br><span class="line">        <span class="keyword">while</span> ((bytesRead = in.read(buffer, <span class="number">0</span>, <span class="number">8192</span>)) != -<span class="number">1</span>) &#123;</span><br><span class="line">            os.write(buffer, <span class="number">0</span>, bytesRead);</span><br><span class="line">        &#125;</span><br><span class="line">        in.close();</span><br><span class="line">        <span class="keyword">return</span> file;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        log.error(<span class="string">"inputStream zhuan file 异常"</span>, e);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="四、大绝招"><a href="#四、大绝招" class="headerlink" title="四、大绝招"></a>四、大绝招</h2><p>其实 SDK 的底层就是封装了三样东西，<strong>鉴权、http 请求 和 响应</strong>，我们完全可以通过观看源码，找出它的鉴权等动作，然后自己封装一套请求，这样就可以完全脱离讯飞的SDK了。</p>
+<h2 id="五、备注"><a href="#五、备注" class="headerlink" title="五、备注"></a>五、备注</h2><p>附上讯飞 SDK 的 maven 引用：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/16538952-787e4669debefd8a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+	  
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束 <i class="fa fa-fighter-jet"></i> 感谢阅读 ------</div>
+    
+</div>
+	  
+	</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SDK-科大讯飞-语音转文字/" rel="tag"><i class="fa fa-tag"></i> -- SDK -- 科大讯飞 -- 语音转文字</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/js-show-dialog/" rel="next" title="js实现对话展示">
+                <i class="fa fa-chevron-left"></i> js实现对话展示
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jet Chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">63</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">32</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">161</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/goldenJet" title="GitHub &rarr; https://github.com/goldenJet" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/goldenJ51015801" title="Twitter &rarr; https://twitter.com/goldenJ51015801" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、背景"><span class="nav-number">1.</span> <span class="nav-text">一、背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、遇到的坑"><span class="nav-number">2.</span> <span class="nav-text">二、遇到的坑</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、关于-SDK-集成的坑"><span class="nav-number">2.0.1.</span> <span class="nav-text">1、关于 SDK 集成的坑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、关于强制读取配置文件-的坑"><span class="nav-number">2.0.2.</span> <span class="nav-text">2、关于强制读取配置文件 的坑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、关于文件上传的坑"><span class="nav-number">2.0.3.</span> <span class="nav-text">4、关于文件上传的坑</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#三、埋坑史"><span class="nav-number">3.</span> <span class="nav-text">三、埋坑史</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、-解决本地jar包的引入"><span class="nav-number">3.0.1.</span> <span class="nav-text">1、 解决本地jar包的引入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、解决配置文件的读取问题"><span class="nav-number">3.0.2.</span> <span class="nav-text">2、解决配置文件的读取问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、解决-LfasrClientImp-类中变量私有化的问题"><span class="nav-number">3.0.3.</span> <span class="nav-text">3、解决 LfasrClientImp 类中变量私有化的问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、解决日志的坑"><span class="nav-number">3.0.4.</span> <span class="nav-text">4、解决日志的坑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5、解决上传接口的坑"><span class="nav-number">3.0.5.</span> <span class="nav-text">5、解决上传接口的坑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、大绝招"><span class="nav-number">4.</span> <span class="nav-text">四、大绝招</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、备注"><span class="nav-number">5.</span> <span class="nav-text">五、备注</span></a></li></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jet Chen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+<div class="BbeiAn-info">
+    <a target="_blank" href="http://www.miitbeian.gov.cn/" rel="nofollow">浙ICP备17005575号-1</a> <!--a标签中增加nofollow属性，避免爬虫出站。-->| 
+	<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802009043" style="text-decoration:none;padding-left:17px;background:url(/images/icon-police.png) no-repeat left center" rel="nofollow">浙公网安备 33010802009043号</a>	  <!--这里将图标作为了背景，以使得能和后面的文字在同一行-->
+</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
