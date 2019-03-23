@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="家喻户晓的一致性 Hash 算法是解决数据分散布局或者说分布式环境下系统伸缩性差的优质解，本文旨在使用 Java 语言手动实现一套该算法。">
+<meta name="keywords" content="算法,一致性HASH">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手动实现一致性 Hash 算法">
+<meta property="og:url" content="https://blog-test.jetchen.cn/consistent-hash/index.html">
+<meta property="og:site_name" content="嘎里三分熟">
+<meta property="og:description" content="家喻户晓的一致性 Hash 算法是解决数据分散布局或者说分布式环境下系统伸缩性差的优质解，本文旨在使用 Java 语言手动实现一套该算法。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16538952-708371d0780c810c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16538952-32a7f029bf6ba8ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16538952-b7055e0c4b64e96d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16538952-09538c5362a489dc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16538952-4fca5a562d156d92.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/16538952-acc1c34b022eae64.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-03-23T14:25:59.997Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="手动实现一致性 Hash 算法">
+<meta name="twitter:description" content="家喻户晓的一致性 Hash 算法是解决数据分散布局或者说分布式环境下系统伸缩性差的优质解，本文旨在使用 Java 语言手动实现一套该算法。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/16538952-708371d0780c810c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+
+
+
+  <link rel="canonical" href="https://blog-test.jetchen.cn/consistent-hash/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>手动实现一致性 Hash 算法 | 嘎里三分熟</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">嘎里三分熟</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about-me/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog-test.jetchen.cn/consistent-hash/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jet Chen">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嘎里三分熟">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">手动实现一致性 Hash 算法
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-03-21 22:19:17" itemprop="dateCreated datePublished" datetime="2019-03-21T22:19:17+08:00">2019-03-21</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><center>家喻户晓的一致性 Hash 算法是解决数据分散布局或者说分布式环境下系统伸缩性差的优质解，本文旨在使用 Java 语言手动实现一套该算法。</center><br><a id="more"></a></p>
+<h2 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h2><p>最简单的一个应用场景便是<strong>缓存</strong>，当单机缓存量过大时需要分库，然后根据相关信息进行 hash 取模运算到指定的机器上去，比如 index = hash(ip) % N。</p>
+<p>但是当增加或者减少节点的时候，由于上述公式的 N 值是有变化的，所以绝大部分，甚至说所有的缓存都会失效，对于这种场景最直接的解决办法便是使用<strong>一致性 hash 算法</strong>。</p>
+<h2 id="二、一致性-Hash-算法简介"><a href="#二、一致性-Hash-算法简介" class="headerlink" title="二、一致性 Hash 算法简介"></a>二、一致性 Hash 算法简介</h2><h4 id="1、简单的一致性-Hash"><a href="#1、简单的一致性-Hash" class="headerlink" title="1、简单的一致性 Hash"></a>1、简单的一致性 Hash</h4><p>关于一致性 Hash 算法，简单的抽象描述就是一个圆环，然后上面均匀布局了 2^32 个节点，比如 [0,1,2,4,8…]，然后将我们的机器节点散列在这个圆环上，至于散列的规则，可以使用 hash(ip) 或者 hash(域名)。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/16538952-708371d0780c810c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="hash 环"></p>
+<p>当寻找数据的时候，只需要将目标数据的key散列在这个环上，然后进行顺时针读取最近的一个机器节点上的数据即可。</p>
+<p>如下图的简单版本，假如总共有3个数据节点（A、B、C），当需要查找的数据的key经计算在A和B之间，则顺时针找，便找到了节点B。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/16538952-32a7f029bf6ba8ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="数据查找"></p>
+<p>最大的优点是：还是以上面的案例为背景，当节点B宕了之后，顺时针便找到了C，这样，影响的范围仅仅是A和B之间的数据，对于其他的数据是不影响的。</p>
+<h4 id="2、虚拟节点"><a href="#2、虚拟节点" class="headerlink" title="2、虚拟节点"></a>2、虚拟节点</h4><p>但是在散列数据节点的时候，紧凑性会受 hash 算法的影响，比如A、B、C三个数据服务器，在 hash 计算后散列在 1、2、4三个节点上，这样就会因为太密集而失去<strong>平衡性。</strong>比如此时我们要查找的数据的key经过 hash 运算之后，大概率是出现在4和1之间的，即在C之后，那样的话顺时针查找便会找到A，那么A服务器便承载了几乎所有的负载，这就失去了该算法的意义。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/16538952-b7055e0c4b64e96d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>此时虚拟节点便出现了，比如上述的三台服务器各虚拟分裂出1各虚拟节点（A1、B1、C1），那么这样便可以在一定程度上解决一致性hash的平衡性问题。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/16538952-09538c5362a489dc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="虚拟节点A1、B1、C1"></p>
+<h2 id="三、数组简陋版"><a href="#三、数组简陋版" class="headerlink" title="三、数组简陋版"></a>三、数组简陋版</h2><h4 id="1、思路"><a href="#1、思路" class="headerlink" title="1、思路"></a>1、思路</h4><p>简单描述下思路：其实就是使用一个数组去存储所有的节点信息，存完之后需要手动排序一下，因为是有序的，所以取的时候就从 index 为0开始挨个对比节点的 hash 值，直到找到一个节点的 hash 值是比我们的目标数据的 hash(key) 大即可，否则返回第一个节点的数据。</p>
+<h4 id="2、代码其实很简单，直接撸："><a href="#2、代码其实很简单，直接撸：" class="headerlink" title="2、代码其实很简单，直接撸："></a>2、代码其实很简单，直接撸：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span>  com.jet.mini.utils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* <span class="doctag">@ClassName</span>: SortArrayConsistentHash</span></span><br><span class="line"><span class="comment">* <span class="doctag">@Description</span>: 初代数组实现的一致性哈数算法</span></span><br><span class="line"><span class="comment">* <span class="doctag">@Author</span>: Jet.Chen</span></span><br><span class="line"><span class="comment">* <span class="doctag">@Date</span>: 2019/3/19 23:11</span></span><br><span class="line"><span class="comment">* <span class="doctag">@Version</span>: 1.0</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>  <span class="class"><span class="keyword">class</span>  <span class="title">SortArrayConsistentHash</span>  </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 最为核心的数据结构</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span>  Node[]  buckets;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 桶的初始大小</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span>  <span class="keyword">static</span>  <span class="keyword">final</span>  <span class="keyword">int</span>  INITIAL_SIZE  =  <span class="number">32</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 当前桶的大小</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span>  <span class="keyword">int</span>  length  =  INITIAL_SIZE;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 当前桶的使用量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span>  <span class="keyword">int</span>  size  =  <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  <span class="title">SortArrayConsistentHash</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        buckets  =  <span class="keyword">new</span>  Node[INITIAL_SIZE];</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 指定数组长度的构造</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  <span class="title">SortArrayConsistentHash</span><span class="params">(<span class="keyword">int</span>  length)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>  (length  &lt;  <span class="number">32</span>)  &#123;</span><br><span class="line">            buckets  =  <span class="keyword">new</span>  Node[INITIAL_SIZE];</span><br><span class="line">        &#125;  <span class="keyword">else</span>  &#123;</span><br><span class="line">            <span class="keyword">this</span>.length  =  length;</span><br><span class="line">            buckets  =  <span class="keyword">new</span>  Node[length];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Description</span>: 写入数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Param</span>: [hash, value]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>: void</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Author</span>: Jet.Chen</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Date</span>: 2019/3/19 23:38</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">void</span>  <span class="title">add</span><span class="params">(<span class="keyword">long</span>  hash,  String  value)</span></span>&#123;</span><br><span class="line">        <span class="comment">// 大小判断是否需要扩容</span></span><br><span class="line">        <span class="keyword">if</span>  (size  ==  length)  reSize();</span><br><span class="line">        Node node  =  <span class="keyword">new</span>  Node(value,  hash);</span><br><span class="line">        buckets[++size]  =  node;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Description</span>: 删除节点</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Param</span>: [hash]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>: boolean</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Author</span>: Jet.Chen</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Date</span>: 2019/3/20 0:24</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">boolean</span>  <span class="title">del</span><span class="params">(<span class="keyword">long</span>  hash)</span>  </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>  (size  ==  <span class="number">0</span>)  <span class="keyword">return</span>  <span class="keyword">false</span>;</span><br><span class="line">        Integer  index  =  <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">for</span>  (<span class="keyword">int</span>  i  =  <span class="number">0</span>;  i  &lt;  length;  i++)  &#123;</span><br><span class="line">            Node node  =  buckets[i];</span><br><span class="line">            <span class="keyword">if</span>  (node  ==  <span class="keyword">null</span>)  <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">if</span>  (node.hash  ==  hash)  index  =  i;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>  (index  !=  <span class="keyword">null</span>)  &#123;</span><br><span class="line">            buckets[index]  =  <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">return</span>  <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span>  <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Description</span>: 排序</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Param</span>: []</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>: void</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Author</span>: Jet.Chen</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Date</span>: 2019/3/19 23:48</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">void</span>  <span class="title">sort</span><span class="params">()</span>  </span>&#123;</span><br><span class="line">        <span class="comment">// 此处的排序不需要关注 eqals 的情况</span></span><br><span class="line">        Arrays.sort(buckets,  <span class="number">0</span>,  size,  (o1,  o2)  -&gt;  o1.hash  &gt;  o2.hash  ?  <span class="number">1</span>  :  -<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Description</span>: 扩容</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Param</span>: []</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>: void</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Author</span>: Jet.Chen</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Date</span>: 2019/3/19 23:42</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">void</span>  <span class="title">reSize</span><span class="params">()</span>  </span>&#123;</span><br><span class="line">        <span class="comment">// 扩容1.5倍</span></span><br><span class="line">        <span class="keyword">int</span>  newLength  =  length  &gt;&gt;  <span class="number">1</span>  +  length;</span><br><span class="line">        buckets  =  Arrays.copyOf(buckets,  newLength);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Description</span>: 根据一致性hash算法获取node值</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Param</span>: [hash]</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>: java.lang.String</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Author</span>: Jet.Chen</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@Date</span>: 2019/3/20 0:16</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  String  <span class="title">getNodeValue</span><span class="params">(<span class="keyword">long</span>  hash)</span>  </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>  (size  ==  <span class="number">0</span>)  <span class="keyword">return</span>  <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">for</span>  (Node bucket  :  buckets)  &#123;</span><br><span class="line">            <span class="comment">// 防止空节点</span></span><br><span class="line">            <span class="keyword">if</span>  (bucket  ==  <span class="keyword">null</span>)  <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">if</span>  (bucket.hash  &gt;=  hash)  <span class="keyword">return</span>  bucket.value;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 防止循环无法尾部对接首部</span></span><br><span class="line">        <span class="comment">// 场景：仅列出node的hash值，[null, 2, 3...]，但是寻求的hash值是4，上面的第一遍循环很显然没能找到2这个节点，所有需要再循环一遍</span></span><br><span class="line">        <span class="keyword">for</span>  (Node bucket  :  buckets)  &#123;</span><br><span class="line">            <span class="keyword">if</span>  (bucket  !=  <span class="keyword">null</span>)  <span class="keyword">return</span>  bucket.value;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span>  <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * node 记录了hash值和原始的IP地址</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span>  <span class="class"><span class="keyword">class</span>  <span class="title">Node</span>  </span>&#123;</span><br><span class="line">        <span class="keyword">public</span>  String  value;</span><br><span class="line">        <span class="keyword">public</span>  <span class="keyword">long</span>  hash;</span><br><span class="line">        <span class="function"><span class="keyword">public</span>  <span class="title">Node</span><span class="params">(String  value,  <span class="keyword">long</span>  hash)</span>  </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.value  =  value;</span><br><span class="line">            <span class="keyword">this</span>.hash  =  hash;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span>  String  <span class="title">toString</span><span class="params">()</span>  </span>&#123;</span><br><span class="line">            <span class="keyword">return</span>  <span class="string">"Node&#123;hash="</span>+hash+<span class="string">", value="</span>+value+<span class="string">"&#125;"</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3、弊端"><a href="#3、弊端" class="headerlink" title="3、弊端"></a>3、弊端</h4><p>① 排序算法：上面直接使用 Arrays.sort() ，即 TimSort 排序算法，这个值得改进；<br>② hash 算法：上文没有提及 hash 算法，需要改进；<br>③ 数据结构：上文使用的是数组，但是需要手动进行排序，优点是插入速度尚可，但是扩容不便，而且需要手动排序，排序的时机也不定，需要改进；<br>④ 虚拟节点：没有考虑虚拟节点，需要改进。</p>
+<h2 id="四、TreeMap-进阶版"><a href="#四、TreeMap-进阶版" class="headerlink" title="四、TreeMap 进阶版"></a>四、TreeMap 进阶版</h2><p>上文的实现既然有弊端，那就操刀改进之：</p>
+<p>① 数据结构：我们可以使用 TreeMap 数据结构，优点是该数据结构是有序的，无需再排序，而且该数据结构中有个函数叫 <strong>tailMap</strong>，作用是获取比指定的 key 大的数据集合；<br>② hash 算法：此处我们使用 <strong>FNV1_32_HASH</strong> 算法，该算法证实下来散列分布比较均匀，hash 碰撞尚且 ok；<br>③ 虚拟节点：我们暂且设置每个节点锁裂变的虚拟节点数量为10。</p>
+<p>代码也不难，也是直接撸：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span>  com.jet.mini.utils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.SortedMap;</span><br><span class="line"><span class="keyword">import</span> java.util.TreeMap;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* <span class="doctag">@ClassName</span>: TreeMapConsistentHash</span></span><br><span class="line"><span class="comment">* <span class="doctag">@Description</span>: treeMap 实现的进化版一致性hash</span></span><br><span class="line"><span class="comment">* <span class="doctag">@Author</span>: Jet.Chen</span></span><br><span class="line"><span class="comment">* <span class="doctag">@Date</span>: 2019/3/20 20:44</span></span><br><span class="line"><span class="comment">* <span class="doctag">@Version</span>: 1.0</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line"><span class="keyword">public</span>  <span class="class"><span class="keyword">class</span>  <span class="title">TreeMapConsistentHash</span>  </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 主要数据结构</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span>  TreeMap&lt;Long,  String&gt;  treeMap  =  <span class="keyword">new</span>  TreeMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 自定义虚拟节点数量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span>  <span class="keyword">static</span>  <span class="keyword">final</span>  <span class="keyword">int</span>  VIRTUAL_NODE_NUM  =  <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 普通的增加节点</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Deprecated</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">void</span>  <span class="title">add</span>  <span class="params">(String  key,  String  value)</span>  </span>&#123;</span><br><span class="line">        <span class="keyword">long</span>  hash  =  hash(key);</span><br><span class="line">        treeMap.put(hash,  value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 存在虚拟节点</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">void</span>  <span class="title">add4VirtualNode</span><span class="params">(String  key,  String  value)</span>  </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>  (<span class="keyword">int</span>  i  =  <span class="number">0</span>;  i  &lt;  VIRTUAL_NODE_NUM;  i++)  &#123;</span><br><span class="line">            <span class="keyword">long</span>  hash  =  hash(key  +  <span class="string">"&amp;&amp;VIR"</span>  +  i);</span><br><span class="line">            treeMap.put(hash,  value);</span><br><span class="line">        &#125;</span><br><span class="line">        treeMap.put(hash(key),  value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 读取节点值</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> key</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  String  <span class="title">getNode</span><span class="params">(String  key)</span>  </span>&#123;</span><br><span class="line">        <span class="keyword">long</span>  hash  =  hash(key);</span><br><span class="line">        SortedMap&lt;Long,  String&gt;  sortedMap  =  treeMap.tailMap(hash);</span><br><span class="line">        String  value;</span><br><span class="line">        <span class="keyword">if</span>  (!sortedMap.isEmpty())  &#123;</span><br><span class="line">            value  =  sortedMap.get(sortedMap.firstKey());</span><br><span class="line">        &#125;  <span class="keyword">else</span>  &#123;</span><br><span class="line">            value  =  treeMap.firstEntry().getValue();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span>  value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 使用的是 FNV1_32_HASH</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">long</span>  <span class="title">hash</span><span class="params">(String  key)</span>  </span>&#123;</span><br><span class="line">        <span class="keyword">final</span>  <span class="keyword">int</span>  p  =  <span class="number">16777619</span>;</span><br><span class="line">        <span class="keyword">int</span>  hash  =  (<span class="keyword">int</span>)<span class="number">2166136261L</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span>  i  =  <span class="number">0</span>;  i  &lt;  key.length();  i++)  &#123;</span><br><span class="line">            hash  =  (hash  ^  key.charAt(i))  *  p;</span><br><span class="line">        &#125;</span><br><span class="line">        hash  +=  hash  &lt;&lt;  <span class="number">13</span>;</span><br><span class="line">        hash  ^=  hash  &gt;&gt;  <span class="number">7</span>;</span><br><span class="line">        hash  +=  hash  &lt;&lt;  <span class="number">3</span>;</span><br><span class="line">        hash  ^=  hash  &gt;&gt;  <span class="number">17</span>;</span><br><span class="line">        hash  +=  hash  &lt;&lt;  <span class="number">5</span>;</span><br><span class="line">        <span class="comment">// 如果算出来的值为负数则取其绝对值</span></span><br><span class="line">        <span class="keyword">if</span>  (hash  &lt;  <span class="number">0</span>)  hash  =  Math.abs(hash);</span><br><span class="line">        <span class="keyword">return</span>  hash;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="五、其他"><a href="#五、其他" class="headerlink" title="五、其他"></a>五、其他</h2><p>1、虚拟节点的数量建议：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/16538952-4fca5a562d156d92.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="虚拟节点数量和服务器数量关系(待考量)"></p>
+<p>看上图，X 轴是虚拟节点数量，Y 轴是服务器数量，很显然，服务器越多，建议的虚拟节点数量也就越少。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/16538952-acc1c34b022eae64.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+	  
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束 <i class="fa fa-fighter-jet"></i> 感谢阅读 ------</div>
+    
+</div>
+	  
+	</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/算法/" rel="tag"><i class="fa fa-tag"></i> 算法</a>
+          
+            <a href="/tags/一致性HASH/" rel="tag"><i class="fa fa-tag"></i> 一致性HASH</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/algorithm-bitmap-bitset/" rel="next" title="通过BitSet源码来理解BitMap算法">
+                <i class="fa fa-chevron-left"></i> 通过BitSet源码来理解BitMap算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jet Chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">65</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">32</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">165</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/goldenJet" title="GitHub &rarr; https://github.com/goldenJet" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/goldenJ51015801" title="Twitter &rarr; https://twitter.com/goldenJ51015801" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、背景"><span class="nav-number">1.</span> <span class="nav-text">一、背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、一致性-Hash-算法简介"><span class="nav-number">2.</span> <span class="nav-text">二、一致性 Hash 算法简介</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、简单的一致性-Hash"><span class="nav-number">2.0.1.</span> <span class="nav-text">1、简单的一致性 Hash</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、虚拟节点"><span class="nav-number">2.0.2.</span> <span class="nav-text">2、虚拟节点</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#三、数组简陋版"><span class="nav-number">3.</span> <span class="nav-text">三、数组简陋版</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、思路"><span class="nav-number">3.0.1.</span> <span class="nav-text">1、思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、代码其实很简单，直接撸："><span class="nav-number">3.0.2.</span> <span class="nav-text">2、代码其实很简单，直接撸：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、弊端"><span class="nav-number">3.0.3.</span> <span class="nav-text">3、弊端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、TreeMap-进阶版"><span class="nav-number">4.</span> <span class="nav-text">四、TreeMap 进阶版</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、其他"><span class="nav-number">5.</span> <span class="nav-text">五、其他</span></a></li></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jet Chen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+<div class="BbeiAn-info">
+    <a target="_blank" href="http://www.miitbeian.gov.cn/" rel="nofollow">浙ICP备17005575号-1</a> <!--a标签中增加nofollow属性，避免爬虫出站。-->| 
+	<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802009043" style="text-decoration:none;padding-left:17px;background:url(/images/icon-police.png) no-repeat left center" rel="nofollow">浙公网安备 33010802009043号</a>	  <!--这里将图标作为了背景，以使得能和后面的文字在同一行-->
+</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
