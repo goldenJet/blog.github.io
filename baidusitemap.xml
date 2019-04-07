@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://blog-test.jetchen.cn/synchronized-status/</loc>
+    <lastmod>2019-04-07</lastmod>
+  </url>  <url>
+    <loc>https://blog-test.jetchen.cn/xunfei-sdk/</loc>
+    <lastmod>2019-04-07</lastmod>
+  </url>  <url>
     <loc>https://blog-test.jetchen.cn/consistent-hash/</loc>
     <lastmod>2019-03-23</lastmod>
   </url>  <url>
     <loc>https://blog-test.jetchen.cn/algorithm-bitmap-bitset/</loc>
     <lastmod>2019-03-22</lastmod>
-  </url>  <url>
-    <loc>https://blog-test.jetchen.cn/xunfei-sdk/</loc>
-    <lastmod>2019-03-15</lastmod>
   </url>  <url>
     <loc>https://blog-test.jetchen.cn/js-show-dialog/</loc>
     <lastmod>2019-03-14</lastmod>

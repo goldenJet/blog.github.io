@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog-test.jetchen.cn/synchronized-status/</loc>
+    
+    <lastmod>2019-04-07T14:04:02.581Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog-test.jetchen.cn/xunfei-sdk/</loc>
+    
+    <lastmod>2019-04-07T14:03:08.251Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog-test.jetchen.cn/consistent-hash/</loc>
     
     <lastmod>2019-03-23T14:26:00.000Z</lastmod>
@@ -12,13 +26,6 @@
     <loc>https://blog-test.jetchen.cn/algorithm-bitmap-bitset/</loc>
     
     <lastmod>2019-03-22T15:07:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog-test.jetchen.cn/xunfei-sdk/</loc>
-    
-    <lastmod>2019-03-15T14:16:34.000Z</lastmod>
     
   </url>
   
