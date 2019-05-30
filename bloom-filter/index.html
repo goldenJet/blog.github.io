@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在海量数据处理的场景之下，Bloom Filter 是一种空间效率很高的数据结构，它是一个可以快速判断元素是否存在的概率算法，但是前提是在一定的容错率之下，本文特此进行了一番介绍。">
+<meta name="keywords" content="算法,BitMap,Bloom Filter,误报率">
+<meta property="og:type" content="article">
+<meta property="og:title" content="细嚼慢咽布隆过滤器(Bloom Filter)">
+<meta property="og:url" content="https://blog-test.jetchen.cn/bloom-filter/index.html">
+<meta property="og:site_name" content="嘎里三分熟">
+<meta property="og:description" content="在海量数据处理的场景之下，Bloom Filter 是一种空间效率很高的数据结构，它是一个可以快速判断元素是否存在的概率算法，但是前提是在一定的容错率之下，本文特此进行了一番介绍。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/05/Bloom%20Filter03.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/05/Bloom%20Filter05.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/cli_500px.png">
+<meta property="og:updated_time" content="2019-05-30T13:21:21.339Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="细嚼慢咽布隆过滤器(Bloom Filter)">
+<meta name="twitter:description" content="在海量数据处理的场景之下，Bloom Filter 是一种空间效率很高的数据结构，它是一个可以快速判断元素是否存在的概率算法，但是前提是在一定的容错率之下，本文特此进行了一番介绍。">
+<meta name="twitter:image" content="http://blogsource.chenkaikai.com/uploads/2019/05/Bloom%20Filter03.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://blog-test.jetchen.cn/bloom-filter/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>细嚼慢咽布隆过滤器(Bloom Filter) | 嘎里三分熟</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">嘎里三分熟</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about-me/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog-test.jetchen.cn/bloom-filter/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jet Chen">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嘎里三分熟">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">细嚼慢咽布隆过滤器(Bloom Filter)
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-05-30 21:18:36" itemprop="dateCreated datePublished" datetime="2019-05-30T21:18:36+08:00">2019-05-30</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><center>在海量数据处理的场景之下，Bloom Filter 是一种空间效率很高的数据结构，它是一个可以快速判断元素是否存在的概率算法，但是前提是在一定的容错率之下，本文特此进行了一番介绍。</center><br><a id="more"></a></p>
+<hr>
+<p>搜索微信公众号【 <strong>Jet与编程</strong> 】体验更多有趣功能和文章哦。</p>
+<hr>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在上篇【<a href="http://www.jetchen.cn/algorithm-bitmap-bitset/" target="_blank" rel="noopener">链接</a>】中，我们借助 Java 的 BitSet 源码尝试着理解了下 BitMap 算法，但是有一个很致命的劣势没有解决，那就是很尴尬的<strong>数据碰撞问题</strong>。<br>啥意思呢，再次解释一下下，BitMap 中我们只是很简单地初始化了一个 Long 数组，然后使用一个个小小的 bit 位来表示一个数据的存在与否，但是其中必然会面对<strong>哈希碰撞</strong>问题。<br>我们画张简图来回顾下 BitMap 算法。<br><img src="http://blogsource.chenkaikai.com/uploads/2019/05/Bloom%20Filter03.png" alt="BitMap 算法简介"><br>如上图所示，hash function 均为 f1，数据 A 和 D 指向的位是<strong>1</strong>，所以肯定是存在的，而 B 和 C 指向的都是同一个位，所以哈希碰撞就是这样很容易地产生了。<br>即：位上无元素则表示该数据肯定不存在，位上有元素则只能表示该数据<strong>可能存在</strong>。</p>
+<h2 id="BF-算法简介"><a href="#BF-算法简介" class="headerlink" title="BF 算法简介"></a>BF 算法简介</h2><p>有弊端总有解决之道，此处正好引入本文主要介绍的一种算法：<strong>布隆过滤器</strong>，英文名为 <strong>Bloom Filter</strong>，下文简称 BF 算法。<br>同样，我们还是先画一张简图来直观地认识下 BF 算法。<br><img src="http://blogsource.chenkaikai.com/uploads/2019/05/Bloom%20Filter05.png" alt="Bloom Filter 算法简介"></p>
+<p>由上图我们可以看出，此时的 A、B、C、D 四个数据各自经过 <strong>f1 和 f2</strong> 方法进行两次 hash 算法，然后分别指向位上面，只有当 f1 和 f2 指向的位上面都为 1 时，才会标记为存在。</p>
+<ol>
+<li>举例 1：上图的 A 和 B，虽然 f2 计算的位都是同样的 1，但是各自的 f1 计算出的位是不一样的，所以由此判断出 A 和 B 是不一样的数据。</li>
+<li>举例 2：上图的 B 和 C，经过 f1 和 f2 计算出的两个位是一样的，所以由此判断出 B 和 C 是一样的数据。</li>
+</ol>
+<p>小结：BF 算法虽然在一定程度上减少了 BitMap 算法中的哈希碰撞，但是终言之，只是减少而已，没法完全避免，就像上文举的案例2一样。</p>
+<h2 id="BF-算法优化"><a href="#BF-算法优化" class="headerlink" title="BF 算法优化"></a>BF 算法优化</h2><p>通过上面的图，其实很容易看出，上图中 hash function 的数量是 2，假如我们计算 3 次呢？或者 4 次甚至更多呢？诚然这可以更进一步避免数据的碰撞问题，但是太多的话却适得其反。</p>
+<p>所以介绍优化之前我们先小结下 BF 算法的劣势，因为优化都是基于某些劣势来进行的：</p>
+<ol>
+<li>误判率，或者换言之可以用 hash 碰撞的概率来帮助理解：虽然相对 BitMap 而言在一定程度上减少了 hash 碰撞的概率，但是也是存在一定的误判性的，所以对精度很高的应用场景，BF 算法并不适合。</li>
+<li>元素的删除：因为一个位可能会对应着好几个数据，所以我们不能随意删除任意一个位上面的元素，否则其他的数据可能会判断错误。</li>
+</ol>
+<p>所以，针对上面的两个点，我们逐个来突破下：</p>
+<h4 id="关于误判率"><a href="#关于误判率" class="headerlink" title="关于误判率"></a>关于误判率</h4><p>BF 算法优劣的影响因素，其实很容易就可以联想到，一个是根据插入的数据总量（n）来计算出最合适的位数组的大小（m）和 hash 函数的个数（k），还有一个便是最优的 <strong>误判率</strong>（使用 P(error) 表示）的选择问题。</p>
+<p>比如：我们假设 P 为 0.01，此时最优的 m 应大概是 n 的 13 倍，而 k，应大概为 8。</p>
+<p>详细的证明过程见下文。</p>
+<h4 id="关于元素删除的需求"><a href="#关于元素删除的需求" class="headerlink" title="关于元素删除的需求"></a>关于元素删除的需求</h4><p>因为数据对应的位会牵动其它的数据，所以 BF 是不可以删除位数据的，那么如果有这样的需求呢？可以使用 couting Bloom Filter 来解决，大致思路就是使用一个 counter 数组来代替位数组。</p>
+<p>什么意思呢？简言之就是在原来的 BF 算法的位上面，不再是用简单的 0 或 1 来表示了，而是存储该位上面的数据总量，比如有两个数据经过 hash function 计算都有指向同一个位，则将该位标记为2，代表有两个数据，当删除其中一个数据时，只需要将该位上面的 2 调整为 1 即可，如此便不再影响其它数据的正确性。</p>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><p>BF 算法虽然有着一定的缺点（主要是误判率），但是它的优点更为突出，所以应用场景也是很广的。</p>
+<p>比如我们在爬虫业务下，有很多的 URL，我们可以通过 BF 算法来判断每个 URL 是否已经被我们的爬虫程序处理过。</p>
+<p>再比如邮箱服务中垃圾邮件的过滤策略，由于垃圾邮件是海量的，我们不可能使用一个很完整的散列映射来标记每一个垃圾邮箱的地址，此处可以使用 BF 算法来标记，从而节约了容量。</p>
+<p>另外，BF 算法在很多开源框架中也都有相应的实现，例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Elasticsearch：org.elasticsearch.common.util.BloomFilter</span><br><span class="line"></span><br><span class="line">Guava：com.google.common.hash.BloomFilter</span><br><span class="line"></span><br><span class="line">Hadoop：org.apache.hadoop.util.bloom.BloomFilter（基于BitSet实现）</span><br></pre></td></tr></table></figure></p>
+<h2 id="BF-算法的数学计算过程"><a href="#BF-算法的数学计算过程" class="headerlink" title="BF 算法的数学计算过程"></a>BF 算法的数学计算过程</h2><h4 id="误判概率的证明和计算"><a href="#误判概率的证明和计算" class="headerlink" title="误判概率的证明和计算"></a>误判概率的证明和计算</h4><p>假设布隆过滤器中的hash function满足simple uniform hashing假设：每个元素都等概率地hash到m个slot中的任何一个，与其它元素被hash到哪个slot无关。若m为bit数，则对某一特定bit位在一个元素由某特定hash function插入时没有被置位为1的概率为：</p>
+<p>$1 - \frac 1m$</p>
+<p>则k个hash function中没有一个对其置位的概率为：</p>
+<p>$(1-\frac 1m)^k$</p>
+<p>如果插入了n个元素，但都未将其置位的概率为：</p>
+<p>$(1-\frac 1m)^{kn}$</p>
+<p>则此位被置位的概率为：</p>
+<p>$1-(1-\frac 1m)^{kn}$</p>
+<p>现在考虑query阶段，若对应某个待query元素的k bits全部置位为1，则可判定其在集合中。因此将某元素误判的概率为：</p>
+<p>$<br>\left(<br>    1-\left(<br>        1-\frac 1m<br>        \right)^{kn}<br>\right)^k<br>$</p>
+<p>由于 $(1+x)^{\frac1x} \sim e$，当 $x \rightarrow 0$ 时，并且 $-\frac1m$ 当m很大时趋近于0，所以：</p>
+<p>$<br>\left(1-\left(1-\frac 1m \right)^{kn} \right)^k = \left(1-\left(1- \frac 1m \right)^{-m \cdot \frac {-kn}m} \right)^k \sim \left(1-e^{\frac {-nk}m}\right)^k<br>$</p>
+<p>从上式中可以看出，当m增大或n减小时，都会使得误判率减小，这也符合直觉。&nbsp;现在计算对于给定的m和n，k为何值时可以使得误判率最低。设误判率为k的函数为：</p>
+<p>$f(k) = \left(1-e^{-\frac {nk}m}\right)^k$</p>
+<p>设 $b=e^{\frac nm}$， 则简化为：$f(k)=(1-b^{-k})^k$ ，</p>
+<p>两边取对数得：$lnf(k)=k \cdot ln(1-b^{-k})$，</p>
+<p>两边对k求导：</p>
+<p>$<br>\begin{align}<br>\frac1{f(k)} \cdot f’(k) &amp;= ln(1-b^{-k}) + k\cdot \frac 1{1-b^{-k}}\cdot(-b^{-k})\cdot lnb \cdot (-1) \<br>                        &amp;=ln(1-b^{-k}) + k\cdot \frac {b^{-k} \cdot lnb}{1-b^{-k}}<br>\end{align}<br>$</p>
+<p>下面求最值：</p>
+<p>$ln(1-b^{-k}) + k \cdot \frac{b^{-k} \cdot lnb}{1-b^{-k}} = 0$<br>$\Rightarrow (1-b^{-k}) \cdot ln(1-b^{-k}) = -k \cdot b^{-k} \cdot lnb $<br>$\Rightarrow (1-b^{-k}) \cdot ln(1-b^{-k}) = b^{-k} \cdot lnb^{-k} $<br>$\Rightarrow 1-b^{-k} = b^{-k}  $<br>$\Rightarrow b^{-k} = \frac12  $<br>$\Rightarrow e^{-\frac{kn}{m}} = \frac12 $<br>$\Rightarrow \frac{kn}{m} = ln2  $<br>$\Rightarrow k = ln2 \cdot \frac mn = 0.7 \cdot \frac mn $ </p>
+<p>因此，即当 $k = 0.7 \cdot \frac mn$ 时误判率最低，此时误判率为：</p>
+<p>$<br>P(error) = (1-\frac 12)^k = 2^{-k} = 2^{-ln2 \cdot \frac mn} \approx0.6185^{\frac mn}<br>$</p>
+<p>可以看出若要使得误判率 ≤1/2，则：</p>
+<p>$<br>k \ge 1 \Rightarrow \frac mn \ge \frac{1}{ln2}<br>$</p>
+<p>这说明了若想保持某固定误判率不变，则布隆过滤器的 位数 m 与添加的元素数 n 应该是线性同步增加的。</p>
+<h4 id="设计和应用布隆过滤器的方法"><a href="#设计和应用布隆过滤器的方法" class="headerlink" title="设计和应用布隆过滤器的方法"></a>设计和应用布隆过滤器的方法</h4><p>应用时首先要先由用户决定添加的元素数 n 和期望的误差率 P。这也是一个设计完整的布隆过滤器需要用户输入的仅有的两个参数，之后的所有参数将由系统计算，并由此建立布隆过滤器。</p>
+<p>系统首先要计算需要的内存大小 m bits:</p>
+<p>$<br>P = 2^{-ln2 \cdot \frac mn} \Rightarrow lnp = ln2 \cdot(-ln2) \cdot \frac mn \Rightarrow m = - \frac{n \cdot lnp}{(ln2)^2}<br>$</p>
+<p>再由 m，n 得到 hash function 的个数：</p>
+<p>$<br>k = ln2 \cdot \frac mn = 0.7 \cdot \frac mn<br>$</p>
+<p>至此系统所需的参数已经备齐，接下来添加 n个元素至布隆过滤器中，再进行 query。</p>
+<p>根据公式，当 k 最优时：</p>
+<p>$<br>P(error) = 2^{-k} \Rightarrow log_2P = -k \Rightarrow k = log_2 \frac 1P \Rightarrow ln2 \frac mn = log_2 \frac  1P<br>$<br>$<br>\Rightarrow \frac mn = ln2 \cdot log_2 \frac 1P = 1.44 \cdot \frac 1P<br>$</p>
+<p>因此可验证当 P=1% 时，存储每个元素需要 9.6 bits：</p>
+<p>$<br>\frac mn  = 1.44 \cdot log_2 \frac 1{0.01} = 9.6 \, bits<br>$</p>
+<p>而每当想将误判率降低为原来的 1/10 ，则存储每个元素需要增加 4.8 bits：</p>
+<p>$<br>\frac mn  = 1.44 \cdot (log_210a - log_2a) = 1.44 \cdot log_210 = 4.8 \, bits<br>$</p>
+<p>这里需要特别注意的是，9.6 bits/element 不仅包含了被置为1的 k 位，还把包含了没有被置为1的一些位数。此时的</p>
+<p>$<br>k = 0.7 \cdot \frac mn = 0.7 * 9.6 = 6.72 \, bits<br>$</p>
+<p>才是每个元素对应的为1的bit位数。</p>
+<p>$k = 0.7 \cdot \frac mn$   从而使得 P(error) 最小时，我们注意到：</p>
+<p>$P(error) = (1-e^{-\frac{nk}{m}})^k$ 中的 $e^{-\frac{nk}{m}} = \frac 12$   ，即$(1-\frac 1m)^{kn} = \frac 12$</p>
+<p>此概率为某 bit 位在插入 n 个元素后未被置位的概率。因此，想保持错误率低，布隆过滤器的空间使用率需为 50%。</p>
+<h2 id="BF-算法的代码实现"><a href="#BF-算法的代码实现" class="headerlink" title="BF 算法的代码实现"></a>BF 算法的代码实现</h2><p>代码比较长，文章中暂不完整展示，更完整的代码 demo 详见<a href="https://github.com/goldenJet/JavaUtils/blob/master/com/jet/utils/bloomFilter/BloomFilter.java" target="_blank" rel="noopener">【链接】</a>。</p>
+<p>下面列出了一小部分代码块，作用是根据插入的元素数量和过滤器容器的大小来计算实际的误报率：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">getFalsePositiveProbability</span><span class="params">(<span class="keyword">double</span> numberOfElements)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// (1 - e^(-k * n / m)) ^ k</span></span><br><span class="line">    <span class="keyword">return</span> Math.pow((<span class="number">1</span> - Math.exp(-k * (<span class="keyword">double</span>) numberOfElements</span><br><span class="line">            / (<span class="keyword">double</span>) bitSetSize)), k);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://blogsource.chenkaikai.com/cli_500px.png" alt="image"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+	  
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束 <i class="fa fa-fighter-jet"></i> 感谢阅读 ------</div>
+    
+</div>
+	  
+	</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/算法/" rel="tag"><i class="fa fa-tag"></i> 算法</a>
+          
+            <a href="/tags/BitMap/" rel="tag"><i class="fa fa-tag"></i> BitMap</a>
+          
+            <a href="/tags/Bloom-Filter/" rel="tag"><i class="fa fa-tag"></i> Bloom Filter</a>
+          
+            <a href="/tags/误报率/" rel="tag"><i class="fa fa-tag"></i> 误报率</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/protobuf/" rel="next" title="protobuf 使用指南">
+                <i class="fa fa-chevron-left"></i> protobuf 使用指南
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jet Chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">69</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">33</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">185</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/goldenJet" title="GitHub &rarr; https://github.com/goldenJet" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/goldenJ51015801" title="Twitter &rarr; https://twitter.com/goldenJ51015801" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BF-算法简介"><span class="nav-number">2.</span> <span class="nav-text">BF 算法简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BF-算法优化"><span class="nav-number">3.</span> <span class="nav-text">BF 算法优化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#关于误判率"><span class="nav-number">3.0.1.</span> <span class="nav-text">关于误判率</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关于元素删除的需求"><span class="nav-number">3.0.2.</span> <span class="nav-text">关于元素删除的需求</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#应用场景"><span class="nav-number">4.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BF-算法的数学计算过程"><span class="nav-number">5.</span> <span class="nav-text">BF 算法的数学计算过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#误判概率的证明和计算"><span class="nav-number">5.0.1.</span> <span class="nav-text">误判概率的证明和计算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设计和应用布隆过滤器的方法"><span class="nav-number">5.0.2.</span> <span class="nav-text">设计和应用布隆过滤器的方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BF-算法的代码实现"><span class="nav-number">6.</span> <span class="nav-text">BF 算法的代码实现</span></a></li></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jet Chen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+<div class="BbeiAn-info">
+    <a target="_blank" href="http://www.miitbeian.gov.cn/" rel="nofollow">浙ICP备17005575号-1</a> <!--a标签中增加nofollow属性，避免爬虫出站。-->| 
+	<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802009043" style="text-decoration:none;padding-left:17px;background:url(/images/icon-police.png) no-repeat left center" rel="nofollow">浙公网安备 33010802009043号</a>	  <!--这里将图标作为了背景，以使得能和后面的文字在同一行-->
+</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
