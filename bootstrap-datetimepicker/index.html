@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -165,7 +165,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -176,7 +176,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -408,9 +408,12 @@
       
         <p><center>BootStrap 可谓是目前较受欢迎的前端框架了，用其开发 web 项目，便捷性只有亲自体验才能体会。本文主要介绍了它众多强大功能中的日期组件的使用。</center><br><a id="more"></a></p>
 <p></p><h2>一、简介</h2><p>当我们设计 form 表单的时候，需要使用到日期的填写，对于控件的选择，你完全可以信赖 bootstrap-datetimepicker，先上几张预览图。</p><p><img src="http://blogsource.chenkaikai.com/uploads/image/20170414/1492133906379644.png" title="1492133906379644.png"><img src="http://blogsource.chenkaikai.com/uploads/image/20170414/1492133906817770.png" title="1492133906817770.png"><img src="http://blogsource.chenkaikai.com/uploads/image/20170414/1492133906862632.png" title="1492133906862632.png"></p><p>这几张是我从不同项目中截下来的图，良莠不齐，但是看官想必已经明了。</p><h2>二、依赖</h2><p>首先，需要从官网下载插件 <a href="http://www.bootcss.com/" target="_blank" title="http://www.bootcss.com/">http://www.bootcss.com/</a></p><p>然后引入 js 和 css 样式即可，此处我们必须引入</p><p>样式文件：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link&amp;nbsp;rel=&quot;stylesheet&quot;&amp;nbsp;href=&quot;datetimepicker/bootstrap-datetimepicker.min.css&quot;&amp;nbsp;/&gt;```&lt;p&gt;js：&lt;/p&gt;</span><br></pre></td></tr></table></figure><p></p>
-<p>&lt;script&nbsp;src=”datetimepicker/bootstrap-datetimepicker.min.js”&gt;<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&amp;nbsp;src=&quot;datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js&quot;&gt;&lt;/script&gt;```&lt;h2&gt;三、简单Demo&lt;br/&gt;&lt;/h2&gt;&lt;p&gt;思路就是，写段 div，然后在 script 中将其格式化，就这么简单。&lt;/p&gt;</span><br></pre></td></tr></table></figure></p>
-<p>&lt;div&nbsp;class=”input-group&nbsp;inputBlank”&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;span&nbsp;class=”input-group-addon”&nbsp;&gt;活动时间<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;input&nbsp;size=”16”&nbsp;type=”text”&nbsp;id=”planDateTime”&nbsp;name=”planDateTime”<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;readonly=”readonly”&nbsp;class=”form_datetime&nbsp;form-control”/&gt;<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$(function&amp;nbsp;()&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;$(&quot;#planDateTime&quot;).datetimepicker(&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;format:&amp;nbsp;&quot;yyyy-mm-dd&amp;nbsp;&amp;nbsp;hh:ii&quot;,&amp;nbsp;//&amp;nbsp;格式化成&amp;nbsp;2017-04-14&amp;nbsp;9:53&amp;nbsp;的形式</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;startView:&amp;nbsp;3,&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;初始时是从年开始选择，然后依次选择月、日、时、分</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;autoclose:&amp;nbsp;true,&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;选择完毕之后会自动关闭选择框</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;todayBtn:&amp;nbsp;true,&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;底部显示今日的按钮，点击便会自动输入当时的时间</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;pickerPosition:&amp;nbsp;&quot;bottom-left&quot;,//&amp;nbsp;显示的位置</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;language:&amp;nbsp;&quot;zh-CN&quot;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;选择和显示的时候，都是中文</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;);</span><br><span class="line">&#125;);```&lt;p&gt;依次点击便会出现如下的效果图：&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;http://blogsource.chenkaikai.com/uploads/image/20170414/1492135456186440.png&quot; title=&quot;1492135456186440.png&quot; alt=&quot;bootstrap-datetimepicker4.png&quot;/&gt;&lt;/p&gt;&lt;h2&gt;四、详细介绍&lt;br/&gt;&lt;/h2&gt;&lt;p&gt;上述其实只是简单的案例，如下是初始化时常用的更为详细的说明：&lt;/p&gt;</span><br></pre></td></tr></table></figure></p>
-<p>$(“&#39;#planDateTime”).datetimepicker({<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;format:&nbsp;”yyyy-mm-dd&nbsp;hh:ii:ss”,//设置时间格式，默认值:&nbsp;&#39;mm/dd/yyyy&#39;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;weekStart&nbsp;:&nbsp;0,&nbsp;//一周从哪一天开始。0（星期日）到6（星期六）,默认值0<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;startDate&nbsp;:&nbsp;”2013-02-14&nbsp;10:00”,//可以被选择的最早时间<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;endDate&nbsp;:&nbsp;”2016-02-14&nbsp;10:00”,//可以被选择的最晚时间<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;daysOfWeekDisabled&nbsp;:&nbsp;”0,6”,//禁止选择一星期中的某些天，例子中这样是禁止选择周六和周日<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;autoclose&nbsp;:&nbsp;true,//当选择一个日期之后是否立即关闭此日期时间选择器<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;startView&nbsp;:&nbsp;2,//点开插件后显示的界面。0、小时1、天2、月3、年4、十年，默认值2<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minView&nbsp;:&nbsp;0,//插件可以精确到那个时间，比如1的话就只能选择到天，不能选择小时了<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxView：4,//同理<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;todayBtn&nbsp;:&nbsp;true,//是否在底部显示“今天”按钮<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;todayHighlight&nbsp;:&nbsp;true,//是否高亮当前时间<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;keyboardNavigation&nbsp;:&nbsp;true,//是否允许键盘选择时间<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;language&nbsp;:&nbsp;&#39;zh-CN&#39;,//选择语言，前提是该语言已导入<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forceParse&nbsp;:&nbsp;true,//当选择器关闭的时候，是否强制解析输入框中的值。也就是说，当用户在输入框中输入了不正确的日期，选择器将会尽量解析输入的值，并将解析后的正确值按照给定的格式format设置到输入框中<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minuteStep&nbsp;:&nbsp;5,//分钟的间隔<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pickerPosition&nbsp;:&nbsp;”bottom-right”,//显示的位置，还支持bottom-left<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;viewSelect&nbsp;:&nbsp;0,//默认和minView相同<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showMeridian&nbsp;:&nbsp;true,//是否加上网格，true的话显示上下午<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initialDate&nbsp;:&nbsp;”2015-02-14&nbsp;10:00”//初始化的时间<br>});<code>`</code></p><p>当然，本文只是上手的简单教程，更为详细的说明，当然还是要去查看官方文档（点击下方进行跳转）。</p><p><a href="http://www.bootcss.com/p/bootstrap-datetimepicker/index.htm" target="_blank">文档</a>&nbsp; <a href="http://www.bootcss.com/p/bootstrap-datetimepicker/demo.htm" target="_blank">案例</a><br></p><p><br></p><p><br></p><p></p>
+<p><script&nbsp;src="datetimepicker bootstrap-datetimepicker.min.js"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&amp;nbsp;src=&quot;datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js&quot;&gt;&lt;/script&gt;```&lt;h2&gt;三、简单Demo&lt;br/&gt;&lt;/h2&gt;&lt;p&gt;思路就是，写段 div，然后在 script 中将其格式化，就这么简单。&lt;/p&gt;</span><br></pre></td></tr></table></figure></script&nbsp;src="datetimepicker></p>
+<p><div&nbsp;class="input-group&nbsp;inputblank">
+&nbsp;&nbsp;&nbsp;&nbsp;<span&nbsp;class="input-group-addon"&nbsp;>活动时间
+&nbsp;&nbsp;&nbsp;&nbsp;<input&nbsp;size="16"&nbsp;type="text"&nbsp;id="plandatetime"&nbsp;name="plandatetime" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;readonly="readonly" &nbsp;class="form_datetime&nbsp;form-control">
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$(function&amp;nbsp;()&amp;nbsp;&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;$(&quot;#planDateTime&quot;).datetimepicker(&#123;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;format:&amp;nbsp;&quot;yyyy-mm-dd&amp;nbsp;&amp;nbsp;hh:ii&quot;,&amp;nbsp;//&amp;nbsp;格式化成&amp;nbsp;2017-04-14&amp;nbsp;9:53&amp;nbsp;的形式</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;startView:&amp;nbsp;3,&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;初始时是从年开始选择，然后依次选择月、日、时、分</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;autoclose:&amp;nbsp;true,&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;选择完毕之后会自动关闭选择框</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;todayBtn:&amp;nbsp;true,&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;底部显示今日的按钮，点击便会自动输入当时的时间</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;pickerPosition:&amp;nbsp;&quot;bottom-left&quot;,//&amp;nbsp;显示的位置</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;language:&amp;nbsp;&quot;zh-CN&quot;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;//&amp;nbsp;选择和显示的时候，都是中文</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&#125;);</span><br><span class="line">&#125;);```&lt;p&gt;依次点击便会出现如下的效果图：&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;http://blogsource.chenkaikai.com/uploads/image/20170414/1492135456186440.png&quot; title=&quot;1492135456186440.png&quot; alt=&quot;bootstrap-datetimepicker4.png&quot;/&gt;&lt;/p&gt;&lt;h2&gt;四、详细介绍&lt;br/&gt;&lt;/h2&gt;&lt;p&gt;上述其实只是简单的案例，如下是初始化时常用的更为详细的说明：&lt;/p&gt;</span><br></pre></td></tr></table></figure></input&nbsp;size="16"&nbsp;type="text"&nbsp;id="plandatetime"&nbsp;name="plandatetime"></span&nbsp;class="input-group-addon"&nbsp;></div&nbsp;class="input-group&nbsp;inputblank"></p>
+<p>$(“&#39;#planDateTime”).datetimepicker({<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;format:&nbsp;”yyyy-mm-dd&nbsp;hh:ii:ss”,//设置时间格式，默认值:&nbsp;&#39;mm/dd/yyyy&#39;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;weekStart&nbsp;:&nbsp;0,&nbsp;//一周从哪一天开始。0（星期日）到6（星期六）,默认值0<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;startDate&nbsp;:&nbsp;”2013-02-14&nbsp;10:00”,//可以被选择的最早时间<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;endDate&nbsp;:&nbsp;”2016-02-14&nbsp;10:00”,//可以被选择的最晚时间<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;daysOfWeekDisabled&nbsp;:&nbsp;”0,6”,//禁止选择一星期中的某些天，例子中这样是禁止选择周六和周日<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;autoclose&nbsp;:&nbsp;true,//当选择一个日期之后是否立即关闭此日期时间选择器<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;startView&nbsp;:&nbsp;2,//点开插件后显示的界面。0、小时1、天2、月3、年4、十年，默认值2<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minView&nbsp;:&nbsp;0,//插件可以精确到那个时间，比如1的话就只能选择到天，不能选择小时了<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxView：4,//同理<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;todayBtn&nbsp;:&nbsp;true,//是否在底部显示“今天”按钮<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;todayHighlight&nbsp;:&nbsp;true,//是否高亮当前时间<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;keyboardNavigation&nbsp;:&nbsp;true,//是否允许键盘选择时间<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;language&nbsp;:&nbsp;&#39;zh-CN&#39;,//选择语言，前提是该语言已导入<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;forceParse&nbsp;:&nbsp;true,//当选择器关闭的时候，是否强制解析输入框中的值。也就是说，当用户在输入框中输入了不正确的日期，选择器将会尽量解析输入的值，并将解析后的正确值按照给定的格式format设置到输入框中<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minuteStep&nbsp;:&nbsp;5,//分钟的间隔<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pickerPosition&nbsp;:&nbsp;”bottom-right”,//显示的位置，还支持bottom-left<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;viewSelect&nbsp;:&nbsp;0,//默认和minView相同<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;showMeridian&nbsp;:&nbsp;true,//是否加上网格，true的话显示上下午<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initialDate&nbsp;:&nbsp;”2015-02-14&nbsp;10:00”//初始化的时间<br>});```</p><p>当然，本文只是上手的简单教程，更为详细的说明，当然还是要去查看官方文档（点击下方进行跳转）。</p><p><a href="http://www.bootcss.com/p/bootstrap-datetimepicker/index.htm" target="_blank">文档</a>&nbsp; <a href="http://www.bootcss.com/p/bootstrap-datetimepicker/demo.htm" target="_blank">案例</a><br></p><p><br></p><p><br></p><p></p>
 
       
     </div>
@@ -1210,7 +1213,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1230,6 +1250,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

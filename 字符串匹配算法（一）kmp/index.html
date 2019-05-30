@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -165,7 +165,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -176,7 +176,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -414,7 +414,7 @@
 <p>&nbsp; &nbsp; &nbsp; 实现原理见下图描述：<br></p>
 <p><img src="http://blogsource.chenkaikai.com/uploads/image/20171023/1508751601330014.png" title="1508751601330014.png" alt="KMP01.png"></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;实现代码的话，详见&nbsp;java.lang.indexOf() 方法即可。<br></p>
-<p><br></p><p></p>
+<p><br>&lt;/p&gt;</p>
 <h2>二、KMP简介</h2>
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;其实，上述的 BF 算法的时间复杂度为O(mn)，有很多性能更强的字符串匹配算法比其优秀，对于 Java 的优化，比如 hashmap 等数据结构在 Java8 中都得到了再次的性能提升，但是 String 中的字符串匹配却一直使用此种算法，很是好奇为什么？网上看到很多的言论，但是令人信服的有两点：其一便是“常用场景”，即字符串很多场景下的规模并不大，使用 BF 已经足够了，其二便是在其一的基础上，由于使用 BF 并不需要额外的初始化时的时间和空间开销，所以在“常用场景”之下，足矣。或许在将来的某个版本之上会有改变，但是再言之，据说其实 JVM 有内部的优化，此点暂未考量过。</p>
@@ -1256,7 +1256,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1276,6 +1293,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

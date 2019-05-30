@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -170,7 +170,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -181,7 +181,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -432,7 +432,7 @@
 <p>&nbsp;&nbsp;&nbsp;&nbsp;然后查看项目A的 network，发现 response headers 中有 HSTS 的信息。<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://blogsource.chenkaikai.com/uploads/image/20180831/1535683071116194.png" title="1535683071116194.png" alt="reject-hsts04.png"></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;好了，所有的证据都指向一个点：HSTS，所以就来搞清楚这个 HSTS 待敌是啥玩意儿。<br></p>
-<p><br></p><p></p>
+<p><br>&lt;/p&gt;</p>
 <h2>二、知识点</h2>
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;1、什么是 HSTS<br></p>
@@ -443,12 +443,12 @@
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如：Strict-Transport-Security: max-age=31536000; includeSubDomains</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这说明：① 在未来的&nbsp;<span style="font-size: 14px;">31536000秒（一年）</span>内，HSTS 都是生效的，即该域名的 http 请求都将自动转为 https 请求；②&nbsp;<span style="font-size: 14px;">includeSubDomains 意味着该域名下的所有子域名也都会采用 https 请求</span></p>
 <p><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;2、弊端<br></span></p>
-<p><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;① 当&nbsp;<span style="font-size: 14px;">Strict-Transport-Security 还未过期，但是域名的证书已经过期了，此时处于 HSTS 考虑，浏览器仍然会采用 https 的方式访问，即会提示不安全</span></span></p>
-<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;② 当主域名的证书并不是通配符证书时，此时子域名会强制走 HSTS，所以也会提示不安全，无法访问<br></span></span></p>
-<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;③ 虽然 HSTS 有效抵御了一些不安全的问题（下文会提到），即所有的请求都是走的 HTTPS，但是首次访问的时候走的是 HTTP 协议（暂不考虑Preload List），黑客也是有机可乘的<br></span></span></p>
-<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;④&nbsp;<span style="font-size: 14px;">Strict-Transport-Security 过期之后的首次请求，走的又是 HTTP 协议</span></span></span></p>
-<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;3、优势<br></span></span></p>
-<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; 不仅仅是优势，其实也是最大的安全技术：<strong>HSTS可以用来抵御SSL剥离攻击。</strong></span></span></p>
+<p><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;① 当&nbsp;<span style="font-size: 14px;">Strict-Transport-Security 还未过期，但是域名的证书已经过期了，此时处于 HSTS 考虑，浏览器仍然会采用 https 的方式访问，即会提示不安全</span>&lt;/span&gt;</span></p>
+<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;② 当主域名的证书并不是通配符证书时，此时子域名会强制走 HSTS，所以也会提示不安全，无法访问<br></span>&lt;/span&gt;</span></p>
+<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;③ 虽然 HSTS 有效抵御了一些不安全的问题（下文会提到），即所有的请求都是走的 HTTPS，但是首次访问的时候走的是 HTTP 协议（暂不考虑Preload List），黑客也是有机可乘的<br></span>&lt;/span&gt;</span></p>
+<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;④&nbsp;<span style="font-size: 14px;">Strict-Transport-Security 过期之后的首次请求，走的又是 HTTP 协议</span>&lt;/span&gt;&lt;/span&gt;</span></span></p>
+<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;3、优势<br></span>&lt;/span&gt;</span></p>
+<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; 不仅仅是优势，其实也是最大的安全技术：<strong>HSTS可以用来抵御SSL剥离攻击。</strong></span>&lt;/span&gt;</span></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;何为SSL剥离攻击？就是说人们访问站点的时候，一般都是使用的 HTTP 请求，然后再由服务端进行重定向操作，此时攻击者将用户访问的所有 HTTPS 协议的地址转为 HTTP 协议的地址，从而达到阻止HTTPS的目的，简言之就是偷偷地将目标地址换成指向指定的类似钓鱼网站等地址。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;而 HSTS 的作用就是，当浏览器和服务端创建过一次安全连接后，之后所有的请求便都会转换成 HTTPS 协议的请求。<br></p>
 <p><br></p>
@@ -464,8 +464,8 @@
 <p><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;所以，修改 nginx 配置是行不通的<br></span></p>
 <p><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;2、终极解决之道<br></span></p>
 <p><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中间又踩了一些坑，最后发现，应该是去调整服务端的响应头信息，<br></span></p>
-<p><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;服务端主体技术是 springBoot，安全框架是 springSecurity，然后又踩了一波坑，最后发现，其实只要调整的是&nbsp;<span style="font-size: 14px;">springSecurity 中的配置。</span></span></p>
-<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;配置见官网，<a href="https://docs.spring.io/autorepo/docs/spring-security/3.2.0.CI-SNAPSHOT/reference/html/headers.html" target="_blank">点击链接</a>。<br></span></span></p>
+<p><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;服务端主体技术是 springBoot，安全框架是 springSecurity，然后又踩了一波坑，最后发现，其实只要调整的是&nbsp;<span style="font-size: 14px;">springSecurity 中的配置。</span>&lt;/span&gt;</span></p>
+<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;配置见官网，<a href="https://docs.spring.io/autorepo/docs/spring-security/3.2.0.CI-SNAPSHOT/reference/html/headers.html" target="_blank">点击链接</a>。<br></span>&lt;/span&gt;</span></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;配置也很简单，见下图即可。<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://blogsource.chenkaikai.com/uploads/image/20180831/1535688197240240.png" title="1535688197240240.png" alt="reject-hsts07.png"></p>
 <p><br></p>
@@ -1294,7 +1294,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1314,6 +1331,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

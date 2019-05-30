@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -163,7 +163,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -174,7 +174,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -409,7 +409,7 @@
 
 <p>之前有一篇文章中介绍过 AES 的双向加密的实现，<a href="http://www.jetchen.cn/aes/" target="_blank">此为链接</a>，然后某一天就出异常了。</p>
 <p>问题很蛋疼，Windows 系统上开发的项目，利用 AES 双向加密技术，在 Java 代码内对手机号进行加密解密操作。<br></p>
-<p>一切正常，但是项目移到 Linux 系统上，解密就出如下异常：</p><p></p>
+<p>一切正常，但是项目移到 Linux 系统上，解密就出如下异常：&lt;/p&gt;</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">javax.crypto.BadPaddingException:&amp;nbsp;Given&amp;nbsp;final&amp;nbsp;block&amp;nbsp;not&amp;nbsp;properly&amp;nbsp;padded</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;com.sun.crypto.provider.SunJCE_f.b(DashoA13*..)</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;com.sun.crypto.provider.SunJCE_f.b(DashoA13*..)</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;com.sun.crypto.provider.AESCipher.engineDoFinal(DashoA13*..)</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;javax.crypto.Cipher.doFinal(DashoA13*..)</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;chb.test.crypto.AESUtil.crypt(AESUtil.java:386)</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;chb.test.crypto.AESUtil.AesDecrypt(AESUtil.java:254)</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;chb.test.crypto.AESUtil.main(AESUtil.java:40)</span><br></pre></td></tr></table></figure>
 <p>定位很精准，就是我的 AESUtil 这个工具类里面的如下代码有问题：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//1.构造密钥生成器，指定为AES算法,不区分大小写</span><br><span class="line">KeyGenerator&amp;nbsp;keygen=&amp;nbsp;KeyGenerator.getInstance(&quot;AES&quot;);</span><br><span class="line">//2.根据ecnodeRules规则初始化密钥生成器</span><br><span class="line">//生成一个128位的随机源,根据传入的字节数组</span><br><span class="line">keygen.init(128,&amp;nbsp;new&amp;nbsp;SecureRandom(encodeRules.getBytes()));</span><br></pre></td></tr></table></figure>
@@ -1238,7 +1238,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1258,6 +1275,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -168,7 +168,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -179,7 +179,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -414,7 +414,7 @@
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;① 想用 jenkins，首先的大前提是准备 java 的运行环境，就是装 jdk 。<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;② 如果你要打包的是 maven 项目，那么恭喜，本地还需要安装一个 maven。<br></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;③ 根据项目托管的环境，如果是 git，那么本地还需要安装 git。</p><p></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;③ 根据项目托管的环境，如果是 git，那么本地还需要安装 git。&lt;/p&gt;</p>
 <h2>二、基础配置</h2>
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上述准备工作完事了之后，那就开心地安装 jenkins 吧。<br></p>
@@ -423,9 +423,9 @@
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果有网，则可以在线安装，如果没有网络，则离线安装（建议在线安装，因为插件之间有关联，在线安装的话会帮你安装关联插件，离线的话则要根据提示的插件的依赖<strong><span style="color: #FF0000;">依续安装</span></strong>），提供一个下载插件的清华的源：<a href="https://mirrors.tuna.tsinghua.edu.cn/jenkins/plugins/" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/jenkins/plugins/</a></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;主要插件列表如下（在线安装时，这几个插件安装后会自动安装其依赖的插件）：</p>
-<p>&lt;span style=”color: #2F2F2F; font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #FFFFFF;”&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>git plugin</strong>：从Git拉代码</p>
-<p>&lt;span style=”color: #2F2F2F; font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #FFFFFF;”&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp;Maven Integration plugin</strong>：如果需要使用 maven 来打包的话</p>
-<p>&lt;span style=”color: #2F2F2F; font-family: -apple-system, “SF UI Text”, Arial, “PingFang SC”, “Hiragino Sans GB”, “Microsoft YaHei”, “WenQuanYi Micro Hei”, sans-serif; background-color: #FFFFFF;”&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp;Publish Over SSH</strong>：如果需要将打包好的代码上传到远程的话<br></p>
+<p><span style="color: #2F2F2F; font-family: -apple-system, " sf ui text", arial, "pingfang sc", "hiragino sans gb", "microsoft yahei", "wenquanyi micro hei", sans-serif; background-color: #ffffff;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>git plugin</strong>：从Git拉代码</span></p>
+<p><span style="color: #2F2F2F; font-family: -apple-system, " sf ui text", arial, "pingfang sc", "hiragino sans gb", "microsoft yahei", "wenquanyi micro hei", sans-serif; background-color: #ffffff;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp;Maven Integration plugin</strong>：如果需要使用 maven 来打包的话</span></p>
+<p><span style="color: #2F2F2F; font-family: -apple-system, " sf ui text", arial, "pingfang sc", "hiragino sans gb", "microsoft yahei", "wenquanyi micro hei", sans-serif; background-color: #ffffff;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp;Publish Over SSH</strong>：如果需要将打包好的代码上传到远程的话<br></span></p>
 <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;② 全局配置<br></h4>
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如下仅列出了两项，其它的例如 git 的秘钥配置，暂不赘述<br></p>
@@ -1255,7 +1255,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1275,6 +1292,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

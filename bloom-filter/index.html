@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -107,7 +107,7 @@
 <meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/05/Bloom%20Filter03.png">
 <meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/05/Bloom%20Filter05.png">
 <meta property="og:image" content="http://blogsource.chenkaikai.com/cli_500px.png">
-<meta property="og:updated_time" content="2019-05-30T13:21:21.339Z">
+<meta property="og:updated_time" content="2019-05-30T13:50:18.639Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="细嚼慢咽布隆过滤器(Bloom Filter)">
 <meta name="twitter:description" content="在海量数据处理的场景之下，Bloom Filter 是一种空间效率很高的数据结构，它是一个可以快速判断元素是否存在的概率算法，但是前提是在一定的容错率之下，本文特此进行了一番介绍。">
@@ -165,7 +165,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -176,7 +176,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -451,7 +451,7 @@
 <p>设 $b=e^{\frac nm}$， 则简化为：$f(k)=(1-b^{-k})^k$ ，</p>
 <p>两边取对数得：$lnf(k)=k \cdot ln(1-b^{-k})$，</p>
 <p>两边对k求导：</p>
-<p>$<br>\begin{align}<br>\frac1{f(k)} \cdot f’(k) &amp;= ln(1-b^{-k}) + k\cdot \frac 1{1-b^{-k}}\cdot(-b^{-k})\cdot lnb \cdot (-1) \<br>                        &amp;=ln(1-b^{-k}) + k\cdot \frac {b^{-k} \cdot lnb}{1-b^{-k}}<br>\end{align}<br>$</p>
+<p>$<br>\begin{align}<br>\frac1{f(k)} \cdot f’(k) &amp;= ln(1-b^{-k}) + k\cdot \frac 1{1-b^{-k}}\cdot(-b^{-k})\cdot lnb \cdot (-1) \\<br>                        &amp;=ln(1-b^{-k}) + k\cdot \frac {b^{-k} \cdot lnb}{1-b^{-k}}<br>\end{align}<br>$</p>
 <p>下面求最值：</p>
 <p>$ln(1-b^{-k}) + k \cdot \frac{b^{-k} \cdot lnb}{1-b^{-k}} = 0$<br>$\Rightarrow (1-b^{-k}) \cdot ln(1-b^{-k}) = -k \cdot b^{-k} \cdot lnb $<br>$\Rightarrow (1-b^{-k}) \cdot ln(1-b^{-k}) = b^{-k} \cdot lnb^{-k} $<br>$\Rightarrow 1-b^{-k} = b^{-k}  $<br>$\Rightarrow b^{-k} = \frac12  $<br>$\Rightarrow e^{-\frac{kn}{m}} = \frac12 $<br>$\Rightarrow \frac{kn}{m} = ln2  $<br>$\Rightarrow k = ln2 \cdot \frac mn = 0.7 \cdot \frac mn $ </p>
 <p>因此，即当 $k = 0.7 \cdot \frac mn$ 时误判率最低，此时误判率为：</p>
@@ -1300,6 +1300,67 @@
   
 
   
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+      for (i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<style>
+.MathJax_Display {
+  overflow: auto hidden;
+}
+</style><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+    
+  
+
 
   
 

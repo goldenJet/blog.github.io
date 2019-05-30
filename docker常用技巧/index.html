@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -167,7 +167,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -178,7 +178,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -411,7 +411,7 @@
         <p><center>记录玩docker时的一些小操作，持续更新中~~</center><br><a id="more"></a></p>
 <h4>本文不介绍docker，只记录自己玩 docker 过程中碰到的一些坑和一些常用的操作。</h4>
 
-<p>给个参考文档链接：<a href="https://yeasy.gitbooks.io/docker_practice/content/" target="_blank"><span style="color: #0070C0;">传送门</span></a></p><p></p>
+<p>给个参考文档链接：<a href="https://yeasy.gitbooks.io/docker_practice/content/" target="_blank"><span style="color: #0070C0;">传送门</span></a>&lt;/p&gt;</p>
 <h2>一、踩坑记</h2>
 
 <h4>&nbsp;&nbsp;&nbsp;&nbsp;1）碰到的第一个大坑</h4>
@@ -422,7 +422,7 @@
 <p><br></p>
 <h4>&nbsp;&nbsp;&nbsp;&nbsp;2）docker 安装 gogs</h4>
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;制作容器：<strong>docker create –name=gogs -p 10022:22 -p 10080:3000 -v /data/gogs:/data –link percona:percona gogs/gogs</strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;制作容器：<strong>docker create —name=gogs -p 10022:22 -p 10080:3000 -v /data/gogs:/data —link percona:percona gogs/gogs</strong></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（上述，命令中的 link 意思是和同样是用 docker 启动的数据库进行连接）<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;然后正常启动，正常访问&nbsp; &nbsp;ip:10080，第一次访问需要在界面进行配置，但是<strong>重启 gogs 这个容器之后，再使用 ip:10080 就访问不了</strong>，尴尬。<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;最后反复研究，发现，其实是在页面配置的时候配置错了，看<a href="https://github.com/gogits/gogs/tree/master/docker" target="_blank"><span style="color: #548DD4;">官网文档</span></a>，如下：<br></p>
@@ -434,7 +434,7 @@
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;顺势将云虚拟主机上的WordPress 迁移到此，迁移很简单，<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>step1</strong>，备份数据库至新安装的percona；<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>step2</strong>，将原来的WordPress 全部文件复制至服务器 /data/wordpress/www/<br></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>step3</strong>，安装wordpress，<strong>docker run –name wordpress –link percona:percona -p 8888:80 -v /data/wordpress/www:/var/www/html -d wordpress</strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>step3</strong>，安装wordpress，<strong>docker run —name wordpress —link percona:percona -p 8888:80 -v /data/wordpress/www:/var/www/html -d wordpress</strong></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;下面就是踩过的两个天坑，</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;① 需要修改配置文件 &nbsp;wp-config.php 里面的数据库连接，如图：注意此处的数据库 host，不能写类似 127.0.0.1 之类的本地ip，要么写对外的数据库地址，要么写 percona<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://blogsource.chenkaikai.com/uploads/image/20171206/1512526748176717.png" title="1512526748176717.png" alt="001.png"></p>
@@ -477,8 +477,8 @@
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查看所有容器：<strong>docker ps -a</strong><br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查看正在运行的容器：<strong>docker ps</strong><br></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;创建容器：<strong>docker create</strong> <strong>–name</strong> percona <strong>-v</strong> /data/mysql-data:/var/lib/mysql <strong>-p</strong> 3306:3306 <strong>-e</strong> MYSQL_ROOT_PASSWORD=root <strong>percona</strong></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;说明：–name 是命名这个容器，-v 是指定数据卷（本机：容器），-p 端口映射（本机实际：docker内），-e 参数设置，最后一个percona是镜像的名字</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;创建容器：<strong>docker create</strong> <strong>—name</strong> percona <strong>-v</strong> /data/mysql-data:/var/lib/mysql <strong>-p</strong> 3306:3306 <strong>-e</strong> MYSQL_ROOT_PASSWORD=root <strong>percona</strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;说明：—name 是命名这个容器，-v 是指定数据卷（本机：容器），-p 端口映射（本机实际：docker内），-e 参数设置，最后一个percona是镜像的名字</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;启动/停止/重启容器：<strong>docker start/stop/restart</strong> [容器名]<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;创建并启动容器：<strong>docker run -d</strong> …<br></p>
 <p>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;进入容器：<strong>docker exec -it imageName /bin/bash</strong></p>
@@ -515,7 +515,7 @@
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;. 就是代表当前文件夹下的所有文件<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;docker images 便可以看到我们的镜像了</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⑤ 创建容器并允许<br></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;docker create –name wechat -t -p 9092:9092 wechat:1.0.0</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;docker create —name wechat -t -p 9092:9092 wechat:1.0.0</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;docker start wechat &amp;&amp; docker logs -f wechat</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;docker ps 便可以查看所有正在允许的镜像<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br></p>
@@ -1340,7 +1340,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1360,6 +1377,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -161,7 +161,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -172,7 +172,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -404,7 +404,7 @@
       
         <p><center>有时候 JS 页面需要使用双向加密技术，那么此篇介绍的 JS 端的 AES便是一点点小福音啦。</center><br><a id="more"></a></p>
 <p></p><h2>一、简介</h2><p><strong>&nbsp; &nbsp; &nbsp; &nbsp;<a href="http://www.jetchen.cn/aes/" target="_blank">上篇</a></strong>介绍了使用&nbsp;Java 代码对 AES 这种对称的双向加密技术的具体实现，此篇文章便讲解下 JS 页面的 AES 双向加密技术的实现。</p><p>&nbsp; &nbsp; &nbsp; &nbsp;其实在有些场景下，我们需要在前端进行数据的加密和解密，并且有时候会需要和后端进行一些些交互，由于 JavaScript 若类型语言的特性存在，所以经常会出现前后台加密解密后出现数据有差的情况，后来查阅后发现，其实可以使用 CryptoJS 来实现 JS 的 AES 双向加密， easy 啦。</p><h2>二、实现<br></h2><p>&nbsp; &nbsp; &nbsp; &nbsp;其实很简单，我们只需要引入 CryptoJS 文件，然后调用其中方法即可，JS 文件点此 <a href="https://github.com/goldenJet/AES-Java-JavaScript/blob/master/src/main/resources/static/js/aes_key.js" target="_blank"><strong>GitHub</strong></a> 地址获取。<br></p><p>&nbsp; &nbsp; &nbsp; &nbsp;加密代码：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;CryptoJS.AES.encrypt(word,key).toString();```&lt;p&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;解密代码：&lt;/p&gt;</span><br></pre></td></tr></table></figure><p></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CryptoJS.AES.decrypt(word,key).toString(CryptoJS.enc.Utf8);<code>&lt;p&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; 其中，work 是你加密的数据，key 是你的秘钥。另外，你也可以点击此&lt;a href=&quot;http://encode.chahuo.com/&quot; target=&quot;_blank&quot;&gt;&lt;strong&gt;链接&lt;/strong&gt;&lt;/a&gt;在线验证 AES 加密。&lt;/p&gt;&lt;h2&gt;三、神来之笔&lt;br/&gt;&lt;/h2&gt;&lt;p&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;还有一种是稍复杂一点的，就是除了需要的秘钥之外，还有一个偏移量（iv）。&lt;/p&gt;&lt;p&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;老规矩，需要的 JS 文件点此 &lt;a href=&quot;https://github.com/goldenJet/AES-Java-JavaScript/blob/master/src/main/resources/static/js/aes_key_iv.js&quot; target=&quot;_blank&quot;&gt;&lt;strong&gt;GitHub &lt;/strong&gt;&lt;/a&gt;地址获取。&lt;/p&gt;&lt;p&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; 代码如下：&lt;br/&gt;&lt;/p&gt;</code><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;key&nbsp;=&nbsp;CryptoJS.enc.Utf8.parse(“十六位十六进制数作为秘钥”);&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;iv&nbsp;&nbsp;=&nbsp;CryptoJS.enc.Utf8.parse(&#39;十六位十六进制数作为秘钥偏移量&#39;);&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;加密方法<br>&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;Encrypt(word){<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;srcs&nbsp;=&nbsp;CryptoJS.enc.Utf8.parse(word);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;encrypted&nbsp;=&nbsp;CryptoJS.AES.encrypt(srcs,&nbsp;key,&nbsp;{&nbsp;iv:&nbsp;iv,mode:CryptoJS.mode.CBC,padding:&nbsp;CryptoJS.pad.Pkcs7});&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;encrypted.ciphertext.toString().toUpperCase();<br>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;解密方法&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;Decrypt(word){&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;encryptedHexStr&nbsp;=&nbsp;CryptoJS.enc.Hex.parse(word);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;srcs&nbsp;=&nbsp;CryptoJS.enc.Base64.stringify(encryptedHexStr);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;decrypt&nbsp;=&nbsp;CryptoJS.AES.decrypt(srcs,&nbsp;key,&nbsp;{&nbsp;iv:&nbsp;iv,mode:CryptoJS.mode.CBC,padding:&nbsp;CryptoJS.pad.Pkcs7});&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;decryptedStr&nbsp;=&nbsp;decrypt.toString(CryptoJS.enc.Utf8);&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;decryptedStr.toString();<br>&nbsp;&nbsp;&nbsp;&nbsp;}<code>`</code></p><p>&nbsp; &nbsp; &nbsp; 最后，也提供一个可以在线校验的<a href="http://www.seacha.com/tools/aes.html" target="_blank"><strong>地址</strong></a>。<br></p><h2>四、小结<br></h2><p>&nbsp; &nbsp; &nbsp; &nbsp;总结就是，数据都是宝贝，数据都是争夺的资源，数据的加密也是有所必要的（虽然本文介绍的加密技术较为一般，但是能满足一般需求）。</p><p>&nbsp; &nbsp; &nbsp; &nbsp;有些大篇幅的详细解释就不贴在此文中了，可以点此<a href="https://zhidao.baidu.com/question/647688575019014285.html?qbl=relate_question_0&word=javascript%20aes" target="_blank"><strong>链接</strong></a>查看与钻研。</p><p><br></p><p></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CryptoJS.AES.decrypt(word,key).toString(CryptoJS.enc.Utf8);<code>&lt;p&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; 其中，work 是你加密的数据，key 是你的秘钥。另外，你也可以点击此&lt;a href=&quot;http://encode.chahuo.com/&quot; target=&quot;_blank&quot;&gt;&lt;strong&gt;链接&lt;/strong&gt;&lt;/a&gt;在线验证 AES 加密。&lt;/p&gt;&lt;h2&gt;三、神来之笔&lt;br/&gt;&lt;/h2&gt;&lt;p&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;还有一种是稍复杂一点的，就是除了需要的秘钥之外，还有一个偏移量（iv）。&lt;/p&gt;&lt;p&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;老规矩，需要的 JS 文件点此 &lt;a href=&quot;https://github.com/goldenJet/AES-Java-JavaScript/blob/master/src/main/resources/static/js/aes_key_iv.js&quot; target=&quot;_blank&quot;&gt;&lt;strong&gt;GitHub &lt;/strong&gt;&lt;/a&gt;地址获取。&lt;/p&gt;&lt;p&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; 代码如下：&lt;br/&gt;&lt;/p&gt;</code><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;key&nbsp;=&nbsp;CryptoJS.enc.Utf8.parse(“十六位十六进制数作为秘钥”);&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;iv&nbsp;&nbsp;=&nbsp;CryptoJS.enc.Utf8.parse(&#39;十六位十六进制数作为秘钥偏移量&#39;);&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;加密方法<br>&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;Encrypt(word){<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;srcs&nbsp;=&nbsp;CryptoJS.enc.Utf8.parse(word);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;encrypted&nbsp;=&nbsp;CryptoJS.AES.encrypt(srcs,&nbsp;key,&nbsp;{&nbsp;iv:&nbsp;iv,mode:CryptoJS.mode.CBC,padding:&nbsp;CryptoJS.pad.Pkcs7});&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;encrypted.ciphertext.toString().toUpperCase();<br>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;解密方法&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;Decrypt(word){&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;encryptedHexStr&nbsp;=&nbsp;CryptoJS.enc.Hex.parse(word);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;srcs&nbsp;=&nbsp;CryptoJS.enc.Base64.stringify(encryptedHexStr);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;decrypt&nbsp;=&nbsp;CryptoJS.AES.decrypt(srcs,&nbsp;key,&nbsp;{&nbsp;iv:&nbsp;iv,mode:CryptoJS.mode.CBC,padding:&nbsp;CryptoJS.pad.Pkcs7});&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;decryptedStr&nbsp;=&nbsp;decrypt.toString(CryptoJS.enc.Utf8);&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;decryptedStr.toString();<br>&nbsp;&nbsp;&nbsp;&nbsp;}```</p><p>&nbsp; &nbsp; &nbsp; 最后，也提供一个可以在线校验的<a href="http://www.seacha.com/tools/aes.html" target="_blank"><strong>地址</strong></a>。<br></p><h2>四、小结<br></h2><p>&nbsp; &nbsp; &nbsp; &nbsp;总结就是，数据都是宝贝，数据都是争夺的资源，数据的加密也是有所必要的（虽然本文介绍的加密技术较为一般，但是能满足一般需求）。</p><p>&nbsp; &nbsp; &nbsp; &nbsp;有些大篇幅的详细解释就不贴在此文中了，可以点此<a href="https://zhidao.baidu.com/question/647688575019014285.html?qbl=relate_question_0&word=javascript%20aes" target="_blank"><strong>链接</strong></a>查看与钻研。</p><p><br></p><p></p>
 
       
     </div>
@@ -1208,7 +1208,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1228,6 +1245,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -165,7 +165,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -176,7 +176,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -411,7 +411,7 @@
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;外网项目按要求欲添加SSL，虽然在 http 三次握手的基础上增加了 SSL 的安全级别的握手，性能上打了点小折扣，并且对服务器性能增加了一点点小压力，但是这些都是安全性的代价，是物有所值的体现。<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;项目背景：项目是 SpringBoot 项目，运行是以 jar 包的形式运行的。<br></p>
-<p><br></p><p></p>
+<p><br>&lt;/p&gt;</p>
 <h2>二、项目配置</h2>
 
 <h4>&nbsp;&nbsp;&nbsp;&nbsp;1、在 resources 下添加证书<br></h4>
@@ -445,8 +445,8 @@
 <p>&nbsp;&nbsp;&nbsp;&nbsp;至今未解之谜，叹气。<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;2、新增证书重启nginx，大概报如下错误：<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NGINX SSL: error:0200100D:system library:fopen:Permission denied</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;很明显是权限问题，但是 ll 发现已经给了文件777的权限，文件权限没问题，所以后来想到了&lt;span style=”color: #333333; font-family: “Microsoft YaHei”, Helvetica, “Meiryo UI”, “Malgun Gothic”, “Segoe UI”, “Trebuchet MS”, Monaco, monospace, Tahoma, STXihei, 华文细黑, STHeiti, “Helvetica Neue”, “Droid Sans”, “wenquanyi micro hei”, FreeSans, Arimo, Arial, SimSun, 宋体, Heiti, 黑体, sans-serif; background-color: #FFFFFF;”&gt;selinux，想到了文件策略问题，于是我们查看了 nginx 内置的 html 文件的策略：</p>
-<p>&lt;span style=”color: #333333; font-family: “Microsoft YaHei”, Helvetica, “Meiryo UI”, “Malgun Gothic”, “Segoe UI”, “Trebuchet MS”, Monaco, monospace, Tahoma, STXihei, 华文细黑, STHeiti, “Helvetica Neue”, “Droid Sans”, “wenquanyi micro hei”, FreeSans, Arimo, Arial, SimSun, 宋体, Heiti, 黑体, sans-serif; background-color: #FFFFFF;”&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ls -lrtZ /usr/share/nginx/html</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;很明显是权限问题，但是 ll 发现已经给了文件777的权限，文件权限没问题，所以后来想到了<span style="color: #333333; font-family: " microsoft yahei", helvetica, "meiryo ui", "malgun gothic", "segoe "trebuchet ms", monaco, monospace, tahoma, stxihei, 华文细黑, stheiti, "helvetica neue", "droid sans", "wenquanyi micro hei", freesans, arimo, arial, simsun, 宋体, heiti, 黑体, sans-serif; background-color: #ffffff;">selinux，想到了文件策略问题，于是我们查看了 nginx 内置的 html 文件的策略：</span></p>
+<p><span style="color: #333333; font-family: " microsoft yahei", helvetica, "meiryo ui", "malgun gothic", "segoe "trebuchet ms", monaco, monospace, tahoma, stxihei, 华文细黑, stheiti, "helvetica neue", "droid sans", "wenquanyi micro hei", freesans, arimo, arial, simsun, 宋体, heiti, 黑体, sans-serif; background-color: #ffffff;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ls -lrtZ /usr/share/nginx/html</span></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://blogsource.chenkaikai.com/uploads/image/20180423/1524447012900731.png" title="1524447012900731.png" alt="Image 1.png"></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;而我们自己的 SSL 证书的 selinux 策略为：<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://blogsource.chenkaikai.com/uploads/image/20180423/1524447115810057.png" title="1524447115810057.png" alt="Image 2.png"></p>
@@ -1266,7 +1266,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1286,6 +1303,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

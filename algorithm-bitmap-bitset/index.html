@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -169,7 +169,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -180,7 +180,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -422,7 +422,7 @@
 <h4 id="2、案例说明"><a href="#2、案例说明" class="headerlink" title="2、案例说明"></a>2、案例说明</h4><p>① 案例一：还是上文的数组，需求是查询元素6是否在数组中。<br>原先我们需要遍历整个数组，时间复杂度为 O(n);<br>而现在我们只需要查验下标为6的字节是0还是1即可，如果是1，则代表存在，时间复杂度直接降为 O(1)。<br>所以，<strong>最直接的应用场景便是：</strong>数据的查重。</p>
 <p>② 案例二：有两个数组，判断这两个数组中的重复元素。<br>原先的最浅显的做法是双层for循环进行判断比较。<br>而现在，只需要将转换完成的两个BirMap进行与运算即可，如：11001110B &amp; 10100000B = 10000000B，所有得出结果，只有元素 7 重复。<br>当然，<strong>最直接的应用场景是：</strong>每个客户都有不同的标签，当需要查找同时符合标签a和标签b的客户的时候，只需要将标签a和标签b的客户查出来进行如上的<strong>与运算</strong>即可。</p>
 <h4 id="3、补充说明"><a href="#3、补充说明" class="headerlink" title="3、补充说明"></a>3、补充说明</h4><p>① 实际使用的时候，并不会向上面一样很随意地将长度设置为8，一般会设置为32（int型）或64（long型），理由见下文 BitSet 源码即可。<br>② 除了上文提到的与运算，当然了，逻辑或和逻辑异或操作都是OK的。<br>③ 每个Bit位只能是0或1，所以只能代表true or false，当我们要进行少量统计的时候，可以使用2-BitMap，即每个位上可以使用 00、01、10、11来分别表示数量为 0、1、2，此时的 11 一般无意义。</p>
-<h2 id="三、BitSet-源码"><a href="#三、BitSet-源码" class="headerlink" title="三、BitSet 源码"></a>三、BitSet 源码</h2><h4 id="1、简述"><a href="#1、简述" class="headerlink" title="1、简述"></a>1、简述</h4><p>对于 BitMap 这种经典的数据结构，在 Java 语言里面，其实已经有对应实现的数据结构类 java.util.BitSet 了（<strong>*@since **</strong>JDK1.0*），而 BitSet 的底层原理，其实就是用 long 类型的数组来存储元素，所以回过头来看上文提到的为什么实际使用的时候，长度一般会是有规则的，因为此处使用的是long类型的数组，而 1 long = 64 bit，所以数据大小会是64的整数倍。</p>
+<h2 id="三、BitSet-源码"><a href="#三、BitSet-源码" class="headerlink" title="三、BitSet 源码"></a>三、BitSet 源码</h2><h4 id="1、简述"><a href="#1、简述" class="headerlink" title="1、简述"></a>1、简述</h4><p>对于 BitMap 这种经典的数据结构，在 Java 语言里面，其实已经有对应实现的数据结构类 java.util.BitSet 了（<strong><em>@since *</em></strong>JDK1.0*），而 BitSet 的底层原理，其实就是用 long 类型的数组来存储元素，所以回过头来看上文提到的为什么实际使用的时候，长度一般会是有规则的，因为此处使用的是long类型的数组，而 1 long = 64 bit，所以数据大小会是64的整数倍。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* The internal field corresponding to the serialField "bits".</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">private</span>  <span class="keyword">long</span>[]  words;</span><br></pre></td></tr></table></figure>
 <p>至于 Java 中的 BitSet 为什么使用 long 数组而不使用 int 数组，我觉得应该是出于 Java 语言的性能考虑的，因为在进行<strong>逻辑与等一系列位运算</strong>的时候，是需要将两个数组中的元素一一进行位运算的，而使用 long 的一个好处是数组的长度减少了，从而遍历的次数也就减少了。</p>
 <p>总之就是和场景有关系，抽象概念上就有点类似 Java 中字符串的匹配算法（indexOf）使用的是 BF（暴力检索）算法一样，为什么不用更优解呢？还不是因为更优解在少量数据的情况下反而是拖后腿的那一位。</p>
@@ -1245,7 +1245,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1265,6 +1282,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -161,7 +161,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -172,7 +172,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -406,7 +406,7 @@
 <h2>一、下载<br></h2>
 
 <p>git clone + 地址，如：<strong>git clone&nbsp;<a href="https://github.com/goldenJet/POIDemo.git" target="_blank" rel="noopener">https://github.com/goldenJet/POIDemo.git</a></strong></p>
-<p>git pull 拉代码，一般是提交之前都必须做的一件事（就像SVN上传前先 update 一样，防止冲突）<br></p><p></p>
+<p>git pull 拉代码，一般是提交之前都必须做的一件事（就像SVN上传前先 update 一样，防止冲突）<br>&lt;/p&gt;</p>
 <h2>二、上传</h2>
 
 <p>① 先初始化</p>
@@ -427,12 +427,12 @@
 <p>&nbsp; &nbsp; ① 查看当前状态（包括所处的分支）：git status</p>
 <p>&nbsp; &nbsp; ② 切换分支，如切换至dev分支：&nbsp;git checkout dev</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;③ 首次提交，有可能会出错：fatal: refusing to merge unrelated histories 那是因为两个仓库无共同的 commit，所以视为不同的项目，无法提交，</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;解决：git pull –allow-unrelated-histories</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;解决：git pull —allow-unrelated-histories</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;④ github 提交时没有contributions解决：大部分情况是提交的邮箱和 github 的邮箱不一致，<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查看提交记录的邮箱：提交记录的地址后添加 .patch 即可查看，如：<a href="https://github.com/goldenJet/SpiderDemo/commit/a2f95d24979a90479e07affd6e70cd2f489cb05d.patch" target="_blank" rel="noopener">https://github.com/goldenJet/SpiderDemo/commit/a2f95d24979a90479e07affd6e70cd2f489cb05d.patch</a></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查看本地的全局提交邮箱：git config –global user.email</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;修改本地的全局提交邮箱：git config –global user.email “your email address”&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<br></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查看和修改当前项目的提交邮箱：把上述命令中的&nbsp; –global&nbsp; 去掉即可<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查看本地的全局提交邮箱：git config —global user.email</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;修改本地的全局提交邮箱：git config —global user.email “your email address”&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查看和修改当前项目的提交邮箱：把上述命令中的&nbsp; —global&nbsp; 去掉即可<br></p>
 <p><br></p>
 <h2>四、很实用</h2>
 
@@ -1262,7 +1262,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1282,6 +1299,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

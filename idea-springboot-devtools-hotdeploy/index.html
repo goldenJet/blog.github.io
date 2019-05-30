@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -165,7 +165,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -176,7 +176,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -415,7 +415,8 @@
       
         <p><center>开发 spring-boot 项目时，频繁编译和重启服务是大诟病，好了，现在开发者的福音来了。</center><br><a id="more"></a></p>
 <p></p><h2>简介<br></h2><p>热部署简单理解就是当你开发时，写的 java 文件有变更，那么此时 IDEA 就会自动帮你部署，而你并不需要再重启服务了。<br></p><p>当然，你也可以通过 Ctrl + Shift +F9 进行手动编译。</p><h2>修改 pom.xml</h2><p>dependencies 中添加如下：<br></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;version&gt;1.3.0.RELEASE&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;```&lt;p&gt;plugins中添加如下代码：&lt;br/&gt;&lt;/p&gt;</span><br></pre></td></tr></table></figure><p></p>
-<p><plugin><br>&nbsp;&nbsp;&nbsp;&nbsp;<groupid>org.springframework.boot</groupid><br>&nbsp;&nbsp;&nbsp;&nbsp;<artifactid>spring-boot-maven-plugin</artifactid><br>&nbsp;&nbsp;&nbsp;&nbsp;<configuration><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--&nbsp;热部署&nbsp;--><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;span&nbsp;style=”white-space:pre”&gt;&nbsp;&nbsp;<fork>true</fork><br>&nbsp;&nbsp;&nbsp;&nbsp;</configuration><br></plugin><code>`</code></p><h2>修改 IDEA 设置<br></h2><p><img src="http://blogsource.chenkaikai.com/uploads/image/20170526/1495788262343945.png" title="1495788262343945.png" alt="hotDeploy.png"></p><h2>临门一脚<br></h2><p>在你的 pom.xml 内按键：Ctrl + Shift + Alt + / ， 然后按下图进行就 OK<br></p><p><img src="http://blogsource.chenkaikai.com/uploads/image/20170526/1495788525365211.png" title="1495788525365211.png"></p><p><img src="http://blogsource.chenkaikai.com/uploads/image/20170526/1495788525846253.png" title="1495788525846253.png"></p><p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p></p>
+<p><plugin><br>&nbsp;&nbsp;&nbsp;&nbsp;<groupid>org.springframework.boot</groupid><br>&nbsp;&nbsp;&nbsp;&nbsp;<artifactid>spring-boot-maven-plugin</artifactid><br>&nbsp;&nbsp;&nbsp;&nbsp;<configuration><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!--&nbsp;热部署&nbsp;--><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span&nbsp;style="white-space:pre">&nbsp;&nbsp;<fork>true</fork><br>&nbsp;&nbsp;&nbsp;&nbsp;</span&nbsp;style="white-space:pre"></configuration>
+</plugin>```</p><h2>修改 IDEA 设置<br></h2><p><img src="http://blogsource.chenkaikai.com/uploads/image/20170526/1495788262343945.png" title="1495788262343945.png" alt="hotDeploy.png"></p><h2>临门一脚<br></h2><p>在你的 pom.xml 内按键：Ctrl + Shift + Alt + / ， 然后按下图进行就 OK<br></p><p><img src="http://blogsource.chenkaikai.com/uploads/image/20170526/1495788525365211.png" title="1495788525365211.png"></p><p><img src="http://blogsource.chenkaikai.com/uploads/image/20170526/1495788525846253.png" title="1495788525846253.png"></p><p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p></p>
 
       
     </div>
@@ -1215,7 +1216,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1235,6 +1253,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

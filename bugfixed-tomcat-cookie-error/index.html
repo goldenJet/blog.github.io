@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -161,7 +161,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -172,7 +172,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -412,7 +412,7 @@
         <p><center>当使用 Spring Session 存储 session 数据时，由于是依托 cookie 的，但是 tomcat 对 cookie 的解析又有所限制，所以出现了文中的问题。</center><br><a id="more"></a></p>
 <h2>一、问题描述<br></h2>
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp;项目是 spring boot 1.4版本的项目，出现了如下的错误：</p><p></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;项目是 spring boot 1.4版本的项目，出现了如下的错误：&lt;/p&gt;</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">java.lang.IllegalArgumentException:&amp;nbsp;An&amp;nbsp;invalid&amp;nbsp;character&amp;nbsp;[32]&amp;nbsp;was&amp;nbsp;present&amp;nbsp;in&amp;nbsp;the&amp;nbsp;Cookie&amp;nbsp;value</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;org.apache.tomcat.util.http.Rfc6265CookieProcessor.validateCookieValue(Rfc6265CookieProcessor.java:160)&amp;nbsp;~[tomcat-embed-core-8.5.4.jar:8.5.4]</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;org.apache.tomcat.util.http.Rfc6265CookieProcessor.generateHeader(Rfc6265CookieProcessor.java:109)&amp;nbsp;~[tomcat-embed-core-8.5.4.jar:8.5.4]</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;org.apache.catalina.connector.Response.generateCookieString(Response.java:989)&amp;nbsp;~[tomcat-embed-core-8.5.4.jar:8.5.4]</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;org.apache.catalina.connector.Response.addCookie(Response.java:937)&amp;nbsp;~[tomcat-embed-core-8.5.4.jar:8.5.4]</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;org.apache.catalina.connector.ResponseFacade.addCookie(ResponseFacade.java:386)&amp;nbsp;~[tomcat-embed-core-8.5.4.jar:8.5.4]</span><br><span class="line">...</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1425)&amp;nbsp;[tomcat-embed-core-8.5.4.jar:8.5.4]</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)&amp;nbsp;[tomcat-embed-core-8.5.4.jar:8.5.4]</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)&amp;nbsp;[na:1.8.0_101]</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)&amp;nbsp;[na:1.8.0_101]</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)&amp;nbsp;[tomcat-embed-core-8.5.4.jar:8.5.4]</span><br><span class="line">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;at&amp;nbsp;java.lang.Thread.run(Thread.java:745)&amp;nbsp;[na:1.8.0_101]</span><br></pre></td></tr></table></figure>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;从问题中我们看出，是 cookie 的原因引起的问题，但是排查我们手动使用 cookie 的地方并没有发现任何问题。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;原来，是因为我们依托了 spring session 来存储一些数据，然而这些赋值的动作是 spring 底层自动完成的，我们并没有手动进行相关操作。<br></p>
@@ -1244,7 +1244,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1264,6 +1281,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

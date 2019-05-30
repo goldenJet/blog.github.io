@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -170,7 +170,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -181,7 +181,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -415,7 +415,7 @@
 <h2>一、初识<br></h2>
 
 <p>Spring 的自动注入，注解方式就是<span style="font-size: 14px;">使用 @Autowired，Spring 会帮助我们自动注入已经使用了 @component、@controller、@service、@repository这些注解标记过的类，从此释放我们的双手，不需要再手动 new 对象了。</span>每个初学者都伸手就是下图的写法：</p>
-<p><img src="http://blogsource.chenkaikai.com/uploads/image/20170726/1501036271442597.png" title="1501036271442597.png" alt="autowired01.png"></p><p></p>
+<p><img src="http://blogsource.chenkaikai.com/uploads/image/20170726/1501036271442597.png" title="1501036271442597.png" alt="autowired01.png">&lt;/p&gt;</p>
 <h2>二、再探</h2>
 
 <p><span style="font-size: 14px;">但是今天看了下智能的 IDE 给的警告信息，瞬间觉得自己之前都是使用的 low 爆了的 BI。</span></p>
@@ -1250,7 +1250,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1270,6 +1287,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -163,7 +163,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -174,7 +174,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -409,14 +409,14 @@
 
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;audio&amp;nbsp;id=&quot;audio&quot;&amp;nbsp;src=&amp;#39;helloWorld.mp3&amp;#39;&gt;&lt;/audio&gt;</span><br></pre></td></tr></table></figure>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;有如上所示的 audio 标签，如下代码便是使用 jQuery 来控制播放和暂停。</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;需要注意的是，[0] 才是对应的节点对象。<br></p><p></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;需要注意的是，[0] 才是对应的节点对象。<br>&lt;/p&gt;</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$(&quot;#audio&quot;)[0].play();//播放</span><br><span class="line">$(&quot;#audio&quot;)[0].pause();//暂停</span><br></pre></td></tr></table></figure>
 <p><br></p>
 <h2>二、在 Chrome 浏览器下如何禁用下载按钮</h2>
 
 <p><img src="http://blogsource.chenkaikai.com/uploads/image/20180202/1517537998843347.png" title="1517537998843347.png" alt="audio01.png"></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;如图所示，在 Chrome 浏览器下，便自动生成了下载的按钮，哎，开始我们想取消掉它，有如下几种方式可以采用：<br></p>
-<h4>&nbsp;&nbsp;&nbsp;&nbsp;1、controlsList=”nodownload”</h4>
+<h4>&nbsp;&nbsp;&nbsp;&nbsp;1、controlsList="nodownload"</h4>
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;此方法的弊端在于，Chrome 的版本至少是 58，低于则无效，具体可以参考<a href="https://github.com/googlechrome/samples/blob/gh-pages/media/controlslist.html" target="_blank"> controlslist.html&nbsp;</a>，<a href="https://googlechrome.github.io/samples/media/controlslist.html" target="_blank">controlsList在线例子</a>：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;audio&amp;nbsp;id=&quot;audio&quot;&amp;nbsp;src=&amp;#39;helloWorld.mp3&amp;#39;&amp;nbsp;controls=&quot;controls&quot;&amp;nbsp;controlsList=&quot;nodownload&quot;&gt;&lt;/audio&gt;</span><br></pre></td></tr></table></figure>
@@ -1100,7 +1100,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">一、jQuery控制播放和暂停</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">二、在 Chrome 浏览器下如何禁用下载按钮</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">2.0.1.</span> <span class="nav-text">    1、controlsList=”nodownload”</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">2.0.2.</span> <span class="nav-text">    2、CSS 方式来隐藏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">2.0.3.</span> <span class="nav-text">    3、禁用右键</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">2.0.4.</span> <span class="nav-text">    4、插件</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">一、jQuery控制播放和暂停</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">二、在 Chrome 浏览器下如何禁用下载按钮</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">2.0.1.</span> <span class="nav-text">    1、controlsList=&quot;nodownload&quot;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">2.0.2.</span> <span class="nav-text">    2、CSS 方式来隐藏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">2.0.3.</span> <span class="nav-text">    3、禁用右键</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">2.0.4.</span> <span class="nav-text">    4、插件</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -1245,7 +1245,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1265,6 +1282,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

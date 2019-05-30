@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -168,7 +168,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -179,7 +179,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -410,7 +410,7 @@
 
       
         <p><center>Java开发人员，在被 Spring 统治的世界，你还不快快学习。现在来快速搭建一套SpringBoot工程吧。</center><br><a id="more"></a></p>
-<p></p><h2>一、快速上手<br></h2><p>按下系列图步骤可快速创建项目。<br></p><p><img src="http://blogsource.chenkaikai.com/uploads/image/20170609/1496997098583293.png" title="1496997098583293.png" alt="SpringBoot01.png"><img src="http://blogsource.chenkaikai.com/uploads/image/20170609/1496997123923818.png" title="1496997123923818.png" alt="SpringBoot02.png"></p><p>下图选择引入的 jar 包，由于是快速搭建，所以只需引入需要的 web 包。</p><p><img src="http://blogsource.chenkaikai.com/uploads/image/20170609/1496997197689846.png" title="1496997197689846.png" alt="SpringBoot03.png"><img src="http://blogsource.chenkaikai.com/uploads/image/20170609/1496997820311973.png" title="1496997820311973.png" alt="SpringBoot04.png">点 finish 就创建成功了。</p><p>然后，下图就是项目的结构，其中自动帮我们创建了启动类 DemoApplication.java，还有配置文件 application.properties</p><p><img src="http://blogsource.chenkaikai.com/uploads/image/20170609/1496997953145774.png" title="1496997953145774.png" alt="SpringBoot07.png"></p><p><img src="http://blogsource.chenkaikai.com/uploads/image/20170609/1496997975230329.png" title="1496997975230329.png" alt="SpringBoot06.png"></p><h2>二、HelloWorld<br></h2><p>默认是8080端口，如果想修改，就进入 application.properties 中修改吧，添加如下代码即可。</p><pre style="background-color:#2b2b2b;color:#a9b7c6;font-family:&#39;SimSun&#39;;font-size:9.0pt;"><span style="font-size: 14px;"><strong>server.port=8081</strong></span><br><code>&lt;p&gt;我们创建了两个 Controller，如下，然后进去启动类跑 main 方法即可启动。&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;http://blogsource.chenkaikai.com/uploads/image/20170609/1496998353628926.png&quot; title=&quot;1496998353628926.png&quot;/&gt;&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;http://blogsource.chenkaikai.com/uploads/image/20170609/1496998353714520.png&quot; title=&quot;1496998353714520.png&quot;/&gt;&lt;/p&gt;&lt;p&gt;然后浏览器分别访问&amp;nbsp;&lt;a href=&quot;http://localhost:8081/upload&quot;&gt;http://localhost:8081/upload&lt;/a&gt;&amp;nbsp;和&amp;nbsp;&lt;a href=&quot;http://localhost:8081/upload2&quot;&gt;http://localhost:8081/upload2&lt;/a&gt; &lt;/p&gt;&lt;p&gt;我们发现前一个会报错，找不到页面，后一个就会在页面看到我们返回的 “&lt;span style=&quot;font-family: &quot;Microsoft YaHei&quot;; font-size: medium;&quot;&gt;HelloWorld2 !&lt;/span&gt;”&lt;/p&gt;&lt;p&gt;缘由很简单，两个Controller，在类上面的注解不同， Ctrl + 左键 点击进入&amp;nbsp;@RestController，你会发现下图的惊喜，它已经帮我们加了 ResponseBody 这个注解，所以返回的是个 Json 串，Spring 不会像第一个 Controller 一样帮我们去找对应的页面。&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;http://blogsource.chenkaikai.com/uploads/image/20170609/1496998720903652.png&quot; title=&quot;1496998720903652.png&quot; alt=&quot;SpringBoot10.png&quot;/&gt;&lt;/p&gt;&lt;p&gt;代码就不贴了，都是最基本的小操作，从此开发Java 的 web 项目，是不是多了一条简洁的道路。&lt;/p&gt;&lt;p&gt;虽然起步变简洁了，但是我们需要的很多配置该怎么解决呢？其实 SpringBoot 里面有一个注解叫&amp;nbsp;@Configuration，加上这个注解的类，就变成一个配合类的，有兴趣的自己研究吧，在此就贴一份简单的 thymeleaf 的配置文件供参考。&lt;/p&gt;</code><br>import&nbsp;com.wailian.thymeleaf.resolver.ByteArrayResourceResolver;<br>import&nbsp;org.springframework.beans.factory.InitializingBean;<br>import&nbsp;org.springframework.beans.factory.annotation.Autowired;<br>import&nbsp;org.springframework.context.annotation.Bean;<br>import&nbsp;org.springframework.context.annotation.Configuration;<br>import&nbsp;org.thymeleaf.TemplateEngine;<br>import&nbsp;org.thymeleaf.templateresolver.TemplateResolver;<br>@Configuration<br>public&nbsp;class&nbsp;ThymeleafConfig&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;@Autowired<br>&nbsp;&nbsp;&nbsp;&nbsp;TemplateEngine&nbsp;templateEngine;<br>&nbsp;&nbsp;&nbsp;&nbsp;@Bean<br>&nbsp;&nbsp;&nbsp;&nbsp;InitializingBean&nbsp;addResolverToTemplateEngine()&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;()&nbsp;-&gt;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TemplateResolver&nbsp;resolver&nbsp;=&nbsp;new&nbsp;TemplateResolver();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resolver.setResourceResolver(new&nbsp;ByteArrayResourceResolver());<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resolver.setPrefix(null);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resolver.setSuffix(null);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resolver.setCacheable(false);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resolver.setTemplateMode(“HTML5”);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resolver.setCharacterEncoding(“utf-8”);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;templateEngine.addTemplateResolver(resolver);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<code>`</code><p><br></p><p><br></p><p></p>
+<p></p><h2>一、快速上手<br></h2><p>按下系列图步骤可快速创建项目。<br></p><p><img src="http://blogsource.chenkaikai.com/uploads/image/20170609/1496997098583293.png" title="1496997098583293.png" alt="SpringBoot01.png"><img src="http://blogsource.chenkaikai.com/uploads/image/20170609/1496997123923818.png" title="1496997123923818.png" alt="SpringBoot02.png"></p><p>下图选择引入的 jar 包，由于是快速搭建，所以只需引入需要的 web 包。</p><p><img src="http://blogsource.chenkaikai.com/uploads/image/20170609/1496997197689846.png" title="1496997197689846.png" alt="SpringBoot03.png"><img src="http://blogsource.chenkaikai.com/uploads/image/20170609/1496997820311973.png" title="1496997820311973.png" alt="SpringBoot04.png">点 finish 就创建成功了。</p><p>然后，下图就是项目的结构，其中自动帮我们创建了启动类 DemoApplication.java，还有配置文件 application.properties</p><p><img src="http://blogsource.chenkaikai.com/uploads/image/20170609/1496997953145774.png" title="1496997953145774.png" alt="SpringBoot07.png"></p><p><img src="http://blogsource.chenkaikai.com/uploads/image/20170609/1496997975230329.png" title="1496997975230329.png" alt="SpringBoot06.png"></p><h2>二、HelloWorld<br></h2><p>默认是8080端口，如果想修改，就进入 application.properties 中修改吧，添加如下代码即可。</p><pre style="background-color:#2b2b2b;color:#a9b7c6;font-family:&#39;SimSun&#39;;font-size:9.0pt;"><span style="font-size: 14px;"><strong>server.port=8081</strong></span><br><code>&lt;p&gt;我们创建了两个 Controller，如下，然后进去启动类跑 main 方法即可启动。&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;http://blogsource.chenkaikai.com/uploads/image/20170609/1496998353628926.png&quot; title=&quot;1496998353628926.png&quot;/&gt;&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;http://blogsource.chenkaikai.com/uploads/image/20170609/1496998353714520.png&quot; title=&quot;1496998353714520.png&quot;/&gt;&lt;/p&gt;&lt;p&gt;然后浏览器分别访问&amp;nbsp;&lt;a href=&quot;http://localhost:8081/upload&quot;&gt;http://localhost:8081/upload&lt;/a&gt;&amp;nbsp;和&amp;nbsp;&lt;a href=&quot;http://localhost:8081/upload2&quot;&gt;http://localhost:8081/upload2&lt;/a&gt; &lt;/p&gt;&lt;p&gt;我们发现前一个会报错，找不到页面，后一个就会在页面看到我们返回的 “&lt;span style=&quot;font-family: &quot;Microsoft YaHei&quot;; font-size: medium;&quot;&gt;HelloWorld2 !&lt;/span&gt;”&lt;/p&gt;&lt;p&gt;缘由很简单，两个Controller，在类上面的注解不同， Ctrl + 左键 点击进入&amp;nbsp;@RestController，你会发现下图的惊喜，它已经帮我们加了 ResponseBody 这个注解，所以返回的是个 Json 串，Spring 不会像第一个 Controller 一样帮我们去找对应的页面。&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;http://blogsource.chenkaikai.com/uploads/image/20170609/1496998720903652.png&quot; title=&quot;1496998720903652.png&quot; alt=&quot;SpringBoot10.png&quot;/&gt;&lt;/p&gt;&lt;p&gt;代码就不贴了，都是最基本的小操作，从此开发Java 的 web 项目，是不是多了一条简洁的道路。&lt;/p&gt;&lt;p&gt;虽然起步变简洁了，但是我们需要的很多配置该怎么解决呢？其实 SpringBoot 里面有一个注解叫&amp;nbsp;@Configuration，加上这个注解的类，就变成一个配合类的，有兴趣的自己研究吧，在此就贴一份简单的 thymeleaf 的配置文件供参考。&lt;/p&gt;</code><br>import&nbsp;com.wailian.thymeleaf.resolver.ByteArrayResourceResolver;<br>import&nbsp;org.springframework.beans.factory.InitializingBean;<br>import&nbsp;org.springframework.beans.factory.annotation.Autowired;<br>import&nbsp;org.springframework.context.annotation.Bean;<br>import&nbsp;org.springframework.context.annotation.Configuration;<br>import&nbsp;org.thymeleaf.TemplateEngine;<br>import&nbsp;org.thymeleaf.templateresolver.TemplateResolver;<br>@Configuration<br>public&nbsp;class&nbsp;ThymeleafConfig&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;@Autowired<br>&nbsp;&nbsp;&nbsp;&nbsp;TemplateEngine&nbsp;templateEngine;<br>&nbsp;&nbsp;&nbsp;&nbsp;@Bean<br>&nbsp;&nbsp;&nbsp;&nbsp;InitializingBean&nbsp;addResolverToTemplateEngine()&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;()&nbsp;-&gt;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TemplateResolver&nbsp;resolver&nbsp;=&nbsp;new&nbsp;TemplateResolver();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resolver.setResourceResolver(new&nbsp;ByteArrayResourceResolver());<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resolver.setPrefix(null);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resolver.setSuffix(null);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resolver.setCacheable(false);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resolver.setTemplateMode(“HTML5”);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resolver.setCharacterEncoding(“utf-8”);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;templateEngine.addTemplateResolver(resolver);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}```<p><br></p><p><br></p><p></p>
 </pre>
       
     </div>
@@ -1212,7 +1212,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1232,6 +1249,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

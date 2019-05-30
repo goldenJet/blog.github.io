@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -164,7 +164,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -175,7 +175,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -411,7 +411,7 @@
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;<a href="http://www.jetchen.cn/%e5%ad%97%e7%ac%a6%e4%b8%b2%e5%8c%b9%e9%85%8d%e7%ae%97%e6%b3%95%ef%bc%88%e4%b8%80%ef%bc%89kmp/" target="_blank">上文</a>中我们介绍了一款字符串匹配的算法，此文会介绍另一款更高效的算法，据称会教KMP算法而言，效率提高了3~5倍。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;该算法由 Bob Boyer 和J Strother Moore 共同创建，故称为&nbsp;Boyer-Moore 字符串搜索算法，简称 BM 算法。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;我们在文本文档编辑的时候，常用的搜索功能（Ctrl + F），底层算法其实就是该 BM 算法。<br></p>
-<p><br></p><p></p>
+<p><br>&lt;/p&gt;</p>
 <h2>二、名词定义</h2>
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;以下摘自&nbsp;wikipedia</p>
@@ -1273,7 +1273,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1293,6 +1310,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

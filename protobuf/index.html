@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -166,7 +166,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -177,7 +177,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -449,7 +449,7 @@
 <li>protoc 下载：<a href="https://github.com/protocolbuffers/protobuf/releases/tag/v3.7.1" target="_blank" rel="noopener">[官方下载地址]</a>，然后将 bin 路径添加到 path 环境变量下去</li>
 <li>查看是否安装成功：控制台输入 <code>protoc --version</code> ，控制台输出版本信息代表成功，如： <code>libprotoc 3.7.1</code></li>
 </ul>
-<ol start="2">
+<ol>
 <li>ideal 安装插件</li>
 </ol>
 <ul>
@@ -459,7 +459,7 @@
 </blockquote>
 </li>
 </ul>
-<ol start="3">
+<ol>
 <li><p>编写 proto 文件<br>定义一个 JetProtos.proto 文件</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">syntax = &quot;proto3&quot;; // PB协议版本</span><br><span class="line"></span><br><span class="line">import &quot;google/protobuf/any.proto&quot;; // 引用外部的message，可以是本地的，也可以是此处比较特殊的 Any</span><br><span class="line"></span><br><span class="line">package jet.protobuf; // 包名，其他 proto 在引用此 proto 的时候，就可以使用 test.protobuf.PersonTest 来使用，</span><br><span class="line">// 注意：和下面的 java_package 是两种易混淆概念，同时定义的时候，java_package 具有较高的优先级</span><br><span class="line"></span><br><span class="line">option java_package = &quot;com.jet.protobuf&quot;; // 生成类的包名，注意：会在指定路径下按照该包名的定义来生成文件夹</span><br><span class="line">option java_outer_classname=&quot;PersonTestProtos&quot;; // 生成类的类名，注意：下划线的命名会在编译的时候被自动改为驼峰命名</span><br><span class="line"></span><br><span class="line">message PersonTest &#123;  </span><br><span class="line">    int32 id = 1; // int 类型  </span><br><span class="line">    string name = 2; // string 类型  </span><br><span class="line">    string email = 3;  </span><br><span class="line">    Sex sex = 4; // 枚举类型  </span><br><span class="line">    repeated PhoneNumber phone = 5; // 引用下面定义的 PhoneNumber 类型的 message  </span><br><span class="line">    map&lt;string, string&gt; tags = 6; // map 类型  </span><br><span class="line">    repeated google.protobuf.Any details = 7; // 使用 google 的 any 类型  </span><br><span class="line"></span><br><span class="line">    // 定义一个枚举  </span><br><span class="line">    enum Sex &#123;      </span><br><span class="line">        DEFAULT = 0;      </span><br><span class="line">        MALE = 1;      </span><br><span class="line">        Female = 2;  </span><br><span class="line">    &#125;  </span><br><span class="line">    </span><br><span class="line">    // 定义一个 message  </span><br><span class="line">    message PhoneNumber &#123;    </span><br><span class="line">        string number = 1;    </span><br><span class="line">        PhoneType type = 2;    </span><br><span class="line">        </span><br><span class="line">        enum PhoneType &#123;      </span><br><span class="line">            MOBILE = 0;      </span><br><span class="line">            HOME = 1;      </span><br><span class="line">            WORK = 2;    </span><br><span class="line">        &#125;  </span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
@@ -471,11 +471,11 @@
 <p>参数说明：</p>
 <ol>
 <li>-I 等价于 -proto_path：指定 .proto 文件所在的路径</li>
-<li>–java_out：编译成 java 文件时，标明输出目标路径</li>
+<li>—java_out：编译成 java 文件时，标明输出目标路径</li>
 <li>./JetProtos.proto：指定需要编译的 .proto 文件</li>
 </ol>
 </blockquote>
-<ol start="5">
+<ol>
 <li>使用</li>
 </ol>
 <ul>
@@ -1325,7 +1325,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1345,6 +1362,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

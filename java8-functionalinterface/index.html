@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -165,7 +165,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -176,7 +176,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -414,7 +414,7 @@
 <p>首先，接口的设计一般是用于定义对象的扩展功能，而写法，接口内部也有且只能有若干个抽象方法。</p>
 <p>但那些都是远古时期的啦（1.7及以前版本）。</p>
 <p>而在 1.8 这个小小跨时代的版本之下，接口内部除了抽象方法，还能写有实现的静态方法和默认方法等，简单的例子就是 Comparator 这个接口，部分代码如下：</p>
-<p><img src="http://blogsource.chenkaikai.com/uploads/image/20170804/1501820304911382.png" title="1501820304911382.png" alt="FunctionalInterface01.png"></p><p></p>
+<p><img src="http://blogsource.chenkaikai.com/uploads/image/20170804/1501820304911382.png" title="1501820304911382.png" alt="FunctionalInterface01.png">&lt;/p&gt;</p>
 <h2>二、特性</h2>
 
 <p>函数式接口的特性是：</p>
@@ -1240,7 +1240,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1260,6 +1277,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

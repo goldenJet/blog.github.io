@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -161,7 +161,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -172,7 +172,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -403,7 +403,28 @@
 
       
         <p><center>Java 格式化输出到控制台</center><br><a id="more"></a></p>
-<p>本文描述的其实是一个并没有什么实用价值的小知识点，哈哈。</p><h2>一、 老规矩</h2><p>老规矩是什么呢，必然是先上代码</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">//&amp;nbsp;定义一些用来格式化输出的变量。</span><br><span class="line">double&amp;nbsp;d&amp;nbsp;=&amp;nbsp;123.4567;</span><br><span class="line">String&amp;nbsp;s&amp;nbsp;=&amp;nbsp;&quot;你好中国！&quot;;</span><br><span class="line">int&amp;nbsp;i&amp;nbsp;=&amp;nbsp;789;</span><br><span class="line">//&amp;nbsp;-----&quot;%&quot;表示进行格式化输出，&quot;%&quot;之后的内容为自定义的格式。-----</span><br><span class="line">//&amp;nbsp;1、&quot;f&quot;表示格式化输出浮点数。</span><br><span class="line">System.out.printf(&quot;--1--：%f\n&quot;,&amp;nbsp;d);</span><br><span class="line">//&amp;nbsp;2、&quot;4.1&quot;中的4表示输出的长度，1表示小数点后的位数。</span><br><span class="line">System.out.printf(&quot;--2--：%4.1f\n&quot;,&amp;nbsp;d);</span><br><span class="line">//&amp;nbsp;3、&quot;+&quot;表示输出的数带正负号。</span><br><span class="line">System.out.printf(&quot;--3--：%+4.1f\n&quot;,&amp;nbsp;d);</span><br><span class="line">//&amp;nbsp;4、&quot;-&quot;表示输出的数左对齐（默认为右对齐）。</span><br><span class="line">System.out.printf(&quot;--4--：%-4.1f\n&quot;,&amp;nbsp;d);</span><br><span class="line">//&amp;nbsp;5、&quot;+-&quot;表示输出的数带正负号且左对齐。</span><br><span class="line">System.out.printf(&quot;--5--：%+-4.1f\n&quot;,&amp;nbsp;d);</span><br><span class="line">//&amp;nbsp;6、&quot;d&quot;表示输出十进制整数。</span><br><span class="line">System.out.printf(&quot;--6--：%d\n&quot;,&amp;nbsp;i);</span><br><span class="line">//&amp;nbsp;7、&quot;o&quot;表示输出八进制整数。</span><br><span class="line">System.out.printf(&quot;--7--：%o\n&quot;,&amp;nbsp;i);</span><br><span class="line">//&amp;nbsp;8、&quot;x&quot;表示输出十六进制整数。</span><br><span class="line">System.out.printf(&quot;--8--：%x\n&quot;,&amp;nbsp;i);</span><br><span class="line">//&amp;nbsp;9、&quot;#x&quot;表示输出带有十六进制标志的整数。</span><br><span class="line">System.out.printf(&quot;--9--：%#x\n&quot;,&amp;nbsp;i);</span><br><span class="line">//&amp;nbsp;10、&quot;s&quot;表示输出字符串。</span><br><span class="line">System.out.printf(&quot;--10--：%s\n&quot;,&amp;nbsp;s);</span><br><span class="line">//&amp;nbsp;11、可以输出多个变量，注意顺序。</span><br><span class="line">System.out.printf(&quot;--11--：输出一个浮点数：%f，一个整数：%d，一个字符串：%s\n&quot;,&amp;nbsp;d,&amp;nbsp;i,&amp;nbsp;s);</span><br><span class="line">//&amp;nbsp;12、&quot;2$&quot;表示第2个变量。</span><br><span class="line">System.out.printf(&quot;--12--：字符串：%2$s，%1$d的十六进制数：%1$#x\n&quot;,&amp;nbsp;i,&amp;nbsp;s);```&lt;p&gt;&amp;nbsp;&lt;strong&gt;控制台打印&lt;/strong&gt;&lt;/p&gt;</span><br></pre></td></tr></table></figure><br><br>–1–：123.456700<br>–2–：123.5<br>–3–：+123.5<br>–4–：123.5<br>–5–：+123.5<br>–6–：789<br>–7–：1425<br>–8–：315<br>–9–：0x315<br>–10–：你好中国！<br>–11–：输出一个浮点数：123.456700，一个整数：789，一个字符串：你好中国！<br>–12–：字符串：你好中国！，789的十六进制数：0x315<code>`</code><h2>二、简单分析</h2><p><code>System.out.printf()</code> 是 jdk1.5 才引入的，官方解释是：Prints a formatted string to System.out.<br><br>其意为，将字符串<strong><span style="color: #ff0000;">格式化输出</span></strong>到控制台，相比于常用的&nbsp;<code>System.out.print()</code> 和&nbsp;<code>System.out.println()</code> 略有一点点的不同。<br><br>（另外，在 intellij idea 中快捷按键是 souf）<br><br>使用比较简单，具体实例可以查看上方代码，说明详见注释。<br><br>其实，主要记住几个点就OK了，如下：</p><ol class=" list-paddingleft-2"><li><p>“%” 表示格式说明符，后面紧跟着的是格式化的规则</p></li><li><p>格式化类型：<span style="color: #ff0000; font-size: 14pt;"><strong>f &nbsp;表示浮点数</strong></span></p></li><li><p>格式化类型：<span style="font-size: 14pt; color: #ff0000;"><strong>s 表示字符串</strong></span></p></li><li><p>格式化类型：<span style="font-size: 14pt; color: #ff0000;"><strong>d 表示十进制整数</strong></span></p></li></ol><p>&nbsp;</p>
+<p>本文描述的其实是一个并没有什么实用价值的小知识点，哈哈。</p><h2>一、 老规矩</h2><p>老规矩是什么呢，必然是先上代码</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">//&amp;nbsp;定义一些用来格式化输出的变量。</span><br><span class="line">double&amp;nbsp;d&amp;nbsp;=&amp;nbsp;123.4567;</span><br><span class="line">String&amp;nbsp;s&amp;nbsp;=&amp;nbsp;&quot;你好中国！&quot;;</span><br><span class="line">int&amp;nbsp;i&amp;nbsp;=&amp;nbsp;789;</span><br><span class="line">//&amp;nbsp;-----&quot;%&quot;表示进行格式化输出，&quot;%&quot;之后的内容为自定义的格式。-----</span><br><span class="line">//&amp;nbsp;1、&quot;f&quot;表示格式化输出浮点数。</span><br><span class="line">System.out.printf(&quot;--1--：%f\n&quot;,&amp;nbsp;d);</span><br><span class="line">//&amp;nbsp;2、&quot;4.1&quot;中的4表示输出的长度，1表示小数点后的位数。</span><br><span class="line">System.out.printf(&quot;--2--：%4.1f\n&quot;,&amp;nbsp;d);</span><br><span class="line">//&amp;nbsp;3、&quot;+&quot;表示输出的数带正负号。</span><br><span class="line">System.out.printf(&quot;--3--：%+4.1f\n&quot;,&amp;nbsp;d);</span><br><span class="line">//&amp;nbsp;4、&quot;-&quot;表示输出的数左对齐（默认为右对齐）。</span><br><span class="line">System.out.printf(&quot;--4--：%-4.1f\n&quot;,&amp;nbsp;d);</span><br><span class="line">//&amp;nbsp;5、&quot;+-&quot;表示输出的数带正负号且左对齐。</span><br><span class="line">System.out.printf(&quot;--5--：%+-4.1f\n&quot;,&amp;nbsp;d);</span><br><span class="line">//&amp;nbsp;6、&quot;d&quot;表示输出十进制整数。</span><br><span class="line">System.out.printf(&quot;--6--：%d\n&quot;,&amp;nbsp;i);</span><br><span class="line">//&amp;nbsp;7、&quot;o&quot;表示输出八进制整数。</span><br><span class="line">System.out.printf(&quot;--7--：%o\n&quot;,&amp;nbsp;i);</span><br><span class="line">//&amp;nbsp;8、&quot;x&quot;表示输出十六进制整数。</span><br><span class="line">System.out.printf(&quot;--8--：%x\n&quot;,&amp;nbsp;i);</span><br><span class="line">//&amp;nbsp;9、&quot;#x&quot;表示输出带有十六进制标志的整数。</span><br><span class="line">System.out.printf(&quot;--9--：%#x\n&quot;,&amp;nbsp;i);</span><br><span class="line">//&amp;nbsp;10、&quot;s&quot;表示输出字符串。</span><br><span class="line">System.out.printf(&quot;--10--：%s\n&quot;,&amp;nbsp;s);</span><br><span class="line">//&amp;nbsp;11、可以输出多个变量，注意顺序。</span><br><span class="line">System.out.printf(&quot;--11--：输出一个浮点数：%f，一个整数：%d，一个字符串：%s\n&quot;,&amp;nbsp;d,&amp;nbsp;i,&amp;nbsp;s);</span><br><span class="line">//&amp;nbsp;12、&quot;2$&quot;表示第2个变量。</span><br><span class="line">System.out.printf(&quot;--12--：字符串：%2$s，%1$d的十六进制数：%1$#x\n&quot;,&amp;nbsp;i,&amp;nbsp;s);```&lt;p&gt;&amp;nbsp;&lt;strong&gt;控制台打印&lt;/strong&gt;&lt;/p&gt;</span><br></pre></td></tr></table></figure>
+
+--1--：123.456700
+--2--：123.5
+--3--：+123.5
+--4--：123.5
+--5--：+123.5
+--6--：789
+--7--：1425
+--8--：315
+--9--：0x315
+--10--：你好中国！
+--11--：输出一个浮点数：123.456700，一个整数：789，一个字符串：你好中国！
+--12--：字符串：你好中国！，789的十六进制数：0x315```<h2>二、简单分析</h2><p><code>System.out.printf()</code> 是 jdk1.5 才引入的，官方解释是：Prints a formatted string to System.out.
+
+其意为，将字符串<strong><span style="color: #ff0000;">格式化输出</span></strong>到控制台，相比于常用的&nbsp;<code>System.out.print()</code> 和&nbsp;<code>System.out.println()</code> 略有一点点的不同。
+
+（另外，在 intellij idea 中快捷按键是 souf）
+
+使用比较简单，具体实例可以查看上方代码，说明详见注释。
+
+其实，主要记住几个点就OK了，如下：</p><ol class=" list-paddingleft-2"><li><p>“%” 表示格式说明符，后面紧跟着的是格式化的规则</p></li><li><p>格式化类型：<span style="color: #ff0000; font-size: 14pt;"><strong>f &nbsp;表示浮点数</strong></span></p></li><li><p>格式化类型：<span style="font-size: 14pt; color: #ff0000;"><strong>s 表示字符串</strong></span></p></li><li><p>格式化类型：<span style="font-size: 14pt; color: #ff0000;"><strong>d 表示十进制整数</strong></span></p></li></ol><p>&nbsp;</p>
       
     </div>
 
@@ -1200,7 +1221,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1220,6 +1258,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

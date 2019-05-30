@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -166,7 +166,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -177,7 +177,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -415,7 +415,7 @@
 <p><img src="http://blogsource.chenkaikai.com/uploads/image/20170724/1500878066326526.png" title="1500878066326526.png"></p>
 <p><img src="http://blogsource.chenkaikai.com/uploads/image/20170724/1500878066278875.png" title="1500878066278875.png"></p>
 <p><img src="http://blogsource.chenkaikai.com/uploads/image/20170724/1500878090517350.png" title="1500878090517350.png" alt="filepath03.png"></p>
-<p>我们在Windows 下开发，运行，能够正常下载，但是放到 Linux 下就GG了。</p><p></p>
+<p>我们在Windows 下开发，运行，能够正常下载，但是放到 Linux 下就GG了。&lt;/p&gt;</p>
 <h2>二、解决</h2>
 
 <p>通过调试，意料之中，读取方式有问题，我们并没有读取到这个文件，所以换一张通用的方式去读取，就是利用 ClassLoader 来读取。运行，完美解决。<br></p>
@@ -1228,7 +1228,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1248,6 +1265,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

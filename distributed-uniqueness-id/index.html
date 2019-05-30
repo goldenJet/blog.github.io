@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -165,7 +165,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -176,7 +176,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -417,13 +417,13 @@
 <h2>一、背景</h2>
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;唯一 ID，每个人都不陌生，因为在很多场景下我们都会接触到，比如：<br></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;– 用户唯一标识<br></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;– 订单唯一标识<br></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;– 商品唯一标示</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— 用户唯一标识<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— 订单唯一标识<br></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— 商品唯一标示</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;唯一 ID 的生成方式是有很多的，而且在不同的业务场景下，会有不同的生成需求，即没有任何一种 ID 的生成方式是最适合所有业务场景的。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;所以说，脱离业务来谈的技术，都是耍流氓。<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;下文会分析一些分布式 ID 的生成方式以供参考。<br></p>
-<p><br></p><p></p>
+<p><br>&lt;/p&gt;</p>
 <h2>二、分布式 ID —— UUID</h2>
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;UUID（Universally Unique Identifier）是通用的唯一识别码，开放软件基金会(OSF)规范定义了包括网卡MAC地址、时间戳、名字空间（Namespace）、随机或伪随机数、时序等元素。利用这些元素来生成UUID。</p>
@@ -434,14 +434,34 @@
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一般我们默认使用第四种，<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;另外，我们如果想研究更多的 UUID 的算法，附上传送门：<a href="http://www.ietf.org/rfc/rfc4122.txt" target="_blank">http://www.ietf.org/rfc/rfc4122.txt</a></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://blogsource.chenkaikai.com/uploads/image/20181021/1540121973610007.png" title="1540121973610007.png" alt="UUID-02.png"></p>
-<ul class=" list-paddingleft-2" style="list-style-type: square;"><li>优点：<br><br>1、无序，即生成规则是无序的<br><br>2、本地生成，性能较高<p></p></li><li><p>缺点：<br><br>1、无序，因为无序带来的弊端是不能生成连续的数字<br><br>2、32 位的十六进制，只能使用 String 来存储，空间占用相对会多一点</p></li></ul>
+<ul class=" list-paddingleft-2" style="list-style-type: square;"><li>优点：
+
+1、无序，即生成规则是无序的
+
+2、本地生成，性能较高<p></p></li><li><p>缺点：
+
+1、无序，因为无序带来的弊端是不能生成连续的数字
+
+2、32 位的十六进制，只能使用 String 来存储，空间占用相对会多一点</p></li></ul>
 
 <p></p><p><br></p>
 <h2>三、分布式 ID —— 数据库主键自增</h2>
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;数据库主键自增比较简单，使用其实很方便，场景也相对比较广。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;使用时只需要将字段设置为主键即可。<br></p>
-<ul class=" list-paddingleft-2" style="list-style-type: square;"><li>优点：<br><br>1、简单，方便<br><br>2、排序和分页都很方便<p></p></li><li><p>缺点：<br><br>1、并发性不好，受限于数据库性能<br><br>2、稳定性不高，受限于数据库的服务，需担心数据库宕机<br><br>3、分库分表时会有问题，需要定制化开发区解决<br><br>4、业务量太明显，因为是自增的数字，所以业务量很容易被研究</p></li></ul>
+<ul class=" list-paddingleft-2" style="list-style-type: square;"><li>优点：
+
+1、简单，方便
+
+2、排序和分页都很方便<p></p></li><li><p>缺点：
+
+1、并发性不好，受限于数据库性能
+
+2、稳定性不高，受限于数据库的服务，需担心数据库宕机
+
+3、分库分表时会有问题，需要定制化开发区解决
+
+4、业务量太明显，因为是自增的数字，所以业务量很容易被研究</p></li></ul>
 
 <p></p><p>&nbsp;&nbsp;&nbsp;&nbsp;所以，对于一些简单的业务场景，比如内部系统、to-B 的系统等，业务量并不高，使用数据库主键自增的方案为最佳。<br></p>
 <p><br></p>
@@ -451,7 +471,15 @@
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;redis 是单线程的，可以充分保证原子性<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;redis 中的俩命令一用便会：Incr 和 IncrBy</p>
-<ul class=" list-paddingleft-2" style="list-style-type: square;"><li>优点：<br><br>1、性能比数据库好<br><br>2、能满足自增的序列号<p></p></li><li><p>缺点：<br><br>1、由于是基于内存的数据库，所以有可能会存在数据丢失的情况，会导致 ID 重复<br><br>2、稳定性需担心，因为完全依赖于 redis</p></li></ul>
+<ul class=" list-paddingleft-2" style="list-style-type: square;"><li>优点：
+
+1、性能比数据库好
+
+2、能满足自增的序列号<p></p></li><li><p>缺点：
+
+1、由于是基于内存的数据库，所以有可能会存在数据丢失的情况，会导致 ID 重复
+
+2、稳定性需担心，因为完全依赖于 redis</p></li></ul>
 
 <p></p><p><br></p>
 <p><br></p>
@@ -1287,7 +1315,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1307,6 +1352,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

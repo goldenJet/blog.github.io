@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -161,7 +161,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -172,7 +172,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -413,7 +413,7 @@
 <p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>ls</strong> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 显示当前目录下的文件<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; 另：&nbsp;<strong>-l</strong>（ls -l 等价于<strong> ll</strong>） 列出文件的详细信息<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>-a</strong> 列出所有文件，包括隐藏的<br></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #FF0000;"><strong>-Z</strong></span> 查看具体权限说明<br></p><p></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #FF0000;"><strong>-Z</strong></span> 查看具体权限说明<br>&lt;/p&gt;</p>
 <h4>2、查看文件</h4>
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;不常用：cat 和 tac 分别是正向和逆向查看文件全内容<br></p>
@@ -488,10 +488,10 @@
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 压缩：<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;① 将abc 只打包不压缩 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <strong>tar -cvf</strong> /home/abc<strong>.tar</strong> /home/abc</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;② 将abc 打包并使用gzip压缩 &nbsp;&nbsp;<strong><span style="font-size: 14px;">tar -zcvf</span></strong><span style="font-size: 14px;"> /home/abc<strong>.tar.gz</strong> /home/abc</span></p>
-<p><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;③<span style="font-size: 14px;">&nbsp;将abc 打包并使用bzip2压缩 &nbsp;&nbsp;</span><strong><span style="font-size: 14px;">tar -jcvf</span></strong><span style="font-size: 14px;"> /home/abc<strong>.tar.bz2</strong> /home/abc</span></span></p>
-<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 解压缩：把上述命令中的 c 替换成 x 就行<br></span></span></p>
-<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 查看压缩包内部：注意要根据压缩形式，即如果是gzip 压缩的，就要用 tar -ztvf /home/abc.tar.gz<br></span></span></p>
-<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 华彩：如果只想解压出abc 文件内部的一个demo 文件夹，此时要使用&nbsp;<strong style="font-size: 14px; white-space: normal;">tar -zcvf</strong><span style="font-size: 14px;">&nbsp;/home/abc<strong>.tar.gz <span style="font-size: 14px; color: #FF0000;">abc/demo</span></strong>&nbsp;/home/abc ，即在tar 包后面指定内部文件名</span></span></span></p>
+<p><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;③<span style="font-size: 14px;">&nbsp;将abc 打包并使用bzip2压缩 &nbsp;&nbsp;</span><strong><span style="font-size: 14px;">tar -jcvf</span></strong><span style="font-size: 14px;"> /home/abc<strong>.tar.bz2</strong> /home/abc</span>&lt;/span&gt;</span></p>
+<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 解压缩：把上述命令中的 c 替换成 x 就行<br></span>&lt;/span&gt;</span></p>
+<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 查看压缩包内部：注意要根据压缩形式，即如果是gzip 压缩的，就要用 tar -ztvf /home/abc.tar.gz<br></span>&lt;/span&gt;</span></p>
+<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 华彩：如果只想解压出abc 文件内部的一个demo 文件夹，此时要使用&nbsp;<strong style="font-size: 14px; white-space: normal;">tar -zcvf</strong><span style="font-size: 14px;">&nbsp;/home/abc<strong>.tar.gz <span style="font-size: 14px; color: #FF0000;">abc/demo</span>&lt;/strong&gt;&nbsp;/home/abc ，即在tar 包后面指定内部文件名&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;</strong></span></span></span></p>
 <h2>三、各种删除<br></h2>
 
 <h4>1、文件和文件夹<br></h4>
@@ -524,11 +524,11 @@
 <h4>1、防火墙操作</h4>
 
 <p>&nbsp; &nbsp; ① 查看已添加的iptables规则： iptables -L -n&nbsp; (service iptables status)</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 将所有iptables以序号标记显示： iptables -L -n –line-numbers</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;② 开端口：iptables -A INPUT -p tcp –dport 80 -j ACCEPT</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 将所有iptables以序号标记显示： iptables -L -n —line-numbers</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;② 开端口：iptables -A INPUT -p tcp —dport 80 -j ACCEPT</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;快速：<br></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;span style=”color: #FF0000; font-family: “PingFang SC”, “Microsoft YaHei”, SimHei, Arial, SimSun; background-color: #FFFFFF;”&gt;/sbin/iptables -I INPUT -p tcp –dport 80 -j ACCEPT</p>
-<p>&lt;span style=”color: #FF0000; font-family: “PingFang SC”, “Microsoft YaHei”, SimHei, Arial, SimSun; background-color: #FFFFFF;”&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;span style=”color: #FF0000; font-family: “PingFang SC”, “Microsoft YaHei”, SimHei, Arial, SimSun; background-color: #FFFFFF;”&gt;/etc/rc.d/init.d/iptables save</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #FF0000; font-family: " pingfang sc", "microsoft yahei", simhei, arial, simsun; background-color: #ffffff;">/sbin/iptables -I INPUT -p tcp —dport 80 -j ACCEPT</span></p>
+<p><span style="color: #FF0000; font-family: " pingfang sc", "microsoft yahei", simhei, arial, simsun; background-color: #ffffff;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #FF0000; font-family: " pingfang sc", "microsoft yahei", simhei, arial, simsun; background-color: #ffffff;">/etc/rc.d/init.d/iptables save</span>&lt;/span&gt;</span></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;③ 配置文件：vim /etc/sysconfig/iptables</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;④ 基本操作</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;service&nbsp;iptables&nbsp;stop&nbsp;&nbsp;</p>
@@ -554,16 +554,16 @@
 <p>&nbsp;&nbsp;&nbsp;&nbsp;② 手动修改</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;命令：date [指令] [参数]</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#设定日期20180330 时刻归零00:00:00&nbsp;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date –s “20180330”&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date —s “20180330”&nbsp;&nbsp;</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#设定时刻20:32:59 日期保持不变&nbsp;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date –s “20:32:59”&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date —s “20:32:59”&nbsp;&nbsp;</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#以下六种均可同时设定日期和时刻&nbsp;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date –s “20180330 20:32:59”&nbsp;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date –s “20:32:59 20180330”&nbsp;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date –s “2018/03/30 20:32:59”&nbsp;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date –s “20:32:59 2018/03/30”&nbsp;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date –s “20:32:59 03/30/2018”&nbsp;&nbsp;</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date –s “03/30/2018 20:32:59”</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date —s “20180330 20:32:59”&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date —s “20:32:59 20180330”&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date —s “2018/03/30 20:32:59”&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date —s “20:32:59 2018/03/30”&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date —s “20:32:59 03/30/2018”&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;date —s “03/30/2018 20:32:59”</p>
 <p>&nbsp; &nbsp; <br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;③ 时区调整<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查看当前时区：date -R<br></p>
@@ -579,9 +579,9 @@
 <p>&nbsp; &nbsp; ① 删除默认安装的 openjdk<br></p>
 <p>&nbsp; &nbsp; &nbsp; &nbsp; 查看包含 java 的程序：rpm -qa | grep java</p>
 <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="font-size: 14px;">rpm -qa | grep gcj</span></p>
-<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="font-size: 14px;">rpm -qa | grep jdk</span></span></p>
-<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; 卸载对应程序：&lt;span style=”color: #454545; font-family: “PingFang SC”, “Microsoft YaHei”, SimHei, Arial, SimSun; background-color: #FFFFFF;”&gt;rpm&nbsp;-e –nodeps xxx</span></span></p>
-<p><span style="font-size: 14px;"><span style="font-size: 14px;">&lt;span style=”color: #454545; font-family: “PingFang SC”, “Microsoft YaHei”, SimHei, Arial, SimSun; background-color: #FFFFFF;”&gt;&nbsp; &nbsp; ②安装 jdk（本人喜欢 tar 包安装）：<br></span></span></p>
+<p><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="font-size: 14px;">rpm -qa | grep jdk</span>&lt;/span&gt;</span></p>
+<p><span style="font-size: 14px;"><span style="font-size: 14px;">&nbsp; &nbsp; &nbsp; &nbsp; 卸载对应程序：<span style="color: #454545; font-family: " pingfang sc", "microsoft yahei", simhei, arial, simsun; background-color: #ffffff;">rpm&nbsp;-e —nodeps xxx</span>&lt;/span&gt;&lt;/span&gt;</span></span></p>
+<p><span style="font-size: 14px;"><span style="font-size: 14px;"><span style="color: #454545; font-family: " pingfang sc", "microsoft yahei", simhei, arial, simsun; background-color: #ffffff;">&nbsp; &nbsp; ②安装 jdk（本人喜欢 tar 包安装）：<br></span>&lt;/span&gt;&lt;/span&gt;</span></span></p>
 <p>&nbsp; &nbsp; &nbsp; &nbsp; 解压：tar -zxvf xxx<br></p>
 <p>&nbsp; &nbsp; ③配置环境变量：<br></p>
 <p>&nbsp; &nbsp; &nbsp; &nbsp; 修改配置文件：vim /etc/profile<br></p>
@@ -617,10 +617,10 @@
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;① scp 命令文件上传下载</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;复制本地文件到远程服务器：scp local_file remote_username@remote_ip:remote_folder；</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;例如：scp /home/jet/file.md <a href="mailto:jet@192.168.1.1" target="_blank" rel="noopener">jet@192.168.1.1</a>:/home/jet/test.md</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;例如：scp /home/jet/file.md jet@192.168.1.1:/home/jet/test.md</p>
 <p><br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;复制远程文件到本地：scp remote_username@remote_ip:remote_folder local_file</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;例如：scp <a href="mailto:jet@192.168.1.1" target="_blank" rel="noopener">jet@192.168.1.1</a>:/home/jet/test.md /home/jet/file.md</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;例如：scp jet@192.168.1.1:/home/jet/test.md /home/jet/file.md</p>
 <p>&nbsp; &nbsp; ② 查看公网ip<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;curl ipinfo.io</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;③ 查域名指向的服务器ip<br></p>
@@ -1434,7 +1434,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1454,6 +1471,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -175,7 +175,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -186,7 +186,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -418,7 +418,65 @@
       
         <p><center>2018-7-19更。IntelliJ IDEA 常用配置及快捷键。</center><br><a id="more"></a></p>
 <p></p><h2>一、常用设置</h2><p></p>
-<p>    ① 编码：</p><br><p>        <img title="1531968517797454.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968517797454.png" alt="idea001.png"></p><br><p>    ② 键入提示：默认是不区分大小写的，即输入string并不会提示，我们的目标是键入string会提示String</p><br><p>        <img title="1531968528433585.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968528433585.png" alt="idea002.png"></p><br><p>    ③ 自动导包：手动整理快捷键：Ctrl+Alt+o</p><br><p>        <img title="1531968539199573.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968539199573.png" alt="idea003.png"></p><br><p>    ④ maven 设置：</p><br><p>        <img title="1531968550741550.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968550741550.png"></p><br><p>        <img title="1531968550785980.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968550785980.png"></p><br><p>    ⑤ 显示内存：</p><br><p>        <img title="1531968574707984.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968574707984.png" alt="idea005.png"></p><br><p>    ⑥ 关于多行显示 tab ：我只喜欢显示一个tab，平时使用 Ctrl+e 来选择最近打开过的文件</p><br><p>        <img title="1531968587117627.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968587117627.png" alt="idea006.png"></p><br><p>    ⑦ 鼠标调整当前页字体大小：Ctrl+鼠标滚轮来调整字体大小</p><br><p>        <img title="1531968597668540.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968597668540.png" alt="idea007.png"></p><br><p>    ⑧ 显示行数和方法线：</p><br><p>        <img title="1531968610756949.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968610756949.png" alt="idea008.png"></p><br><p>    ⑨ 类注释模板：<br><img class="alignnone wp-image-261 size-full" src="http://blogsource.chenkaikai.com/uploads/2018/07/idea001.png" alt width="1183" height="562"></p><br><p>     ⑩ 方法注释模板：<br>          我的快捷键是 /jet  ，然后按 Tab<br><img class="alignnone size-full wp-image-265" src="http://blogsource.chenkaikai.com/uploads/2018/07/idea002.png" alt width="987" height="360"> <br><img class="alignnone size-full wp-image-266" src="http://blogsource.chenkaikai.com/uploads/2018/07/idea003.png" alt width="903" height="453"><br><br><img class="alignnone wp-image-267 size-full" src="http://blogsource.chenkaikai.com/uploads/2018/07/idea004.png" alt width="1042" height="699"></p><br><p> </p><br><h2>二、常用快捷键</h2><br><p>    1、System.out.println 快捷输出       </p><br><p>           sout  =&gt; System.out.println();</p><br><p>        “abc”.sout  =&gt; System.out.println(“abc”);</p><br><p>    2、for 循环</p><br><p>        list.for</p><br><p>        for(String s:list){</p><br><p>        }</p><br><p>    3、选择一个模块：Ctrl+w</p><br><p>    4、删除一行：Ctrl+y / Ctrl+x</p><br><p>    5、复制选择的内容（不选择则是复制一行）：Ctrl+d</p><br><p>    6、最近打开的文件：Crtl+e</p><br><p>    7、当前文件搜索/整个项目搜索：Ctrl+f，Ctrl+Shift+f</p><br><p>    8、override/implement：Ctrl+o</p><br><p>    9、根据类名/文件名查找文件：Ctrl+n，Ctrl+Shift+n</p><br><p>    10、跳转到指定行：Ctrl+g</p><br><p>    11、git相关：pull：Ctrl+t，commit：Ctrl+k，push：Ctrl+Shift+K</p><br><p>    12、万能去除疑难杂症：Alt+enter</p><br><p>    13、导入包处理：Ctrl+Alt+o</p><br><p>    14、添加try catch 和 折叠 等：Ctrl+Alt+t</p><br><p>    15、括号的前或后：Ctrl+[ / Ctrl+]</p><br><p>    16、文件内查找方法：Ctrl+f12</p><br><p>    17、查找方法被调用的地方：</p><br><p>            ① low一点的，只显示层次：Ctrl+Alt+h（f4 进源码，Alt+8回来）</p><br><p>            ② 强大一点的，推荐：Alt+f7（PS：也可以用在变量上）</p><br><p>    18、查找Controller方法：ctrl+alt+shift+n</p><br><p>    19、强大的 bookmark（便于将方法保存在书签里面）：</p><br><p>            列出：Shift+f11</p><br><p>            改名：Ctrl+Enter</p><br><p>            添加：在方法上 f11</p><br><p>    20、折叠代码，比如for循环：Ctrl+Shift+.</p><br><h2>三、常用插件</h2><br><p>    ① Lombok Plugin 神器，注意maven中也要引入</p><br><p>    ② VisualVM Launcher 内存分析（其实就是原生的）</p><br><p>    ③ Rainbow Brackets 彩虹括号</p><br><p>    ④ Translation 翻译</p><br><p>    ⑤ Maven Helper 解决依赖冲突</p><br><p>    ⑥ GsonFormat json转java实体类</p><br><p> </p>
+<p>    ① 编码：</p>
+<p>        <img title="1531968517797454.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968517797454.png" alt="idea001.png"></p>
+<p>    ② 键入提示：默认是不区分大小写的，即输入string并不会提示，我们的目标是键入string会提示String</p>
+<p>        <img title="1531968528433585.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968528433585.png" alt="idea002.png"></p>
+<p>    ③ 自动导包：手动整理快捷键：Ctrl+Alt+o</p>
+<p>        <img title="1531968539199573.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968539199573.png" alt="idea003.png"></p>
+<p>    ④ maven 设置：</p>
+<p>        <img title="1531968550741550.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968550741550.png"></p>
+<p>        <img title="1531968550785980.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968550785980.png"></p>
+<p>    ⑤ 显示内存：</p>
+<p>        <img title="1531968574707984.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968574707984.png" alt="idea005.png"></p>
+<p>    ⑥ 关于多行显示 tab ：我只喜欢显示一个tab，平时使用 Ctrl+e 来选择最近打开过的文件</p>
+<p>        <img title="1531968587117627.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968587117627.png" alt="idea006.png"></p>
+<p>    ⑦ 鼠标调整当前页字体大小：Ctrl+鼠标滚轮来调整字体大小</p>
+<p>        <img title="1531968597668540.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968597668540.png" alt="idea007.png"></p>
+<p>    ⑧ 显示行数和方法线：</p>
+<p>        <img title="1531968610756949.png" src="http://blogsource.chenkaikai.com/uploads/image/20180719/1531968610756949.png" alt="idea008.png"></p>
+<p>    ⑨ 类注释模板：<br><img class="alignnone wp-image-261 size-full" src="http://blogsource.chenkaikai.com/uploads/2018/07/idea001.png" alt width="1183" height="562"></p>
+<p>     ⑩ 方法注释模板：<br>          我的快捷键是 /jet  ，然后按 Tab<br><img class="alignnone size-full wp-image-265" src="http://blogsource.chenkaikai.com/uploads/2018/07/idea002.png" alt width="987" height="360"> <br><img class="alignnone size-full wp-image-266" src="http://blogsource.chenkaikai.com/uploads/2018/07/idea003.png" alt width="903" height="453"><br><br><img class="alignnone wp-image-267 size-full" src="http://blogsource.chenkaikai.com/uploads/2018/07/idea004.png" alt width="1042" height="699"></p>
+<p> </p>
+<h2>二、常用快捷键</h2>
+<p>    1、System.out.println 快捷输出       </p>
+<p>           sout  => System.out.println();</p>
+<p>        “abc”.sout  => System.out.println("abc");</p>
+<p>    2、for 循环</p>
+<p>        list.for</p>
+<p>        for(String s:list){</p>
+<p>        }</p>
+<p>    3、选择一个模块：Ctrl+w</p>
+<p>    4、删除一行：Ctrl+y / Ctrl+x</p>
+<p>    5、复制选择的内容（不选择则是复制一行）：Ctrl+d</p>
+<p>    6、最近打开的文件：Crtl+e</p>
+<p>    7、当前文件搜索/整个项目搜索：Ctrl+f，Ctrl+Shift+f</p>
+<p>    8、override/implement：Ctrl+o</p>
+<p>    9、根据类名/文件名查找文件：Ctrl+n，Ctrl+Shift+n</p>
+<p>    10、跳转到指定行：Ctrl+g</p>
+<p>    11、git相关：pull：Ctrl+t，commit：Ctrl+k，push：Ctrl+Shift+K</p>
+<p>    12、万能去除疑难杂症：Alt+enter</p>
+<p>    13、导入包处理：Ctrl+Alt+o</p>
+<p>    14、添加try catch 和 折叠 等：Ctrl+Alt+t</p>
+<p>    15、括号的前或后：Ctrl+[ / Ctrl+]</p>
+<p>    16、文件内查找方法：Ctrl+f12</p>
+<p>    17、查找方法被调用的地方：</p>
+<p>            ① low一点的，只显示层次：Ctrl+Alt+h（f4 进源码，Alt+8回来）</p>
+<p>            ② 强大一点的，推荐：Alt+f7（PS：也可以用在变量上）</p>
+<p>    18、查找Controller方法：ctrl+alt+shift+n</p>
+<p>    19、强大的 bookmark（便于将方法保存在书签里面）：</p>
+<p>            列出：Shift+f11</p>
+<p>            改名：Ctrl+Enter</p>
+<p>            添加：在方法上 f11</p>
+<p>    20、折叠代码，比如for循环：Ctrl+Shift+.</p>
+<h2>三、常用插件</h2>
+<p>    ① Lombok Plugin 神器，注意maven中也要引入</p>
+<p>    ② VisualVM Launcher 内存分析（其实就是原生的）</p>
+<p>    ③ Rainbow Brackets 彩虹括号</p>
+<p>    ④ Translation 翻译</p>
+<p>    ⑤ Maven Helper 解决依赖冲突</p>
+<p>    ⑥ GsonFormat json转java实体类</p>
+<p> </p>
 
 <!-- wp:paragraph -->
 <p></p><p></p><br><!-- /wp:paragraph --><p></p>
@@ -1213,7 +1271,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1233,6 +1308,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 

@@ -16,7 +16,7 @@
 
 <html class="theme-next gemini use-motion" lang="en">
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
@@ -161,7 +161,7 @@
   .use-motion .logo-line-before i { left: initial; }
   .use-motion .logo-line-after i { right: initial; }
   </style>
-</noscript>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </head>
 
@@ -172,7 +172,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -409,7 +409,7 @@
 <p>&nbsp;&nbsp;&nbsp;&nbsp;JS中数据类型有：空字符串、null、undefined、NaN、number、boolean、string、object、array，等。<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;其中的 Boolean 值判断为 false 的有：空字符串、null、undefined、NaN、0、false，<br></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;其余所有都为 true。<br></p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;如下介绍其中最基本的六种数据类型的判断方法。<br></p><p></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;如下介绍其中最基本的六种数据类型的判断方法。<br>&lt;/p&gt;</p>
 <h2>方法一：typeof</h2>
 
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">var&amp;nbsp;num&amp;nbsp;=&amp;nbsp;1;</span><br><span class="line">var&amp;nbsp;str&amp;nbsp;=&amp;nbsp;&quot;hello&quot;;</span><br><span class="line">var&amp;nbsp;bool&amp;nbsp;=&amp;nbsp;true;</span><br><span class="line">var&amp;nbsp;n&amp;nbsp;=&amp;nbsp;null;</span><br><span class="line">var&amp;nbsp;arr&amp;nbsp;=&amp;nbsp;[1,2,3];</span><br><span class="line">var&amp;nbsp;obj&amp;nbsp;=&amp;nbsp;&#123;&quot;name&quot;:&quot;Jet&quot;&#125;;</span><br><span class="line">var&amp;nbsp;fun&amp;nbsp;=&amp;nbsp;function()&#123;console.log(1)&#125;</span><br><span class="line">console.log(typeof&amp;nbsp;num);&amp;nbsp;//&amp;nbsp;number</span><br><span class="line">console.log(typeof&amp;nbsp;str);&amp;nbsp;//&amp;nbsp;string</span><br><span class="line">console.log(typeof&amp;nbsp;bool);&amp;nbsp;//&amp;nbsp;boolean</span><br><span class="line">console.log(typeof&amp;nbsp;n);&amp;nbsp;//&amp;nbsp;object</span><br><span class="line">console.log(typeof&amp;nbsp;arr);&amp;nbsp;//&amp;nbsp;object</span><br><span class="line">console.log(typeof&amp;nbsp;obj);&amp;nbsp;//&amp;nbsp;object</span><br><span class="line">console.log(typeof&amp;nbsp;fun);&amp;nbsp;//&amp;nbsp;function</span><br></pre></td></tr></table></figure>
@@ -1246,7 +1246,24 @@
   
 
 
-  <script src="/js/src/bootstrap.js?v=7.0.0"></script>
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -1266,6 +1283,13 @@
   
 
   
+  
+
+  
+  
+
+  
+
 
   
 
