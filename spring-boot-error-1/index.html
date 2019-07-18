@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在日常web开发中发生了异常，往往是需要通过一个统一的异常处理来保证客户端能够收到友好的提示，此文介绍了 Spring Boot 框架下的全局异常处理方式。">
+<meta name="keywords" content="SpringBoot,Java,全局异常处理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Boot 全局异常处理（上）">
+<meta property="og:url" content="https://blog-test.jetchen.cn/spring-boot-error-1/index.html">
+<meta property="og:site_name" content="嘎里三分熟">
+<meta property="og:description" content="在日常web开发中发生了异常，往往是需要通过一个统一的异常处理来保证客户端能够收到友好的提示，此文介绍了 Spring Boot 框架下的全局异常处理方式。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/07/SpringBootError01.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/07/SpringBootError02.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/cli_500px.png">
+<meta property="og:updated_time" content="2019-07-18T14:38:56.565Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring Boot 全局异常处理（上）">
+<meta name="twitter:description" content="在日常web开发中发生了异常，往往是需要通过一个统一的异常处理来保证客户端能够收到友好的提示，此文介绍了 Spring Boot 框架下的全局异常处理方式。">
+<meta name="twitter:image" content="http://blogsource.chenkaikai.com/uploads/2019/07/SpringBootError01.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://blog-test.jetchen.cn/spring-boot-error-1/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Spring Boot 全局异常处理（上） | 嘎里三分熟</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">嘎里三分熟</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about-me/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog-test.jetchen.cn/spring-boot-error-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jet Chen">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嘎里三分熟">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring Boot 全局异常处理（上）
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-07-18 22:34:52" itemprop="dateCreated datePublished" datetime="2019-07-18T22:34:52+08:00">2019-07-18</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/SpringBoot/Spring基础/" itemprop="url" rel="index"><span itemprop="name">Spring基础</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><center>在日常web开发中发生了异常，往往是需要通过一个统一的异常处理来保证客户端能够收到友好的提示，此文介绍了 Spring Boot 框架下的全局异常处理方式。</center><br><a id="more"></a></p>
+<hr>
+<p>搜索微信公众号【 <strong>Jet与编程</strong> 】体验更多有趣功能和文章哦。</p>
+<hr>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>对接的项目多了，奇奇怪怪的问题就都出现了，比如有一个最让人烦心的问题 <strong>异常</strong>。</p>
+<p>偶尔会碰到框架抛出的默认的异常，比如 Laraval，比如 Spring Boot，每个框架抛出的异常格式是不一致的，有 Json 或 XML 格式的数据，更甚至有 HTML 页面，最为关键的是响应的数据结构和接口约定的数据结构不一致，所以这时候我们在对响应内容进行解析的时候反而会给我们自己的代码带来需要处理的异常。</p>
+<p>基于此，为了对自己的接口负责，我们需要进行全局的异常处理，目的是防止出现约定之外的数据结构。</p>
+<h2 id="Spring-Boot-默认的异常处理机制"><a href="#Spring-Boot-默认的异常处理机制" class="headerlink" title="Spring Boot 默认的异常处理机制"></a>Spring Boot 默认的异常处理机制</h2><p>默认情况下，Spring Boot 会返回两种类型的异常，一种是 <strong>HTML</strong>，还有一种是 Json 格式的数据，这主要取决于请求头中的 <strong>Accept</strong> 参数，比如浏览器发出的请求，请求头中会附带 <strong>Accept：text/html</strong>，所以此时 Spring Boot 会返回一个错误页面，称为 <strong>Whitelabel Error Page</strong>，而当我们使用 Postman 请求时，返回的则是 Json 类型的数据。</p>
+<p>原理其实也很简单，Spring Boot 默认提供了程序出错的结果映射路径 <strong>/error</strong>。而这个 <strong>/error</strong> 请求会由 <strong>BasicErrorController</strong> 来处理，其内部其实就是通过判断请求头的 Accept 中的内容来进行区分处理逻辑的（判断是否包含 text/html），从而来决定返回页面视图还是 JSON 消息内容。</p>
+<p>相关 BasicErrorController 中代码如下：</p>
+<p><img src="http://blogsource.chenkaikai.com/uploads/2019/07/SpringBootError01.png" alt="BasicErrorController 处理逻辑"></p>
+<h2 id="自定义错误页面"><a href="#自定义错误页面" class="headerlink" title="自定义错误页面"></a>自定义错误页面</h2><p>自定义错误页面的好处有好多，比如 404 错误页面，我们完全可以自定义 404 的 HTML 页面，上面可以放置图片等，这样体验就更友好一点。</p>
+<p>自定义的错误页面有两种，一种是 <strong>静态页面</strong>，一种是使用 <strong>模板引擎</strong> 动态生成，后者的优势是可以在页面上显示自定义的内容。</p>
+<ul>
+<li><p>静态页面的方式，html 文件的路径为：<strong>resources/public/error/xxx.html</strong></p>
+<blockquote>
+<p>如果要替换 404 错误页面，则在此路径下放置 404.html 文件，同理，如果要替换 500 错误页面，则在此路径下放置 500.html 文件即可</p>
+</blockquote>
+</li>
+<li><p>模板引擎渲染的动态页面的方式，html 文件的路径为：<strong>resources/templates/error/xxx.html</strong></p>
+<blockquote>
+<p>文件命名同上</p>
+</blockquote>
+</li>
+</ul>
+<p><strong>注意：动态页面的优先级是要高于静态页面的</strong><br>比如你同时配置了静态页面和动态页面，那么最终生效的，会是动态页面。</p>
+<p>附上文件结构图：</p>
+<p><img src="http://blogsource.chenkaikai.com/uploads/2019/07/SpringBootError02.png" alt="文件结构"></p>
+<h2 id="自定义错误信息"><a href="#自定义错误信息" class="headerlink" title="自定义错误信息"></a>自定义错误信息</h2><p>上面介绍了最简单的错误处理，最主要的针对返回的 HTML，但是我们往往也要处理 Json 类型的返回内容，目的是让数据结构和我们的接口返回的数据结构一致。</p>
+<h4 id="Step-1-自定义-servlet-容器"><a href="#Step-1-自定义-servlet-容器" class="headerlink" title="Step 1 自定义 servlet 容器"></a>Step 1 自定义 servlet 容器</h4><p><strong>需要注意的是，Spring Boot 2.x 和 Sprig Boot 1.x 是不一样的。</strong></p>
+<p>此处 Demo 我们仅处理了 404 和 500 这两种异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContainerConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 下面是 springboot 2.x 系列的写法 */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> WebServerFactoryCustomizer&lt;ConfigurableWebServerFactory&gt; <span class="title">webServerFactoryCustomizer</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> factory -&gt; &#123;</span><br><span class="line">            factory.addErrorPages(<span class="keyword">new</span> ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, <span class="string">"/error/500"</span>));</span><br><span class="line">            factory.addErrorPages(<span class="keyword">new</span> ErrorPage(HttpStatus.NOT_FOUND, <span class="string">"/error/404"</span>));</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 下面是 springboot 1.x 系列的写法 */</span></span><br><span class="line">    <span class="comment">/*@Bean</span></span><br><span class="line"><span class="comment">    public EmbeddedServletContainerCustomizer containerCustomizer()&#123;</span></span><br><span class="line"><span class="comment">        return new EmbeddedServletContainerCustomizer()&#123;</span></span><br><span class="line"><span class="comment">            @Override</span></span><br><span class="line"><span class="comment">            public void customize(ConfigurableEmbeddedServletContainer container) &#123;</span></span><br><span class="line"><span class="comment">                container.addErrorPages(new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/error/500"));</span></span><br><span class="line"><span class="comment">                container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/error/404"));</span></span><br><span class="line"><span class="comment">            &#125;</span></span><br><span class="line"><span class="comment">        &#125;;</span></span><br><span class="line"><span class="comment">    &#125;*/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Step-2-自定义对应的请求处理类"><a href="#Step-2-自定义对应的请求处理类" class="headerlink" title="Step 2 自定义对应的请求处理类"></a>Step 2 自定义对应的请求处理类</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyBasicErrorController</span> <span class="keyword">extends</span> <span class="title">BasicErrorController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyBasicErrorController</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(<span class="keyword">new</span> DefaultErrorAttributes(), <span class="keyword">new</span> ErrorProperties());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Description</span>: 定义500的ModelAndView</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Param</span>: [request, response]</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span>: org.springframework.web.servlet.ModelAndView </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Author</span>: Jet.Chen</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Date</span>: 2019-07-17 21:56</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="meta">@RequestMapping</span>(produces = <span class="string">"text/html"</span>,value = <span class="string">"/500"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ModelAndView <span class="title">errorHtml500</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> </span>&#123;</span><br><span class="line">        response.setStatus(getStatus(request).value());</span><br><span class="line">        Map&lt;String, Object&gt; model = getErrorAttributes(request, isIncludeStackTrace(request, MediaType.TEXT_HTML));</span><br><span class="line">        model.put(<span class="string">"msg"</span>,<span class="string">"自定义错误信息"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ModelAndView(<span class="string">"error/500"</span>, model);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Description</span>: 定义500 和 404 的错误JSON信息</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Param</span>: [request]</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span>: org.springframework.http.ResponseEntity&lt;cn.jetchen.steecrserver.config.STCRResposeData&gt;</span></span><br><span class="line"><span class="comment">    * STCRResposeData 为全局统一的接口数据结构</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Author</span>: Jet.Chen</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Date</span>: 2019-07-17 23:13</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="meta">@RequestMapping</span>(value = &#123;<span class="string">"/500"</span>, <span class="string">"/404"</span>&#125;)</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;STCRResposeData&gt; <span class="title">error500</span><span class="params">(HttpServletRequest request)</span> </span>&#123;</span><br><span class="line">        Map&lt;String, Object&gt; body = getErrorAttributes(request, isIncludeStackTrace(request, MediaType.TEXT_HTML));</span><br><span class="line">        HttpStatus status = getStatus(request);</span><br><span class="line">        Object messageTemp;</span><br><span class="line">        <span class="comment">// stcrResposeData 为返回的数据</span></span><br><span class="line">        STCRResposeData stcrResposeData = STCRResposeData.initError(</span><br><span class="line">                String.format(<span class="string">"%d%d"</span>, <span class="number">1</span>, status.value()), </span><br><span class="line">                (messageTemp = body.get(<span class="string">"error"</span>)) == <span class="keyword">null</span> ? <span class="keyword">null</span> : messageTemp.toString(),</span><br><span class="line">                <span class="keyword">new</span> HashMap&lt;String, Object&gt;() &#123;&#123;</span><br><span class="line">                    put(<span class="string">"error"</span>, body.get(<span class="string">"error"</span>));</span><br><span class="line">                    put(<span class="string">"message"</span>, body.get(<span class="string">"message"</span>));</span><br><span class="line">                &#125;&#125;);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(stcrResposeData, status);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Description</span>: 定义404的ModelAndView</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Param</span>: [request, response]</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span>: org.springframework.web.servlet.ModelAndView </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Author</span>: Jet.Chen</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Date</span>: 2019-07-17 23:13</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="meta">@RequestMapping</span>(produces = <span class="string">"text/html"</span>,value = <span class="string">"/404"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ModelAndView <span class="title">errorHtml400</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> </span>&#123;</span><br><span class="line">        response.setStatus(getStatus(request).value());</span><br><span class="line">        Map&lt;String, Object&gt; model = getErrorAttributes(request, isIncludeStackTrace(request, MediaType.TEXT_HTML));</span><br><span class="line">        model.put(<span class="string">"msg"</span>,<span class="string">"自定义错误信息"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ModelAndView(<span class="string">"error/404"</span>, model);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>全局异常的处理是非常有必要的，但是此文到此的处理方式其实才完成了一半，这些会在下篇文章中介绍，主要是因为此处处理的是全局的错误，是在过滤器之外的，但是我们希望处理的粒度更细一点。</p>
+<p>比如在控制器层的全局处理方式：<strong>@ControllerAdvice</strong>，从抽象概念上可以理解成它是处理那些在 Controller 方法中抛出的异常。</p>
+<p><img src="http://blogsource.chenkaikai.com/cli_500px.png" alt="image"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+	  
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束 <i class="fa fa-fighter-jet"></i> 感谢阅读 ------</div>
+    
+</div>
+	  
+	</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SpringBoot/" rel="tag"><i class="fa fa-tag"></i> SpringBoot</a>
+          
+            <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
+          
+            <a href="/tags/全局异常处理/" rel="tag"><i class="fa fa-tag"></i> 全局异常处理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/bloom-filter/" rel="next" title="细嚼慢咽布隆过滤器(Bloom Filter)">
+                <i class="fa fa-chevron-left"></i> 细嚼慢咽布隆过滤器(Bloom Filter)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jet Chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">70</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">34</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">187</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/goldenJet" title="GitHub &rarr; https://github.com/goldenJet" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/goldenJ51015801" title="Twitter &rarr; https://twitter.com/goldenJ51015801" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Boot-默认的异常处理机制"><span class="nav-number">2.</span> <span class="nav-text">Spring Boot 默认的异常处理机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义错误页面"><span class="nav-number">3.</span> <span class="nav-text">自定义错误页面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义错误信息"><span class="nav-number">4.</span> <span class="nav-text">自定义错误信息</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Step-1-自定义-servlet-容器"><span class="nav-number">4.0.1.</span> <span class="nav-text">Step 1 自定义 servlet 容器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Step-2-自定义对应的请求处理类"><span class="nav-number">4.0.2.</span> <span class="nav-text">Step 2 自定义对应的请求处理类</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jet Chen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+<div class="BbeiAn-info">
+    <a target="_blank" href="http://www.miitbeian.gov.cn/" rel="nofollow">浙ICP备17005575号-1</a> <!--a标签中增加nofollow属性，避免爬虫出站。-->| 
+	<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802009043" style="text-decoration:none;padding-left:17px;background:url(/images/icon-police.png) no-repeat left center" rel="nofollow">浙公网安备 33010802009043号</a>	  <!--这里将图标作为了背景，以使得能和后面的文字在同一行-->
+</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
