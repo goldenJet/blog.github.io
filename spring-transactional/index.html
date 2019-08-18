@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="关于 Spring 事务，平时开发过程中都会有接触到，但是对这块知识的详细总结却很少，所以本文总结了下 Spring 事务的传播行为。">
+<meta name="keywords" content="Spring,Spring 事务,Spring 事务传播行为,Spring 事务特征,Spring 事务隔离级别">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring 中的事务传播行为">
+<meta property="og:url" content="https://blog-test.jetchen.cn/spring-transactional/index.html">
+<meta property="og:site_name" content="嘎里三分熟">
+<meta property="og:description" content="关于 Spring 事务，平时开发过程中都会有接触到，但是对这块知识的详细总结却很少，所以本文总结了下 Spring 事务的传播行为。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/cli_500px.png">
+<meta property="og:updated_time" content="2019-08-18T12:06:47.499Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring 中的事务传播行为">
+<meta name="twitter:description" content="关于 Spring 事务，平时开发过程中都会有接触到，但是对这块知识的详细总结却很少，所以本文总结了下 Spring 事务的传播行为。">
+<meta name="twitter:image" content="http://blogsource.chenkaikai.com/cli_500px.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://blog-test.jetchen.cn/spring-transactional/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Spring 中的事务传播行为 | 嘎里三分熟</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">嘎里三分熟</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about-me/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog-test.jetchen.cn/spring-transactional/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jet Chen">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嘎里三分熟">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring 中的事务传播行为
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-08-07 19:43:42" itemprop="dateCreated datePublished" datetime="2019-08-07T19:43:42+08:00">2019-08-07</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring基础/" itemprop="url" rel="index"><span itemprop="name">Spring基础</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><center>关于 Spring 事务，平时开发过程中都会有接触到，但是对这块知识的详细总结却很少，所以本文总结了下 Spring 事务的传播行为。</center><br><a id="more"></a></p>
+<hr>
+<p>搜索微信公众号【 <strong>Jet与编程</strong> 】体验更多有趣功能和文章哦。</p>
+<hr>
+<h2 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h2><p>Spring 框架应该是每一个人 javaer 都必须接触和学习的技术，Spring 公司所提供的各种框架是 Java 开发行业可参考的重要标准之一。</p>
+<p>Spring 中有 7 种类型的事务传播行为。事务传播行为是 Spring 框架提供的一种事务管理方式，它是 Spring 框架之中非常重要的一个技术点，毕竟事务关系到应用程序和数据库的交互，而数据更是互联网行业最为重要的资源。</p>
+<p>平时开发过程中事务都会有使用，但是没有真正地总结过，尤其是事务中嵌套事务的场景，此篇基础知识文在此做一个简单的学习总结，</p>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><h4 id="事务的特征"><a href="#事务的特征" class="headerlink" title="事务的特征"></a>事务的特征</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原子性</td>
+<td>一个事务中所有对数据库的操作是一个不可分割的操作序列，要么全做要么全不做</td>
+</tr>
+<tr>
+<td>一致性</td>
+<td>数据不会因为事务的执行而遭到破坏</td>
+</tr>
+<tr>
+<td>隔离性</td>
+<td>一个事物的执行，不受其他事务的干扰，即并发执行的事物之间互不干扰</td>
+</tr>
+<tr>
+<td>持久性</td>
+<td>一个事物一旦提交，它对数据库的改变就是永久的</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="事务的隔离级别"><a href="#事务的隔离级别" class="headerlink" title="事务的隔离级别"></a>事务的隔离级别</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>read_uncommitted</td>
+<td>读未提交，一个事务可以感知或者操作另外一个未提交的事务，可能会出现脏读、不可重复读、幻读</td>
+</tr>
+<tr>
+<td>read_committed</td>
+<td>读已提交，一个事务只能感知或者操作另一个已经提交的事务，可能会出现不可重复读、幻读</td>
+</tr>
+<tr>
+<td>repeatable_read</td>
+<td>可重复读，能够避免脏读，不可重复读，不能避免幻读</td>
+</tr>
+<tr>
+<td>serializable</td>
+<td>串行化，隔离级别最高，消耗资源最低，代价最高，能够防止脏读， 不可重复读，幻读。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p><strong>mysql 默认的事务隔离级别是 repeatable_read</strong></p>
+</blockquote>
+<h4 id="Spring-事务的传播行为"><a href="#Spring-事务的传播行为" class="headerlink" title="Spring 事务的传播行为"></a>Spring 事务的传播行为</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>传播行为</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① <strong>Propagation.REQUIRED</strong>（默认）</td>
+<td>如果当前存在事务，则加入该事务，如果当前不存在事务，则创建一个新的事务。</td>
+</tr>
+<tr>
+<td>② Propagation.SUPPORTS</td>
+<td>如果当前存在事务，则加入该事务；如果当前不存在事务，则以非事务的方式继续运行。</td>
+</tr>
+<tr>
+<td>③ Propagation.MANDATORY</td>
+<td>如果当前存在事务，则加入该事务；如果当前不存在事务，则抛出异常。</td>
+</tr>
+<tr>
+<td>④ <strong>Propagation.REQUIRES_NEW</strong></td>
+<td>重新创建一个新的事务，如果当前存在事务，延缓当前的事务。</td>
+</tr>
+<tr>
+<td>⑤ Propagation.NOT_SUPPORTED</td>
+<td>以非事务的方式运行，如果当前存在事务，暂停当前的事务。</td>
+</tr>
+<tr>
+<td>⑥ Propagation.NEVER</td>
+<td>以非事务的方式运行，如果当前存在事务，则抛出异常。</td>
+</tr>
+<tr>
+<td>⑦ <strong>Propagation.NESTED</strong></td>
+<td>如果没有，就新建一个事务；如果有，就在当前事务中嵌套其他事务。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="代码演示"><a href="#代码演示" class="headerlink" title="代码演示"></a>代码演示</h2><p>准备动作：新建一个 spring 项目，数据库脚本见：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">SET NAMES utf8mb4;</span><br><span class="line">SET FOREIGN_KEY_CHECKS = 0;</span><br><span class="line"></span><br><span class="line">-- ----------------------------</span><br><span class="line">-- Table structure for customer</span><br><span class="line">-- ----------------------------</span><br><span class="line">DROP TABLE IF EXISTS `customer`;</span><br><span class="line">CREATE TABLE `customer` (</span><br><span class="line">  `id` int(11) NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `name` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,</span><br><span class="line">  `remark` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (`id`)</span><br><span class="line">) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;</span><br><span class="line"></span><br><span class="line">-- ----------------------------</span><br><span class="line">-- Records of customer</span><br><span class="line">-- ----------------------------</span><br><span class="line">BEGIN;</span><br><span class="line">INSERT INTO `customer` VALUES (1, &apos;A&apos;, &apos;a&apos;);</span><br><span class="line">INSERT INTO `customer` VALUES (2, &apos;B&apos;, &apos;b&apos;);</span><br><span class="line">INSERT INTO `customer` VALUES (3, &apos;C&apos;, &apos;c&apos;);</span><br><span class="line">COMMIT;</span><br><span class="line"></span><br><span class="line">SET FOREIGN_KEY_CHECKS = 1;</span><br></pre></td></tr></table></figure>
+<p>测试步骤为：方法 A 中调用方法 B 和 方法 C，三个方法各自操作数据库中的一条数据，然后方法 A、B、C 组合添加事务<br>伪代码为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function A()&#123; // 方法 A</span><br><span class="line">    functionB(); // 方法 B</span><br><span class="line">    functionC(); // 方法 C</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="①-Propagation-REQUIRED（默认）"><a href="#①-Propagation-REQUIRED（默认）" class="headerlink" title="① Propagation.REQUIRED（默认）"></a>① <strong>Propagation.REQUIRED</strong>（默认）</h4><ul>
+<li>步骤：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Transactional</span><br><span class="line">function A()&#123; // 有事务</span><br><span class="line">    functionB(); // 无事务，代码正常</span><br><span class="line">    functionC(); // 无事务，代码抛异常</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>结果：</li>
+</ul>
+<p>数据库中无数据</p>
+<ul>
+<li>说明：</li>
+</ul>
+<p>方法 B 和方法 C 虽然没有自己的事务，但是外层的方法 A 是有事务的，由于默认的事务传播机制，所以方法 B 和 C 都加入到了 A 的事务之中，所以当 C 报错时，B 也随着回滚了。</p>
+<h4 id="②-Propagation-SUPPORTS"><a href="#②-Propagation-SUPPORTS" class="headerlink" title="② Propagation.SUPPORTS"></a>② Propagation.SUPPORTS</h4><ul>
+<li>步骤：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function A()&#123; // 无事务</span><br><span class="line">    functionB(); // 有事务，代码正常，事务为：@Transactional(propagation = Propagation.SUPPORTS)</span><br><span class="line">    functionC(); // 有事务，代码抛异常，事务为：@Transactional(propagation = Propagation.SUPPORTS)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>结果：</li>
+</ul>
+<p>数据库中有两条数据</p>
+<ul>
+<li>说明：</li>
+</ul>
+<p>Propagation.SUPPORTS 的意思是当前有事务则加入，没有则不添加事务，所以，由于 A 是没有事务的，那么 B 和 C 自然而然也就不加入事务中，而 C 中的报错了，那么自然而然也就不会进行数据回滚。</p>
+<h4 id="③-Propagation-MANDATORY"><a href="#③-Propagation-MANDATORY" class="headerlink" title="③ Propagation.MANDATORY"></a>③ Propagation.MANDATORY</h4><ul>
+<li>步骤：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function A()&#123; // 无事务</span><br><span class="line">    functionB(); // 有事务，代码正常，事务为：@Transactional(propagation = Propagation.MANDATORY)</span><br><span class="line">    functionC(); // 有事务，代码抛异常，事务为：@Transactional(propagation = Propagation.SUPPORTS)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>结果：</li>
+</ul>
+<p>不仅数据库中无数据，而且运行时报错：<code>org.springframework.transaction.IllegalTransactionStateException: No existing transaction found for transaction marked with propagation &#39;mandatory&#39;</code></p>
+<ul>
+<li>说明：</li>
+</ul>
+<p>Propagation.MANDATORY 的意思是当前有事务则加入，没有事务则抛出异常。所以上述代码在运行时抛出了 <code>IllegalTransactionStateException</code> 异常。</p>
+<h4 id="④-Propagation-REQUIRES-NEW"><a href="#④-Propagation-REQUIRES-NEW" class="headerlink" title="④ Propagation.REQUIRES_NEW"></a>④ <strong>Propagation.REQUIRES_NEW</strong></h4><ul>
+<li>步骤：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function A()&#123; // 有事务</span><br><span class="line">    insert one data;</span><br><span class="line">    </span><br><span class="line">    functionB(); // 有事务，代码正常，事务为：@Transactional(propagation = Propagation.REQUIRES_NEW)</span><br><span class="line">    functionC(); // 有事务，代码抛异常，事务为：@Transactional(propagation = Propagation.REQUIRES_NEW)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>结果：</li>
+</ul>
+<p>数据库中仅有方法 B 的一条数据。</p>
+<ul>
+<li>说明：</li>
+</ul>
+<p>Propagation.REQUIRES_NEW 的意思是重新创建一个新的事务，如果当前存在事务，延缓当前的事务。<br>这个理解起来有点拗。结合上述代码案例来看，首先 B 和 C 都是有各自的事务的，所以在 C 抛出异常后，C 会回滚，而 B 则会正常插入一条数据，毕竟两者的事务的独立的，但是此时 A 也是有事务的，并且 A 的事务是在 B 和 C 之后再执行的，所以当 C 抛出异常之后，A 自然而然也就捕获到了，那么 A 的事务也会回滚，所以数据库中 A 插入的数据也被回滚掉了。</p>
+<h4 id="⑤-Propagation-NOT-SUPPORTED"><a href="#⑤-Propagation-NOT-SUPPORTED" class="headerlink" title="⑤ Propagation.NOT_SUPPORTED"></a>⑤ Propagation.NOT_SUPPORTED</h4><ul>
+<li>步骤：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function A()&#123; // 有事务</span><br><span class="line">    functionB(); // 无事务，代码正常，添加注解：@Transactional(propagation = Propagation.NOT_SUPPORTED)</span><br><span class="line">    functionC(); // 无事务，代码抛异常，添加注解：@Transactional(propagation = Propagation.NOT_SUPPORTED)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>结果：</li>
+</ul>
+<p>数据库中有 B 和 C 两条数据。</p>
+<ul>
+<li>说明：</li>
+</ul>
+<p>Propagation.NOT_SUPPORTED 的意思是当前代码以非事务的方式运行，就算有事务，而已暂停当前事务。<br>结合上面的伪代码来看，虽然 A 是有事务的，但是 B 和 c 的注解为 NOT_SUPPORTED，意思是我这个方法是不需要加入事务中的，所以 B 和 C 是没有加入 A 的事务中去的，所以哪怕 B 抛出异常，由于不参会事务，所以 B 和 C 的数据都是不会回滚的，所以数据库中就会有 B 和 C 两条数据。</p>
+<h4 id="⑥-Propagation-NEVER"><a href="#⑥-Propagation-NEVER" class="headerlink" title="⑥ Propagation.NEVER"></a>⑥ Propagation.NEVER</h4><ul>
+<li>步骤：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function A()&#123; // 有事务</span><br><span class="line">    functionB(); // 无事务，代码正常，添加注解：@Transactional(propagation = Propagation.NEVER)</span><br><span class="line">    functionC(); // 无事务，代码抛异常，添加注解：@Transactional(propagation = Propagation.NEVER)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>结果：</li>
+</ul>
+<p>数据库中无数据，并且运行时报错<code>org.springframework.transaction.IllegalTransactionStateException: Existing transaction found for transaction marked with propagation &#39;never&#39;</code></p>
+<ul>
+<li>说明：</li>
+</ul>
+<p>Propagation.NEVER 的意思是以非事务的方式去运行，如果有事务，则抛出异常。<br>上述伪代码中，A 是有事务的，但是 B 和 C 添加了 NEVER 的事务，意思是别给我加事务，我拒绝，你要是给我加了事务我就给你抛异常。</p>
+<h4 id="⑦-Propagation-NESTED"><a href="#⑦-Propagation-NESTED" class="headerlink" title="⑦ Propagation.NESTED"></a>⑦ <strong>Propagation.NESTED</strong></h4><ul>
+<li>步骤：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">function A()&#123; // 有事务</span><br><span class="line">    insert one data;</span><br><span class="line">    </span><br><span class="line">    functionB(); // 有事务，代码正常，事务为：@Transactional(propagation = Propagation.NESTED)</span><br><span class="line">    functionC(); // 有事务，代码抛异常，事务为：@Transactional(propagation = Propagation.NESTED)</span><br><span class="line">    </span><br><span class="line">    throw exception;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>结果：</li>
+</ul>
+<p>结果就是没有结果，因为 JPA 是不支持这种循环嵌套事务的，所以在运行的时候就会抛出异常：<br><code>org.springframework.transaction.NestedTransactionNotSupportedException: JpaDialect does not support savepoints - check your JPA provider&#39;s capabilities</code></p>
+<ul>
+<li>说明：</li>
+</ul>
+<p>Propagation.NESTED 的意思是如果外层没有事务，则内层会添加一个，而如果外层有事务，则内层会嵌套一层事务，即内层是有两层事务的。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>demo 的源码见：【<a href="https://github.com/goldenJet/leetcode/blob/master/src/main/java/cn/jet/leetcode/spring/transactional" target="_blank" rel="noopener">GitHub 地址</a>】</p>
+<p><img src="http://blogsource.chenkaikai.com/cli_500px.png" alt></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+	  
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束 <i class="fa fa-fighter-jet"></i> 感谢阅读 ------</div>
+    
+</div>
+	  
+	</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring/" rel="tag"><i class="fa fa-tag"></i> Spring</a>
+          
+            <a href="/tags/Spring-事务/" rel="tag"><i class="fa fa-tag"></i> Spring 事务</a>
+          
+            <a href="/tags/Spring-事务传播行为/" rel="tag"><i class="fa fa-tag"></i> Spring 事务传播行为</a>
+          
+            <a href="/tags/Spring-事务特征/" rel="tag"><i class="fa fa-tag"></i> Spring 事务特征</a>
+          
+            <a href="/tags/Spring-事务隔离级别/" rel="tag"><i class="fa fa-tag"></i> Spring 事务隔离级别</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/spring-boot-error-2/" rel="next" title="Spring Boot 全局异常处理（下）">
+                <i class="fa fa-chevron-left"></i> Spring Boot 全局异常处理（下）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jet Chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">72</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">34</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">191</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/goldenJet" title="GitHub &rarr; https://github.com/goldenJet" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/goldenJ51015801" title="Twitter &rarr; https://twitter.com/goldenJ51015801" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景介绍"><span class="nav-number">1.</span> <span class="nav-text">背景介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事务"><span class="nav-number">2.</span> <span class="nav-text">事务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#事务的特征"><span class="nav-number">2.0.1.</span> <span class="nav-text">事务的特征</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#事务的隔离级别"><span class="nav-number">2.0.2.</span> <span class="nav-text">事务的隔离级别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-事务的传播行为"><span class="nav-number">2.0.3.</span> <span class="nav-text">Spring 事务的传播行为</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#代码演示"><span class="nav-number">3.</span> <span class="nav-text">代码演示</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#①-Propagation-REQUIRED（默认）"><span class="nav-number">3.0.1.</span> <span class="nav-text">① Propagation.REQUIRED（默认）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#②-Propagation-SUPPORTS"><span class="nav-number">3.0.2.</span> <span class="nav-text">② Propagation.SUPPORTS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#③-Propagation-MANDATORY"><span class="nav-number">3.0.3.</span> <span class="nav-text">③ Propagation.MANDATORY</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#④-Propagation-REQUIRES-NEW"><span class="nav-number">3.0.4.</span> <span class="nav-text">④ Propagation.REQUIRES_NEW</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#⑤-Propagation-NOT-SUPPORTED"><span class="nav-number">3.0.5.</span> <span class="nav-text">⑤ Propagation.NOT_SUPPORTED</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#⑥-Propagation-NEVER"><span class="nav-number">3.0.6.</span> <span class="nav-text">⑥ Propagation.NEVER</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#⑦-Propagation-NESTED"><span class="nav-number">3.0.7.</span> <span class="nav-text">⑦ Propagation.NESTED</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">4.</span> <span class="nav-text">其他</span></a></li></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jet Chen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+<div class="BbeiAn-info">
+    <a target="_blank" href="http://www.miitbeian.gov.cn/" rel="nofollow">浙ICP备17005575号-1</a> <!--a标签中增加nofollow属性，避免爬虫出站。-->| 
+	<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802009043" style="text-decoration:none;padding-left:17px;background:url(/images/icon-police.png) no-repeat left center" rel="nofollow">浙公网安备 33010802009043号</a>	  <!--这里将图标作为了背景，以使得能和后面的文字在同一行-->
+</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
