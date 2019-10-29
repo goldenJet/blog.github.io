@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="webhook 是 git 仓库锋利的瑞士军刀之一，利用它，我们可以监听例如 push 在内的所有动作，并设置很多定制化的回调，比如本文的自动部署博客便是最简单的应用场景之一。">
+<meta name="keywords" content="GitHub,flask,gitpython,HEXO,webhook">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用 github 的 webhooks 自动部署博客">
+<meta property="og:url" content="https://blog-test.jetchen.cn/github-webhooks/index.html">
+<meta property="og:site_name" content="嘎里三分熟">
+<meta property="og:description" content="webhook 是 git 仓库锋利的瑞士军刀之一，利用它，我们可以监听例如 push 在内的所有动作，并设置很多定制化的回调，比如本文的自动部署博客便是最简单的应用场景之一。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/10/webhook01.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/10/webhook02.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/10/webhook03.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/cli_500px.png">
+<meta property="og:updated_time" content="2019-10-29T13:19:54.391Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利用 github 的 webhooks 自动部署博客">
+<meta name="twitter:description" content="webhook 是 git 仓库锋利的瑞士军刀之一，利用它，我们可以监听例如 push 在内的所有动作，并设置很多定制化的回调，比如本文的自动部署博客便是最简单的应用场景之一。">
+<meta name="twitter:image" content="http://blogsource.chenkaikai.com/uploads/2019/10/webhook01.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://blog-test.jetchen.cn/github-webhooks/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>利用 github 的 webhooks 自动部署博客 | 嘎里三分熟</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">嘎里三分熟</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about-me/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog-test.jetchen.cn/github-webhooks/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jet Chen">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嘎里三分熟">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">利用 github 的 webhooks 自动部署博客
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-10-29 21:16:57" itemprop="dateCreated datePublished" datetime="2019-10-29T21:16:57+08:00">2019-10-29</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/常用工具/" itemprop="url" rel="index"><span itemprop="name">常用工具</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><center>webhook 是 git 仓库锋利的瑞士军刀之一，利用它，我们可以监听例如 push 在内的所有动作，并设置很多定制化的回调，比如本文的自动部署博客便是最简单的应用场景之一。</center><br><a id="more"></a></p>
+<hr>
+<p>搜索微信公众号【 <strong>Jet与编程</strong> 】体验更多有趣功能和文章哦。</p>
+<hr>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>博客原是 WordPress 搭建的，由于某些个人无法接受的原因，准备转成静态博客，之前转过，使用的是 HEXO，基本成功了，但是是部署在 github pages 上面的，如今准备部署在国内的阿里云服务器上。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>使用 HEXO 搭建的博客平台，进行写博客的流程是：</p>
+<blockquote>
+<p>1、本地使用 Markdown 编写博客，<br>2、本地编译成 html 文件，<br>3、将 html 文件上传至服务器，一般免费的有 github page，gitee 等</p>
+</blockquote>
+<p>所以此处需要改造的点其实很简单，就是把 github 仓库中的 html 文件全部下载至服务器上，然后利用 web 服务器做个反向代理即可，比如 nginx。</p>
+<p>后续的部署流程：</p>
+<blockquote>
+<p>1、本地写完博客，编译完成后上传至 github 仓库<br>2、登陆到服务器上面进行 git update 操作</p>
+</blockquote>
+<p>问题就此暴露出来了，每次写完博客都要登陆下服务器去更新下 html 文件，我的天，这谁顶得住。</p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>于是自然而然想到了 git 仓库的 web 钩子，即当 git 仓库收到 push 或者其他命令时，会自动调我们的钩子程序（其实就是向我们指定的地址发送一个 post 请求），而我们只需要让我们的这个程序去跟新下服务器上面的代码（html 文件）即可。</p>
+<p>流程示例图见下图：</p>
+<p><img src="http://blogsource.chenkaikai.com/uploads/2019/10/webhook01.png" alt="流程示例图"></p>
+<p>从上面可以出，我们只剩 2 件事需要做，一是配置下 github 的 webhook，二是在我们的服务器上写一个 web 程序来处理 github 发送过来的请求。</p>
+<h3 id="1、webhook-配置"><a href="#1、webhook-配置" class="headerlink" title="1、webhook 配置"></a>1、webhook 配置</h3><p>配置比较简单，需要注意的是，秘钥虽然是非必填的，但是最好还是加上，为了安全。<br><img src="http://blogsource.chenkaikai.com/uploads/2019/10/webhook02.png" alt="webhook 配置"></p>
+<p>请求的数据，每个平台都不一样，在此以 github 为例，数据内容见下图：<br><strong>注：请求头中有一个很重要的签名参数，该参数前部分为加密方式，后部分为的签名，而明文就是我们在 webhook 中配置的秘钥。这点很重要哦。</strong><br><img src="http://blogsource.chenkaikai.com/uploads/2019/10/webhook03.png" alt="webhook 请求示例图"></p>
+<h3 id="2、程序编写"><a href="#2、程序编写" class="headerlink" title="2、程序编写"></a>2、程序编写</h3><p>写一个简单是 web 程序。</p>
+<p>本人主要是编写 java 代码的，如果要用 java 来写的话，比较麻烦，所以考虑选择一款解释性语言来编写，其实用啥语言都无所谓啦，毕竟代码处理逻辑很简单，选用自己熟悉的就行，例如 Python、PHP、nodejs 等都行。</p>
+<p>此处选择的是使用 Python 来编写，web 框架是比较轻量的 Flask，操作 git 使用的是 gitPython，所以需要安装下：</p>
+<blockquote>
+<p>pip install flask<br>pip install gitpython</p>
+</blockquote>
+<p>代码比较简单，不多赘述，主要就是两点：</p>
+<blockquote>
+<p>1、签名校验<br>2、git update</p>
+</blockquote>
+<p>详细代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, request, Blueprint, jsonify, current_app</span><br><span class="line"><span class="keyword">from</span> git <span class="keyword">import</span> Repo</span><br><span class="line"><span class="keyword">import</span> hmac</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route("/api/github_hook", methods=['POST'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">github_web_hook</span><span class="params">()</span>:</span></span><br><span class="line"></span><br><span class="line">    header_signature_origin = request.headers.get(<span class="string">'X-Hub-Signature'</span>)</span><br><span class="line">    <span class="keyword">if</span> header_signature_origin <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'你没有权限访问！'</span></span><br><span class="line">        </span><br><span class="line">    hash_type, header_signature = header_signature_origin.split(<span class="string">'='</span>)</span><br><span class="line">    <span class="keyword">if</span> hash_type != <span class="string">'sha1'</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'不支持的加密方式！'</span></span><br><span class="line">        </span><br><span class="line">    secret = str.encode(<span class="string">"http://www.jetchen.cn"</span>)</span><br><span class="line">    </span><br><span class="line">    hashhex = hmac.new(secret, request.data, digestmod=<span class="string">'sha1'</span>).hexdigest()</span><br><span class="line">    <span class="keyword">if</span> hmac.compare_digest(hashhex, header_signature):</span><br><span class="line">        repo = Repo(<span class="string">'/data/blog-test/blog.github.io/'</span>) <span class="comment"># 获取本地git仓库</span></span><br><span class="line">        <span class="comment"># repo = Repo('D:\project\mixed\\blog.github.io\\') # 获取本地git仓库</span></span><br><span class="line">        <span class="comment"># origin = repo.remotes.origin # 获取远程库 &amp; 远程分支</span></span><br><span class="line">        <span class="comment"># origin.pull('--rebase') # 拉代码</span></span><br><span class="line">        remote = repo.remote()</span><br><span class="line">        remote.pull(<span class="string">'master'</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> <span class="string">'after'</span> <span class="keyword">in</span> request.json:</span><br><span class="line">            commit = request.json[<span class="string">'after'</span>][<span class="number">0</span>:<span class="number">6</span>] <span class="comment"># pull 的最新的commit</span></span><br><span class="line">            print(<span class="string">'Repository updated with commit &#123;&#125;'</span>.format(commit))</span><br><span class="line">            </span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'签名校验失败！'</span></span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> jsonify(&#123;&#125;), <span class="number">200</span></span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    app.run(port=<span class="number">8001</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="http://blogsource.chenkaikai.com/cli_500px.png" alt="image"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+	  
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束 <i class="fa fa-fighter-jet"></i> 感谢阅读 ------</div>
+    
+</div>
+	  
+	</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/GitHub/" rel="tag"><i class="fa fa-tag"></i> GitHub</a>
+          
+            <a href="/tags/flask/" rel="tag"><i class="fa fa-tag"></i> flask</a>
+          
+            <a href="/tags/gitpython/" rel="tag"><i class="fa fa-tag"></i> gitpython</a>
+          
+            <a href="/tags/HEXO/" rel="tag"><i class="fa fa-tag"></i> HEXO</a>
+          
+            <a href="/tags/webhook/" rel="tag"><i class="fa fa-tag"></i> webhook</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/skiplist/" rel="next" title="跳跃表之初体验">
+                <i class="fa fa-chevron-left"></i> 跳跃表之初体验
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jet Chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">74</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">35</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">200</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/goldenJet" title="GitHub &rarr; https://github.com/goldenJet" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/goldenJ51015801" title="Twitter &rarr; https://twitter.com/goldenJ51015801" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">2.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、webhook-配置"><span class="nav-number">3.1.</span> <span class="nav-text">1、webhook 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、程序编写"><span class="nav-number">3.2.</span> <span class="nav-text">2、程序编写</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jet Chen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+<div class="BbeiAn-info">
+    <a target="_blank" href="http://www.miitbeian.gov.cn/" rel="nofollow">浙ICP备17005575号-1</a> <!--a标签中增加nofollow属性，避免爬虫出站。-->| 
+	<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802009043" style="text-decoration:none;padding-left:17px;background:url(/images/icon-police.png) no-repeat left center" rel="nofollow">浙公网安备 33010802009043号</a>	  <!--这里将图标作为了背景，以使得能和后面的文字在同一行-->
+</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

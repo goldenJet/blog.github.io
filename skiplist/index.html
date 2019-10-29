@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.ico?v=7.0.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16.ico?v=7.0.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="跳跃表(SkipList)既满足了链表增删快的优势，又拥有了列表查询速度快的优势，而它本质上其实就是一个支持二分查找的有序链表，并且在Redis和LeveIDB中都有用到。">
+<meta name="keywords" content="java,算法,SkipList,哈希表,平衡树,数据结构,红黑树">
+<meta property="og:type" content="article">
+<meta property="og:title" content="跳跃表之初体验">
+<meta property="og:url" content="https://blog-test.jetchen.cn/skiplist/index.html">
+<meta property="og:site_name" content="嘎里三分熟">
+<meta property="og:description" content="跳跃表(SkipList)既满足了链表增删快的优势，又拥有了列表查询速度快的优势，而它本质上其实就是一个支持二分查找的有序链表，并且在Redis和LeveIDB中都有用到。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/09/SkipLists01.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/09/SkipLists02.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/09/SkipLists03.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/uploads/2019/09/SkipLists04.png">
+<meta property="og:image" content="http://blogsource.chenkaikai.com/cli_500px.png">
+<meta property="og:updated_time" content="2019-10-29T13:25:34.706Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="跳跃表之初体验">
+<meta name="twitter:description" content="跳跃表(SkipList)既满足了链表增删快的优势，又拥有了列表查询速度快的优势，而它本质上其实就是一个支持二分查找的有序链表，并且在Redis和LeveIDB中都有用到。">
+<meta name="twitter:image" content="http://blogsource.chenkaikai.com/uploads/2019/09/SkipLists01.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://blog-test.jetchen.cn/skiplist/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>跳跃表之初体验 | 嘎里三分熟</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">嘎里三分熟</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about-me/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog-test.jetchen.cn/skiplist/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jet Chen">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="嘎里三分熟">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">跳跃表之初体验
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-09-17 15:22:39" itemprop="dateCreated datePublished" datetime="2019-09-17T15:22:39+08:00">2019-09-17</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java基础/" itemprop="url" rel="index"><span itemprop="name">Java基础</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><center>跳跃表(SkipList)既满足了链表增删快的优势，又拥有了列表查询速度快的优势，而它本质上其实就是一个支持二分查找的有序链表，并且在Redis和LeveIDB中都有用到。</center><br><a id="more"></a></p>
+<hr>
+<p>搜索微信公众号【 <strong>Jet与编程</strong> 】体验更多有趣功能和文章哦。</p>
+<hr>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在查找算法的解决方案中，即根据 key 来查找其所在的位置，主要思想一般是基于两种，一种是基于平衡树，还有一种是基于哈希表。</p>
+<p>而跳跃表（Skip List，下文简称跳表），也可以理解为查找算法的解决方案之一，但是它却没法归类到上述两种方案中，并且跳表实现起来也是比较简单的，在大部分应用场景下，跳表的性能是和平衡树相差无几的。</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>跳跃表这种数据结构是由 <strong>William Pugh</strong> 发明的，首次公开出现于他的论文中【<a href="http://blogsource.chenkaikai.com/uploads/2019/09/skiplists.pdf" target="_blank" rel="noopener">下载</a>】，该种数据结构是一种很精妙的设计。</p>
+<p>跳跃表（Skip List），顾名思义，首先它是一个 list，是一个基于链表而改进的数据结构。众所周知，链表的优势是增删，而不是查询，因为链表中每个节点都会记录并且只会记录下一个节点，所以在链表中查找数据时，是需要从首个数据开始挨个进行查找的（时间复杂度为O(n)）。而跳表的优势在于，查找数据时是不会挨个进行查找的，可以抽象理解为它是会按照某些规则跳过部分节点来进行查找的，所以查询的性能是高于链表的。</p>
+<p>如下的简图，目标是查找77：</p>
+<ol>
+<li>首先找到1，然后由于77大于1，所以找到下个等高节点20，而不是7</li>
+<li>继续从20出发，下个等高的节点是80，所以找到80，</li>
+<li>发现77比80小，所以继续从20出发，找下一个矮一点点的节点，此时正好找到了我们的目标值77</li>
+</ol>
+<p><img src="http://blogsource.chenkaikai.com/uploads/2019/09/SkipLists01.png" alt="SkipList 简图"></p>
+<p>从上面的初窥中可以看出，我们要查找一个值的时候，并不需要像链表一样挨个查找，而是在期间跳过了部分节点，从而在性能上得到了提升。</p>
+<p>另外上图中体现了一个 <strong>高度</strong> 的概念，如上面的第二步，我们从20开始向后查找到的节点是80而不是77，因为当时我们处于20的第三层高度，而第三层高度是指向80的，所以我们只会查找到80，但是对比发现80嫌大，所以便往下退一层，即第二层，而第二层也是指向80的，再向下到达了第一层，第一层指向的节点是77，此时正好找到了目标值。</p>
+<p>下图展示了每层的关联关系：<br><img src="http://blogsource.chenkaikai.com/uploads/2019/09/SkipLists02.png" alt="链表关系"></p>
+<p>其实从某种意义上来说，跳表和二分查找还是有些些相似的，跳表的时间复杂度为O(log n)。</p>
+<h2 id="跳跃表中的数据插入"><a href="#跳跃表中的数据插入" class="headerlink" title="跳跃表中的数据插入"></a>跳跃表中的数据插入</h2><p>上文介绍了跳表的基本思路，但是是基于查询的，那么跳表是如何一步步形成的呢？换句话说，数据是如何插入的呢？</p>
+<p>其实上文有一个概念没有讲清楚，即每个节点的层高是如何产生的，至于是如何产生的，偷偷告诉你，是在一定限制下随机生成的，哈哈哈，惊不惊喜，意不意外。</p>
+<p>下面画图介绍了一下数据的插入过程。</p>
+<p><img src="http://blogsource.chenkaikai.com/uploads/2019/09/SkipLists03.png" alt="跳跃表中插入数据"></p>
+<p>在插入一个数据的时候，会影响前后相关的关联索引，主要会影响第一层至当前层的关联索引。</p>
+<p>在上图中，如果我们要查找30，则过程见下图中带序号的虚线：</p>
+<p><img src="http://blogsource.chenkaikai.com/uploads/2019/09/SkipLists04.png" alt="跳跃表查询步骤"></p>
+<p>当然，在新增一个节点的时候，肯定也是要先进行一下查询动作的。</p>
+<p>而删除节点，也是和新增的过程差不多，也是需要调整前后数据的关联索引的。</p>
+<h2 id="层数的计算"><a href="#层数的计算" class="headerlink" title="层数的计算"></a>层数的计算</h2><p>上面提到的层数是一个随机数，但是是在一定的限制范围之内的。</p>
+<p>关于此处的限制，主要设计到两个概念:</p>
+<ol>
+<li>层高上限（MaxLevel），即层高至少为1，并且不允许超出该上限，</li>
+<li>某个有 i 层高的节点，则出现在 i+1 层的概率为 p，该 p 为固定值</li>
+</ol>
+<blockquote>
+<p>在 Redis 的 SkipList 中，默认的 p 为 <strong>1/4</strong>，默认的 MaxLevel 为 <strong>32</strong></p>
+</blockquote>
+<p>获取层高的伪代码为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">function <span class="title">getRandomLevel</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> level = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(random() &lt; p &amp;&amp; level &lt; MaxLevel) &#123;</span><br><span class="line">        level ++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> level;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>至于具体的细节，建议参考 Redis 中的跳跃表，暂不赘述，此处仅用 Java 语言来大概实现一下跳跃表。</p>
+<h2 id="Java-实现"><a href="#Java-实现" class="headerlink" title="Java 实现"></a>Java 实现</h2><ul>
+<li><p>skipList</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* <span class="doctag">@Description</span>: 跳跃表</span></span><br><span class="line"><span class="comment">* <span class="doctag">@Author</span>: Jet.Chen</span></span><br><span class="line"><span class="comment">* <span class="doctag">@Date</span>: 2019/9/16 17:39</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SkipList</span> &lt;<span class="title">T</span>&gt;</span>&#123;    </span><br><span class="line">    <span class="keyword">private</span> SkipListNode&lt;T&gt; head,tail;    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> nodes; <span class="comment">// 节点总数    </span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> listLevel; <span class="comment">// 最大层数    </span></span><br><span class="line">    <span class="keyword">private</span> Random random; <span class="comment">// 随机数，用于投掷硬币决定是否要加层高    </span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">double</span> PROBABILITY = <span class="number">0.25</span>; <span class="comment">// 向上提升一个的概率（此处采用redis中的默认值）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAXLEVEL = <span class="number">32</span>; <span class="comment">// 最大层高（此处采用redis中的默认值）    </span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SkipList</span><span class="params">()</span> </span>&#123;        </span><br><span class="line">        random = <span class="keyword">new</span> Random();        </span><br><span class="line">        clear();</span><br><span class="line">    &#125;    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Description</span>: 清空跳跃表    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Param</span>: []    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span>: void    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Author</span>: Jet.Chen    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Date</span>: 2019/9/16 17:41    </span></span><br><span class="line"><span class="comment">    */</span>    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span></span>&#123;        </span><br><span class="line">        head = <span class="keyword">new</span> SkipListNode&lt;T&gt;(SkipListNode.HEAD_KEY, <span class="keyword">null</span>);        </span><br><span class="line">        tail = <span class="keyword">new</span> SkipListNode&lt;T&gt;(SkipListNode.TAIL_KEY, <span class="keyword">null</span>);        </span><br><span class="line">        horizontalLink(head, tail);        </span><br><span class="line">        listLevel = <span class="number">0</span>;        </span><br><span class="line">        nodes = <span class="number">0</span>;   </span><br><span class="line">    &#125;    </span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span></span>&#123;        </span><br><span class="line">        <span class="keyword">return</span> nodes == <span class="number">0</span>;    </span><br><span class="line">    &#125;     </span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> </span>&#123;        </span><br><span class="line">        <span class="keyword">return</span> nodes;    </span><br><span class="line">    &#125;   </span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Description</span>: 找到要插入的位置前面的那个key 的最底层节点    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Param</span>: [key]    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span>: com.jet.SkipListNode&lt;T&gt;    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Author</span>: Jet.Chen    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Date</span>: 2019/9/16 17:42    </span></span><br><span class="line"><span class="comment">    */</span>    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> SkipListNode&lt;T&gt; <span class="title">findNode</span><span class="params">(<span class="keyword">int</span> key)</span></span>&#123;        </span><br><span class="line">        SkipListNode&lt;T&gt; p = head;        </span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;            </span><br><span class="line">            <span class="keyword">while</span> (p.right.getKey() != SkipListNode.TAIL_KEY &amp;&amp; p.right.getKey() &lt;= key) &#123;                </span><br><span class="line">                p = p.right;           </span><br><span class="line">            &#125;            </span><br><span class="line">            <span class="keyword">if</span> (p.down != <span class="keyword">null</span>) &#123;                </span><br><span class="line">                p = p.down;            </span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;                </span><br><span class="line">                <span class="keyword">break</span>;            </span><br><span class="line">            &#125;         </span><br><span class="line">        &#125;        </span><br><span class="line">        <span class="keyword">return</span> p;    </span><br><span class="line">    &#125;    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Description</span>: 查找是否存在key，存在则返回该节点，否则返回null    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Param</span>: [key]    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span>: com.wailian.SkipListNode&lt;T&gt;    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Author</span>: Jet.Chen    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Date</span>: 2019/9/16 17:43    </span></span><br><span class="line"><span class="comment">    */</span>    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> SkipListNode&lt;T&gt; <span class="title">search</span><span class="params">(<span class="keyword">int</span> key)</span></span>&#123;        </span><br><span class="line">        SkipListNode&lt;T&gt; p = findNode(key);        </span><br><span class="line">        <span class="keyword">if</span> (key == p.getKey()) &#123;            </span><br><span class="line">            <span class="keyword">return</span> p;        </span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;            </span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;        </span><br><span class="line">        &#125;    </span><br><span class="line">    &#125;    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Description</span>: 向跳跃表中添加key-value    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Param</span>: [k, v]    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span>: void    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Author</span>: Jet.Chen    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Date</span>: 2019/9/16 17:43    </span></span><br><span class="line"><span class="comment">    */</span>    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(<span class="keyword">int</span> k,T v)</span></span>&#123;        </span><br><span class="line">        SkipListNode&lt;T&gt; p = findNode(k);        </span><br><span class="line">        <span class="comment">// 如果key值相同，替换原来的value即可结束        </span></span><br><span class="line">        <span class="keyword">if</span> (k == p.getKey()) &#123;            </span><br><span class="line">            p.setValue(v);            </span><br><span class="line">            <span class="keyword">return</span>;        </span><br><span class="line">        &#125;</span><br><span class="line">        SkipListNode&lt;T&gt; q = <span class="keyword">new</span> SkipListNode&lt;&gt;(k, v);        </span><br><span class="line">        backLink(p, q);        </span><br><span class="line">        <span class="keyword">int</span> currentLevel = <span class="number">0</span>; <span class="comment">// 当前所在的层级是0       </span></span><br><span class="line">        <span class="comment">// 抛硬币        </span></span><br><span class="line">        <span class="keyword">while</span> (random.nextDouble() &lt; PROBABILITY &amp;&amp; currentLevel &lt; MAXLEVEL) &#123;            </span><br><span class="line">            <span class="comment">// 如果超出了高度，需要重新建一个顶层            </span></span><br><span class="line">            <span class="keyword">if</span> (currentLevel &gt;= listLevel) &#123;                </span><br><span class="line">                listLevel++;                </span><br><span class="line">                SkipListNode&lt;T&gt; p1 = <span class="keyword">new</span> SkipListNode&lt;&gt;(SkipListNode.HEAD_KEY, <span class="keyword">null</span>);                </span><br><span class="line">                SkipListNode&lt;T&gt; p2 = <span class="keyword">new</span> SkipListNode&lt;&gt;(SkipListNode.TAIL_KEY, <span class="keyword">null</span>);                </span><br><span class="line">                horizontalLink(p1, p2);                </span><br><span class="line">                verticalLink(p1, head);                </span><br><span class="line">                verticalLink(p2, tail);                </span><br><span class="line">                head = p1;                </span><br><span class="line">                tail = p2;            </span><br><span class="line">            &#125;           </span><br><span class="line">            <span class="comment">// 将p移动到上一层            </span></span><br><span class="line">            <span class="keyword">while</span> (p.up == <span class="keyword">null</span>) &#123;                </span><br><span class="line">                p = p.left;            </span><br><span class="line">            &#125;            </span><br><span class="line">            p = p.up;             </span><br><span class="line">            SkipListNode&lt;T&gt; e = <span class="keyword">new</span> SkipListNode&lt;&gt;(k, <span class="keyword">null</span>); <span class="comment">// 只保存key就ok            </span></span><br><span class="line">            backLink(p, e); <span class="comment">// 将e插入到p的后面            </span></span><br><span class="line">            verticalLink(e, q); <span class="comment">// 将e和q上下连接            </span></span><br><span class="line">            q = e;            </span><br><span class="line">            currentLevel++;        </span><br><span class="line">        &#125;        </span><br><span class="line">        nodes++; <span class="comment">// 层数递增    </span></span><br><span class="line">    &#125;    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Description</span>: node1后面插入node2    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Param</span>: [node1, node2]    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span>: void    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Author</span>: Jet.Chen    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Date</span>: 2019/9/16 17:45    </span></span><br><span class="line"><span class="comment">    */</span>    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">backLink</span><span class="params">(SkipListNode&lt;T&gt; node1,SkipListNode&lt;T&gt; node2)</span></span>&#123;        </span><br><span class="line">        node2.left = node1;        </span><br><span class="line">        node2.right = node1.right;        </span><br><span class="line">        node1.right.left = node2;        </span><br><span class="line">        node1.right = node2;    </span><br><span class="line">    &#125;    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Description</span>: 水平双向连接    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Param</span>: [node1, node2]    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span>: void    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Author</span>: Jet.Chen    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Date</span>: 2019/9/16 17:45    </span></span><br><span class="line"><span class="comment">    */</span>    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">horizontalLink</span><span class="params">(SkipListNode&lt;T&gt; node1,SkipListNode&lt;T&gt; node2)</span></span>&#123;        </span><br><span class="line">        node1.right = node2;        </span><br><span class="line">        node2.left = node1;    </span><br><span class="line">    &#125;   </span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Description</span>: 垂直双向连接    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Param</span>: [node1, node2]    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span>: void    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Author</span>: Jet.Chen    </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@Date</span>: 2019/9/16 17:45    </span></span><br><span class="line"><span class="comment">    */</span>    </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">verticalLink</span><span class="params">(SkipListNode&lt;T&gt; node1, kipListNode&lt;T&gt; node2)</span></span>&#123;        </span><br><span class="line">        node1.down = node2;        </span><br><span class="line">        node2.up = node1;    </span><br><span class="line">    &#125;    </span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span>    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;        </span><br><span class="line">        <span class="keyword">if</span> (isEmpty()) &#123;            </span><br><span class="line">            <span class="keyword">return</span> <span class="string">"跳跃表为空！"</span>;        </span><br><span class="line">        &#125;        </span><br><span class="line">        StringBuilder builder = <span class="keyword">new</span> StringBuilder();        </span><br><span class="line">        SkipListNode&lt;T&gt; p=head;        </span><br><span class="line">        <span class="keyword">while</span> (p.down != <span class="keyword">null</span>) &#123;            </span><br><span class="line">            p = p.down;        </span><br><span class="line">        &#125;         </span><br><span class="line">        <span class="keyword">while</span> (p.left != <span class="keyword">null</span>) &#123;            </span><br><span class="line">            p = p.left;        </span><br><span class="line">        &#125;        </span><br><span class="line">        <span class="keyword">if</span> (p.right!= <span class="keyword">null</span>) &#123;            </span><br><span class="line">            p = p.right;        </span><br><span class="line">        &#125;        </span><br><span class="line">        <span class="keyword">while</span> (p.right != <span class="keyword">null</span>) &#123;            </span><br><span class="line">            builder.append(p).append(<span class="string">"\n"</span>);            </span><br><span class="line">            p = p.right;        </span><br><span class="line">        &#125;         </span><br><span class="line">        <span class="keyword">return</span> builder.toString();    </span><br><span class="line">        &#125; </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>skipListNode</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* <span class="doctag">@Description</span>: 跳跃表的节点,包括key-value和上下左右4个指针</span></span><br><span class="line"><span class="comment">* <span class="doctag">@Author</span>: Jet.Chen</span></span><br><span class="line"><span class="comment">* <span class="doctag">@Date</span>: 2019/9/16 17:48</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SkipListNode</span> &lt;<span class="title">T</span>&gt;</span>&#123;    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> key;    </span><br><span class="line">    <span class="keyword">private</span> T value;    </span><br><span class="line">    <span class="keyword">public</span> SkipListNode&lt;T&gt; up, down, left, right; <span class="comment">// 上下左右 四个指针    </span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> HEAD_KEY = Integer.MIN_VALUE; <span class="comment">// 负无穷    </span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span>  TAIL_KEY = Integer.MAX_VALUE; <span class="comment">// 正无穷    </span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SkipListNode</span><span class="params">(<span class="keyword">int</span> k, T v)</span> </span>&#123;        </span><br><span class="line">        key = k;        </span><br><span class="line">        value = v;    </span><br><span class="line">    &#125;    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getKey</span><span class="params">()</span> </span>&#123;        </span><br><span class="line">        <span class="keyword">return</span> key;    </span><br><span class="line">    &#125;    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setKey</span><span class="params">(<span class="keyword">int</span> key)</span> </span>&#123;        </span><br><span class="line">        <span class="keyword">this</span>.key = key;    </span><br><span class="line">    &#125;    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getValue</span><span class="params">()</span> </span>&#123;        </span><br><span class="line">        <span class="keyword">return</span> value;    </span><br><span class="line">    &#125;    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(T value)</span> </span>&#123;        </span><br><span class="line">        <span class="keyword">this</span>.value = value;    </span><br><span class="line">    &#125;    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;        </span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> == o) &#123;            </span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;        </span><br><span class="line">        &#125;        </span><br><span class="line">        <span class="keyword">if</span> (o == <span class="keyword">null</span>) &#123;            </span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;        </span><br><span class="line">        &#125;        </span><br><span class="line">        <span class="keyword">if</span> (!(o <span class="keyword">instanceof</span> SkipListNode&lt;?&gt;)) &#123;            </span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;        </span><br><span class="line">        &#125;        </span><br><span class="line">        SkipListNode&lt;T&gt; ent;        </span><br><span class="line">        <span class="keyword">try</span> &#123;            </span><br><span class="line">            ent = (SkipListNode&lt;T&gt;) o; <span class="comment">// 检测类型        </span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassCastException ex) &#123;            </span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;        </span><br><span class="line">        &#125;        </span><br><span class="line">        <span class="keyword">return</span> (ent.getKey() == key) &amp;&amp; (ent.getValue() == value);    </span><br><span class="line">    &#125;    </span><br><span class="line">    <span class="meta">@Override</span>    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;        </span><br><span class="line">        <span class="keyword">return</span> <span class="string">"key-value:"</span> + key + <span class="string">"-"</span> + value;    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>test</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;        </span><br><span class="line">        SkipList&lt;String&gt; list = <span class="keyword">new</span> SkipList&lt;&gt;();        </span><br><span class="line">        System.out.println(list);        </span><br><span class="line">        list.put(<span class="number">6</span>, <span class="string">"cn"</span>);        </span><br><span class="line">        list.put(<span class="number">1</span>, <span class="string">"https"</span>);        </span><br><span class="line">        list.put(<span class="number">2</span>, <span class="string">":"</span>);        </span><br><span class="line">        list.put(<span class="number">3</span>, <span class="string">"//"</span>);        </span><br><span class="line">        list.put(<span class="number">1</span>, <span class="string">"http"</span>);        </span><br><span class="line">        list.put(<span class="number">4</span>, <span class="string">"jetchen"</span>);        </span><br><span class="line">        list.put(<span class="number">5</span>, <span class="string">"."</span>);        </span><br><span class="line">        System.out.println(list);        </span><br><span class="line">        System.out.println(list.size());    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><ul>
+<li>java demo源码见 <a href="https://github.com/goldenJet/JavaUtils/tree/master/com/jet/utils/skipList" target="_blank" rel="noopener">地址</a></li>
+<li>java 的 concurrent 包中其实也有实现，详见 <strong>ConcurrentSkipListMap</strong> 和 <strong>ConcurrentSkipListSet</strong></li>
+</ul>
+<p><img src="http://blogsource.chenkaikai.com/cli_500px.png" alt="image"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+	
+	<div>
+	  
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束 <i class="fa fa-fighter-jet"></i> 感谢阅读 ------</div>
+    
+</div>
+	  
+	</div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"><i class="fa fa-tag"></i> java</a>
+          
+            <a href="/tags/算法/" rel="tag"><i class="fa fa-tag"></i> 算法</a>
+          
+            <a href="/tags/SkipList/" rel="tag"><i class="fa fa-tag"></i> SkipList</a>
+          
+            <a href="/tags/哈希表/" rel="tag"><i class="fa fa-tag"></i> 哈希表</a>
+          
+            <a href="/tags/平衡树/" rel="tag"><i class="fa fa-tag"></i> 平衡树</a>
+          
+            <a href="/tags/数据结构/" rel="tag"><i class="fa fa-tag"></i> 数据结构</a>
+          
+            <a href="/tags/红黑树/" rel="tag"><i class="fa fa-tag"></i> 红黑树</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/spring-transactional/" rel="next" title="Spring 中的事务传播行为">
+                <i class="fa fa-chevron-left"></i> Spring 中的事务传播行为
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/github-webhooks/" rel="prev" title="利用 github 的 webhooks 自动部署博客">
+                利用 github 的 webhooks 自动部署博客 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Jet Chen</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">74</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">35</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">200</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/goldenJet" title="GitHub &rarr; https://github.com/goldenJet" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/goldenJ51015801" title="Twitter &rarr; https://twitter.com/goldenJ51015801" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">2.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跳跃表中的数据插入"><span class="nav-number">3.</span> <span class="nav-text">跳跃表中的数据插入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#层数的计算"><span class="nav-number">4.</span> <span class="nav-text">层数的计算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-实现"><span class="nav-number">5.</span> <span class="nav-text">Java 实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其它"><span class="nav-number">6.</span> <span class="nav-text">其它</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jet Chen</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+<div class="BbeiAn-info">
+    <a target="_blank" href="http://www.miitbeian.gov.cn/" rel="nofollow">浙ICP备17005575号-1</a> <!--a标签中增加nofollow属性，避免爬虫出站。-->| 
+	<a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802009043" style="text-decoration:none;padding-left:17px;background:url(/images/icon-police.png) no-repeat left center" rel="nofollow">浙公网安备 33010802009043号</a>	  <!--这里将图标作为了背景，以使得能和后面的文字在同一行-->
+</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.0"></script>
+
+  <script src="/js/src/motion.js?v=7.0.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.0"></script>
+<script src="/js/src/post-details.js?v=7.0.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=7.0.0"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
